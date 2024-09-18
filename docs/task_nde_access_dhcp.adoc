@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: docs/task_nde_access_dhcp.html 
+summary: Saiba como acessar o mecanismo de implantação do NetApp em ambientes que usam DHCP para atribuir endereços IP. 
+keywords: netapp, hci, netapp deployment engine, deployment, engine, deploy, access, dhcp 
+---
+= Acesse o mecanismo de implantação do NetApp em ambientes com DHCP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Em ambientes em que os servidores adquirem automaticamente a configuração IPv4 a partir do DHCP, você pode acessar o mecanismo de implantação do NetApp usando o endereço IPv4 atribuído à interface Bond1G em um dos nós de storage. Você pode usar um pendrive USB para recuperar o endereço IPv4 de um dos nós de armazenamento. O mecanismo de implantação do NetApp detetará automaticamente outros nós de computação e storage que usam endereços IPv4 atribuídos por DHCP. Você não deve usar este método a menos que sua rede tenha requisitos especiais.
+
+.O que você vai precisar
+* Você ou o administrador da rede concluíram as tarefas no documento instruções de instalação e configuração.
+* Você tem acesso físico aos nós do NetApp HCI.
+* Todos os nós do NetApp HCI são ativados.
+* O DHCP está ativado nas redes de gerenciamento e armazenamento de NetApp HCI.
+* O pool de endereços DHCP é grande o suficiente para acomodar dois endereços IPv4 por nó NetApp HCI.
+
+
+
+NOTE: Para que a implantação do NetApp HCI seja bem-sucedida, todos os nós da implantação devem ter endereços IPv4 adquiridos ou configurados automaticamente (você não pode misturar métodos de atribuição de endereço IPv4).
+
+.Sobre esta tarefa
+Se o DHCP estiver em uso somente para a rede de armazenamento (interfaces Bond10G), você deve usar as etapas descritas no link: link:task_nde_access_no_dhcp.html["Acesse o mecanismo de implantação do NetApp em ambientes sem DHCP"] Para acessar o mecanismo de implantação do NetApp.
+
+.Passos
+. Aguarde vários minutos para que os nós solicitem endereços IP.
+. Escolha um nó de armazenamento e insira um pendrive USB no nó. Deixe-o dentro por pelo menos cinco segundos.
+. Remova a unidade USB e insira-a no computador.
+. Abra o `readme.html` ficheiro. Isso leva você à interface de usuário do mecanismo de implantação do NetApp.
+
+
+[discrete]
+== Encontre mais informações
+
+* link:firmware_driver_versions.html["Versões de firmware e driver ESXi compatíveis para versões de NetApp HCI e firmware para nós de storage NetApp HCI"]
+

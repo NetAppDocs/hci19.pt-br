@@ -1,0 +1,55 @@
+---
+sidebar: sidebar 
+permalink: docs/concept_cg_hci_licensing.html 
+summary: Quando você usa o NetApp HCI, talvez você precise de licenças adicionais. 
+keywords: netapp, hci, license 
+---
+= Licenciamento do NetApp HCI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Ao usar o NetApp HCI, você pode precisar de licenças adicionais dependendo do que estiver usando.
+
+
+
+== Licenciamento do NetApp HCI e VMware vSphere
+
+O licenciamento do VMware vSphere depende da sua configuração:
+
+[cols="25,75"]
+|===
+| Opção de rede | Licenciamento 
+
+
+| Opção A: Dois cabos para nós de computação que usam a marcação de VLAN (todos os nós de computação) | Requer o uso do vSphere Distributed Switch, que requer o licenciamento do VMware vSphere Enterprise Plus. 
+
+
+| Opção B: Seis cabos para nós de computação usando VLANs marcadas (nó de computação de H410C 2RU 4 nós) | Esta configuração usa o vSphere Standard Switch como padrão. O uso opcional do vSphere Distributed Switch requer o licenciamento do VMware Enterprise Plus. 
+
+
+| Opção C: Seis cabos para nós de computação que usam VLANs nativas e marcadas (nó de computação de H410C nós, 2RU 4 nós) | Esta configuração usa o vSphere Standard Switch como padrão. O uso opcional do vSphere Distributed Switch requer o licenciamento do VMware Enterprise Plus. 
+|===
+
+
+== Licenciamento de NetApp HCI e ONTAP Select
+
+Se você recebeu uma versão do ONTAP Select para uso em conjunto com um sistema NetApp HCI adquirido, as seguintes limitações adicionais se aplicam:
+
+* A licença do ONTAP Select, que é fornecida com a venda do sistema NetApp HCI, só pode ser usada em conjunto com os nós de computação do NetApp HCI.
+* O storage dessas instâncias do ONTAP Select deve residir apenas nos nós de storage do NetApp HCI.
+* É proibido o uso de nós de computação de terceiros ou nós de storage de terceiros.
+
+
+
+
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* http://docs.netapp.com/sfe-122/index.jsp["Centro de Documentação de Software SolidFire e Element"^]
+

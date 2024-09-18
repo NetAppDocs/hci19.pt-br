@@ -1,0 +1,715 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hcc_upgrade_element_software.html 
+summary: Como parte de uma atualização do sistema NetApp HCI, você atualiza o software NetApp Element. 
+keywords: netapp, hci, HealthTools, cluster, element, H610S upgrade, hcc 
+---
+= Atualize o software Element
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Para atualizar o software NetApp Element, você pode usar a IU do Controle de nuvem híbrida da NetApp, a API REST ou o pacote de ferramentas do HealthTools. Certas operações são suprimidas durante uma atualização do software Element, como adicionar e remover nós, adicionar e remover unidades, e comandos associados a iniciadores, grupos de acesso de volume e redes virtuais, entre outros.
+
+.O que você vai precisar
+* *Admin Privileges*: Você tem permissões de administrador de cluster de armazenamento para executar a atualização.
+* *Caminho de atualização válido*: Você verificou as informações do caminho de atualização para a versão do Element para a qual está atualizando e verificou que o caminho de atualização é válido. https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/Element_Software/What_is_the_upgrade_matrix_for_storage_clusters_running_NetApp_Element_software%3F["NetApp KB: Matriz de atualização para clusters de armazenamento que executam o software NetApp Element"^]
+* *Sincronização da hora do sistema*: Você garantiu que a sincronização da hora do sistema em todos os nós e que o NTP está configurado corretamente para o cluster de armazenamento e nós. Cada nó deve ser configurado com um servidor de nomes DNS na IU da Web por nó (`https://[IP address]:442`) sem falhas de cluster não resolvidas relacionadas ao desvio de tempo.
+* *Portas do sistema*: Se você estiver usando o Controle de nuvem híbrida da NetApp para atualizações, você garantiu que as portas necessárias estejam abertas. Consulte link:hci_prereqs_required_network_ports.html["Portas de rede"] para obter mais informações.
+* *Nó de gerenciamento*: Para a API e a IU do NetApp Hybrid Cloud Control, o nó de gerenciamento em seu ambiente está executando a versão 11,3.
+* *Serviços de gerenciamento*: Você atualizou seu pacote de serviços de gerenciamento para a versão mais recente.
+
+
+
+IMPORTANT: Você deve atualizar para o pacote de serviços de gerenciamento mais recente antes de atualizar o software Element para a versão 12,3.x. Se estiver a atualizar o software Element para a versão 12,3.x, necessita de serviços de gestão 2.14.60 ou posterior para prosseguir.
+
+* *Integridade do cluster*: Você verificou que o cluster está pronto para ser atualizado. link:task_hcc_upgrade_element_prechecks.html["Execute verificações de integridade do storage Element antes de atualizar o storage"]Consulte .
+* *BMC atualizado para H610S nós*: Você atualizou a versão do BMC para seus H610S nós. Consulte link:rn_H610S_BMC_3.84.07.html["notas de versão e instruções de atualização"].
+* *Contrato de Licença de Usuário final (EULA)*: Começando com os serviços de gerenciamento 2.20.69, você deve aceitar e salvar o EULA antes de usar a interface de usuário ou API do NetApp Hybrid Cloud Control para atualizar o software Element:
++
+.. Abra o endereço IP do nó de gerenciamento em um navegador da Web:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+.. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage.
+.. Selecione *Upgrade* perto do canto superior direito da interface.
+.. O EULA aparece. Role para baixo, selecione *Aceito para atualizações atuais e futuras* e selecione *Salvar*.
+
+
+
+
+.Opções de atualização
+Escolha uma das seguintes opções de atualização do software Element:
+
+* <<Use a IU do Controle de nuvem híbrida da NetApp para atualizar o storage Element>>
+* <<Use a API de controle de nuvem híbrida da NetApp para atualizar o storage Element>>
+* <<Atualize o software Element em sites conetados usando HealthTools>>
+* <<Atualize o software Element em sites escuros usando HealthTools>>
+
+
+
+IMPORTANT: Se você estiver atualizando um nó da série H610S para o elemento 12,3.x e o nó estiver executando uma versão do elemento anterior a 11,8, será necessário executar etapas adicionais de atualização (<<Atualizando H610S nós de storage para o elemento 12,3.x (fase 2),fase 2>>) para cada nó de storage. Se você estiver executando o elemento 11,8 ou posterior, as etapas adicionais de atualização (fase 2) não serão necessárias.
+
+
+
+== Use a IU do Controle de nuvem híbrida da NetApp para atualizar o storage Element
+
+Usando a IU do Controle de nuvem híbrida da NetApp, você pode atualizar um cluster de storage.
+
+
+CAUTION: Para possíveis problemas durante a atualização dos clusters de storage usando o Controle de nuvem híbrida da NetApp e suas soluções alternativas, consulte o https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/NetApp_HCI/Potential_issues_and_workarounds_when_running_storage_upgrades_using_NetApp_Hybrid_Cloud_Control["Artigo da KB"^].
+
+
+TIP: O processo de atualização leva aproximadamente 30 minutos por nó para plataformas que não sejam H610S.
+
+.Passos
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage.
+. Selecione *Upgrade* perto do canto superior direito da interface.
+. Na página *Upgrades*, selecione *Storage*.
++
+A guia *Storage* lista os clusters de armazenamento que fazem parte da sua instalação. Se um cluster estiver inacessível pelo Controle de nuvem híbrida da NetApp, ele não será exibido na página *Upgrades*.
+
+. Escolha entre as opções a seguir e execute o conjunto de etapas aplicáveis ao cluster:
++
+[cols="2*"]
+|===
+| Opção | Passos 
+
+
+| Todos os clusters executando o elemento 11,8 e posterior  a| 
+.. Selecione *Procurar* para carregar o pacote de atualização que transferiu.
+.. Aguarde até que o upload seja concluído. Uma barra de progresso mostra o status do upload.
++
+
+CAUTION: O upload do arquivo será perdido se você navegar para longe da janela do navegador.
+
++
+É apresentada uma mensagem no ecrã depois de o ficheiro ser carregado e validado com êxito. A validação pode demorar vários minutos. Se você navegar para longe da janela do navegador nesta fase, o upload do arquivo será preservado.
+
+.. Selecione *Begin Upgrade*.
++
+
+TIP: O *Status do Upgrade* muda durante a atualização para refletir o status do processo. Ele também muda em resposta às ações que você toma, como pausar a atualização, ou se a atualização retornar um erro. <<Alterações de status da atualização>>Consulte .
+
++
+
+NOTE: Enquanto a atualização estiver em andamento, você pode sair da página e voltar a ela mais tarde para continuar monitorando o progresso. A página não atualiza dinamicamente o status e a versão atual se a linha do cluster for recolhida. A linha do cluster deve ser expandida para atualizar a tabela ou você pode atualizar a página.
+
++
+Pode transferir registos após a conclusão da atualização.
+
+
+
+
+
+| Você está atualizando um cluster H610S executando a versão do Element anterior a 11,8.  a| 
+.. Selecione a seta suspensa ao lado do cluster que você está atualizando e selecione a partir das versões de atualização disponíveis.
+.. Selecione *Begin Upgrade*. Depois que a atualização estiver concluída, a IU solicitará que você execute a fase 2 do processo.
+.. Conclua as etapas adicionais necessárias (fase 2) no https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/H_Series/NetApp_H610S_storage_node_power_off_and_on_procedure["Artigo da KB"^] e confirme na IU que você concluiu a fase 2.
+
+
+Pode transferir registos após a conclusão da atualização. Para obter informações sobre as várias alterações de status de atualização, <<Alterações de status da atualização>>consulte .
+
+|===
+
+
+
+
+=== Alterações de status da atualização
+
+Aqui estão os diferentes estados que a coluna *Status da atualização* na IU mostra antes, durante e após o processo de atualização:
+
+[cols="2*"]
+|===
+| Estado de atualização | Descrição 
+
+
+| Atualizado | O cluster foi atualizado para a versão mais recente do Element disponível. 
+
+
+| Versões disponíveis | Versões mais recentes do Element e/ou firmware de storage estão disponíveis para atualização. 
+
+
+| Em curso | A atualização está em andamento. Uma barra de progresso mostra o status da atualização. As mensagens na tela também mostram falhas no nível do nó e exibem a ID do nó de cada nó no cluster à medida que a atualização progride. Você pode monitorar o status de cada nó usando a IU do Element ou o plug-in do NetApp Element para a IU do vCenter Server. 
+
+
+| Atualizar Pausando | Você pode optar por pausar a atualização. Dependendo do estado do processo de atualização, a operação de pausa pode ser bem-sucedida ou falhar. Você verá um prompt da interface do usuário solicitando que você confirme a operação de pausa. Para garantir que o cluster esteja em um local seguro antes de pausar uma atualização, pode levar até duas horas para que a operação de atualização seja completamente pausada. Para retomar a atualização, selecione *Resume*. 
+
+
+| Em pausa | Fez uma pausa na atualização. Selecione *Resume* para retomar o processo. 
+
+
+| Erro | Ocorreu um erro durante a atualização. Você pode baixar o log de erros e enviá-lo para o suporte da NetApp. Depois de resolver o erro, você pode retornar à página e selecionar *Resume*. Quando você retoma a atualização, a barra de progresso recua por alguns minutos enquanto o sistema executa a verificação de integridade e verifica o estado atual da atualização. 
+
+
+| Completo com acompanhamento | Somente para nós H610S atualizando a partir da versão do Element anterior à 11,8. Após a conclusão da fase 1 do processo de atualização, este estado solicita que você execute a fase 2 da atualização (consulte a https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/H_Series/NetApp_H610S_storage_node_power_off_and_on_procedure["Artigo da KB"^] ). Depois de concluir a fase 2 e confirmar que a concluiu, o estado muda para *até à data*. 
+|===
+
+
+== Use a API de controle de nuvem híbrida da NetApp para atualizar o storage Element
+
+Você pode usar APIs para atualizar nós de storage em um cluster para a versão mais recente do software Element. Você pode usar uma ferramenta de automação de sua escolha para executar as APIs. O fluxo de trabalho da API documentado aqui usa a IU da API REST disponível no nó de gerenciamento como exemplo.
+
+.Passos
+. Faça download do pacote de atualização de storage para um dispositivo que esteja acessível ao nó de gerenciamento; vá para o software NetApp HCI https://mysupport.netapp.com/site/products/all/details/netapp-hci/downloads-tab["página de transferências"^] e baixe a imagem mais recente do nó de storage.
+. Faça o upload do pacote de atualização de armazenamento para o nó de gerenciamento:
++
+.. Abra a IU da API REST do nó de gerenciamento no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/package-repository/1/
+----
+.. Selecione *autorizar* e preencha o seguinte:
++
+... Introduza o nome de utilizador e a palavra-passe do cluster.
+... Introduza a ID do cliente como `mnode-client`.
+... Selecione *autorizar* para iniciar uma sessão.
+... Feche a janela autorização.
+
+
+.. Na IU da API REST, selecione *POST /packages*.
+.. Selecione *Experimente*.
+.. Selecione *Procurar* e selecione o pacote de atualização.
+.. Selecione *execute* para iniciar o upload.
+.. Na resposta, copie e salve o ID do (`"id"`pacote ) para uso em uma etapa posterior.
+
+
+. Verifique o status do upload.
++
+.. Na IU da API REST, selecione *GET​ /packages​/​ id/status*.
+.. Selecione *Experimente*.
+.. Insira o ID do pacote que você copiou na etapa anterior em *id*.
+.. Selecione *execute* para iniciar a solicitação de status.
++
+A resposta indica `state` como `SUCCESS` quando concluída.
+
+
+
+. Localize a ID do cluster de armazenamento:
++
+.. Abra a IU da API REST do nó de gerenciamento no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/inventory/1/
+----
+.. Selecione *autorizar* e preencha o seguinte:
++
+... Introduza o nome de utilizador e a palavra-passe do cluster.
+... Introduza a ID do cliente como `mnode-client`.
+... Selecione *autorizar* para iniciar uma sessão.
+... Feche a janela autorização.
+
+
+.. Na IU da API REST, selecione *GET /installations*.
+.. Selecione *Experimente*.
+.. Selecione *Executar*.
+.. Na resposta, copie o ID do ativo de instalação (`"id"`).
+.. Na IU da API REST, selecione *GET /installations/
+.. Selecione *Experimente*.
+.. Cole o ID do ativo de instalação no campo *id*.
+.. Selecione *Executar*.
+.. A partir da resposta, copie e salve o ID do cluster de armazenamento (`"id"`) do cluster que pretende atualizar para uso em uma etapa posterior.
+
+
+. Execute a atualização de armazenamento:
++
+.. Abra a IU da API REST de storage no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/storage/1/
+----
+.. Selecione *autorizar* e preencha o seguinte:
++
+... Introduza o nome de utilizador e a palavra-passe do cluster.
+... Introduza a ID do cliente como `mnode-client`.
+... Selecione *autorizar* para iniciar uma sessão.
+... Feche a janela autorização.
+
+
+.. Selecione *POST /Upgrades*.
+.. Selecione *Experimente*.
+.. Introduza a ID do pacote de atualização no campo Parameter (parâmetro).
+.. Introduza a ID do cluster de armazenamento no campo Parameter (parâmetro).
++
+A carga útil deve ser semelhante ao seguinte exemplo:
+
++
+[listing]
+----
+{
+  "config": {},
+  "packageId": "884f14a4-5a2a-11e9-9088-6c0b84e211c4",
+  "storageId": "884f14a4-5a2a-11e9-9088-6c0b84e211c4"
+}
+----
+.. Selecione *execute* para iniciar a atualização.
++
+A resposta deve indicar o estado como `initializing`:
+
++
+[listing]
+----
+{
+  "_links": {
+    "collection": "https://localhost:442/storage/upgrades",
+    "self": "https://localhost:442/storage/upgrades/3fa85f64-1111-4562-b3fc-2c963f66abc1",
+    "log": https://localhost:442/storage/upgrades/3fa85f64-1111-4562-b3fc-2c963f66abc1/log
+  },
+  "storageId": "114f14a4-1a1a-11e9-9088-6c0b84e200b4",
+  "upgradeId": "334f14a4-1a1a-11e9-1055`-6c0b84e2001b4",
+  "packageId": "774f14a4-1a1a-11e9-8888-6c0b84e200b4",
+  "config": {},
+  "state": "initializing",
+  "status": {
+    "availableActions": [
+      "string"
+    ],
+    "message": "string",
+    "nodeDetails": [
+      {
+        "message": "string",
+        "step": "NodePreStart",
+        "nodeID": 0,
+        "numAttempt": 0
+      }
+    ],
+    "percent": 0,
+    "step": "ClusterPreStart",
+    "timestamp": "2020-04-21T22:10:57.057Z",
+    "failedHealthChecks": [
+      {
+        "checkID": 0,
+        "name": "string",
+        "displayName": "string",
+        "passed": true,
+        "kb": "string",
+        "description": "string",
+        "remedy": "string",
+        "severity": "string",
+        "data": {},
+        "nodeID": 0
+      }
+    ]
+  },
+  "taskId": "123f14a4-1a1a-11e9-7777-6c0b84e123b2",
+  "dateCompleted": "2020-04-21T22:10:57.057Z",
+  "dateCreated": "2020-04-21T22:10:57.057Z"
+}
+----
+.. Copie o ID de atualização (`"upgradeId"`) que faz parte da resposta.
+
+
+. Verifique o progresso e os resultados da atualização:
++
+.. Selecione *GET ​/Upgrades/
+.. Selecione *Experimente*.
+.. Insira o ID de atualização da etapa anterior em *upgradeId*.
+.. Selecione *Executar*.
+.. Siga um destes procedimentos se houver problemas ou requisitos especiais durante a atualização:
++
+[cols="2*"]
+|===
+| Opção | Passos 
+
+
+| Você precisa corrigir problemas de integridade do cluster devido a `failedHealthChecks` mensagem no corpo de resposta.  a| 
+... Vá para o artigo específico da KB listado para cada problema ou execute o recurso especificado.
+... Se um KB for especificado, conclua o processo descrito no artigo da KB relevante.
+... Depois de resolver problemas de cluster, reautentique se necessário e selecione *put ​/Upgrades/
+... Selecione *Experimente*.
+... Insira o ID de atualização da etapa anterior em *upgradeId*.
+... Introduza `"action":"resume"` o corpo do pedido.
++
+[listing]
+----
+{
+  "action": "resume"
+}
+----
+... Selecione *Executar*.
+
+
+
+
+| Você precisa pausar a atualização porque a janela de manutenção está fechando ou por outro motivo.  a| 
+... Reautentique se necessário e selecione *put ​/Upgrades/
+... Selecione *Experimente*.
+... Insira o ID de atualização da etapa anterior em *upgradeId*.
+... Introduza `"action":"pause"` o corpo do pedido.
++
+[listing]
+----
+{
+  "action": "pause"
+}
+----
+... Selecione *Executar*.
+
+
+
+
+| Se você estiver atualizando um cluster H610S executando uma versão do Element anterior a 11,8, verá o estado `finishedNeedsAck` no corpo da resposta. Você precisa executar etapas adicionais de atualização (fase 2) para cada nó de storage H610S.  a| 
+... Consulte <<Upgrading H610S storage nodes to Element 12.3.x or later (phase 2)>> e conclua o processo para cada nó.
+... Reautentique se necessário e selecione *put ​/Upgrades/
+... Selecione *Experimente*.
+... Insira o ID de atualização da etapa anterior em *upgradeId*.
+... Introduza `"action":"acknowledge"` o corpo do pedido.
++
+[listing]
+----
+{
+  "action": "acknowledge"
+}
+----
+... Selecione *Executar*.
+
+
+|===
+.. Execute a API *GET ​/Upgrades/"upgradeId"* várias vezes, conforme necessário, até que o processo esteja concluído.
++
+Durante a atualização, o `status` indica `running` se não foram encontrados erros. À medida que cada nó é atualizado, o `step` valor muda para `NodeFinished`.
+
++
+A atualização foi concluída com êxito quando o `percent` valor é `100` e o `state` indica `finished`.
+
+
+
+
+
+
+
+== O que acontece se uma atualização falhar usando o controle de nuvem híbrida da NetApp
+
+Se uma unidade ou nó falhar durante uma atualização, a IU do Element mostrará falhas de cluster. O processo de atualização não avança para o nó seguinte e aguarda a resolução das falhas do cluster. A barra de progresso na IU mostra que a atualização está aguardando a resolução das falhas do cluster. Nesta fase, selecionar *Pausa* na IU não funcionará, porque a atualização aguarda que o cluster esteja saudável. Você precisará ativar o suporte da NetApp para ajudar na investigação de falha.
+
+O controle de nuvem híbrida da NetApp tem um período de espera pré-definido de três horas, durante o qual um dos seguintes cenários pode acontecer:
+
+* As falhas do cluster são resolvidas dentro da janela de três horas e a atualização é retomada. Você não precisa tomar nenhuma ação nesse cenário.
+* O problema persiste após três horas e o status da atualização mostra *erro* com um banner vermelho. Você pode retomar a atualização selecionando *Resume* após o problema ser resolvido.
+* O suporte da NetApp determinou que a atualização precisa ser temporariamente cancelada para tomar medidas corretivas antes da janela de três horas. O suporte usará a API para cancelar a atualização.
+
+
+
+CAUTION: Abortar a atualização do cluster enquanto um nó está sendo atualizado pode resultar na remoção desgraciosa das unidades do nó. Se as unidades forem removidas sem graça, adicionar as unidades de volta durante uma atualização exigirá intervenção manual pelo suporte da NetApp. O nó pode estar demorando mais para fazer atualizações de firmware ou atividades de sincronização pós-atualização. Se o progresso da atualização parecer interrompido, entre em Contato com o suporte da NetApp para obter assistência.
+
+
+
+== Atualize o software Element em sites conetados usando HealthTools
+
+.Passos
+. Baixe o pacote de atualização de storage; vá para o software NetApp HCI https://mysupport.netapp.com/site/products/all/details/netapp-hci/downloads-tab["página de transferências"^] e faça o download da imagem de nó de storage mais recente para um dispositivo que não seja o nó de gerenciamento.
++
+
+NOTE: Você precisa da versão mais recente do HealthTools para atualizar o software de armazenamento Element.
+
+. Copie o arquivo ISO para o nó de gerenciamento em um local acessível como /tmp.
++
+Ao carregar o ficheiro ISO, certifique-se de que o nome do ficheiro não é alterado, caso contrário, os passos posteriores falharão.
+
+. *Opcional*: Faça o download do ISO do nó de gerenciamento para os nós de cluster antes da atualização.
++
+Essa etapa reduz o tempo de atualização pré-estadiamento da ISO nos nós de storage e executando verificações internas adicionais para garantir que o cluster esteja em bom estado para ser atualizado. A execução desta operação não colocará o cluster no modo de "atualização" ou restringirá qualquer uma das operações do cluster.
+
++
+[listing]
+----
+sfinstall <MVIP> -u <cluster_username> <path-toinstall-file-ISO> --stage
+----
++
+
+NOTE: Omitir a senha da linha de comando para permitir `sfinstall` solicitar as informações. Para senhas que contêm carateres especiais, adicione uma barra invertida (`\`) antes de cada caractere especial. Por exemplo, `mypass!@1` deve ser introduzido como `mypass\!\@`.
+
++
+*Exemplo* Veja a seguinte entrada de amostra:
+
++
+[listing]
+----
+sfinstall 10.117.0.244 -u admin /tmp/solidfire-rtfisodium-11.0.0.345.iso --stage
+----
++
+A saída para a amostra mostra que `sfinstall` tenta verificar se uma versão mais recente do `sfinstall` está disponível:
+
++
+[listing]
+----
+sfinstall 10.117.0.244 -u admin
+/tmp/solidfire-rtfisodium-11.0.0.345.iso 2018-10-01 16:52:15:
+Newer version of sfinstall available.
+This version: 2018.09.01.130, latest version: 2018.06.05.901.
+The latest version of the HealthTools can be downloaded from:
+https:// mysupport.netapp.com/NOW/cgi-bin/software/
+or rerun with --skip-version-check
+----
++
+Veja o seguinte trecho de amostra de uma operação pré-estágio bem-sucedida:
+
++
+
+NOTE: Quando o estadiamento for concluído, a mensagem será exibida `Storage Node Upgrade Staging Successful` após o evento de atualização.
+
++
+[listing]
+----
+flabv0004 ~ # sfinstall -u admin
+10.117.0.87 solidfire-rtfi-sodium-patch3-11.3.0.14171.iso --stage
+2019-04-03 13:19:58: sfinstall Release Version: 2019.01.01.49 Management Node Platform:
+Ember Revision: 26b042c3e15a Build date: 2019-03-12 18:45
+2019-04-03 13:19:58: Checking connectivity to MVIP 10.117.0.87
+2019-04-03 13:19:58: Checking connectivity to node 10.117.0.86
+2019-04-03 13:19:58: Checking connectivity to node 10.117.0.87
+...
+2019-04-03 13:19:58: Successfully connected to cluster and all nodes
+...
+2019-04-03 13:20:00: Do you want to continue? ['Yes', 'No']: Yes
+...
+2019-04-03 13:20:55: Staging install pack on cluster nodes
+2019-04-03 13:20:55: newVersion: 11.3.0.14171
+2019-04-03 13:21:01: nodeToStage: nlabp2814, nlabp2815, nlabp2816, nlabp2813
+2019-04-03 13:21:02: Staging Node nlabp2815 mip=[10.117.0.87] nodeID=[2] (1 of 4 nodes)
+2019-04-03 13:21:02: Node Upgrade serving image at
+http://10.117.0.204/rtfi/solidfire-rtfisodium-
+patch3-11.3.0.14171/filesystem.squashfs
+...
+2019-04-03 13:25:40: Staging finished. Repeat the upgrade command without the --stage option to start the upgrade.
+----
++
+Os ISOs faseados serão automaticamente eliminados após a conclusão da atualização. No entanto, se a atualização não foi iniciada e precisa ser reprogramada, os ISOs podem ser manualmente desfasados usando o comando:
+
++
+`sfinstall <MVIP> -u <cluster_username> --destage`
+
++
+Depois que a atualização tiver sido iniciada, a opção de etapa não estará mais disponível.
+
+. Inicie a atualização com o `sfinstall` comando e o caminho para o arquivo ISO:
++
+`sfinstall <MVIP> -u <cluster_username> <path-toinstall-file-ISO>`
+
++
+*Exemplo*
+
++
+Veja o seguinte comando de entrada de amostra:
+
++
+[listing]
+----
+sfinstall 10.117.0.244 -u admin /tmp/solidfire-rtfi-sodium-11.0.0.345.iso
+----
++
+A saída para a amostra mostra que `sfinstall` tenta verificar se uma versão mais recente do `sfinstall` está disponível:
+
++
+[listing]
+----
+sfinstall 10.117.0.244 -u admin /tmp/solidfire-rtfi-sodium-11.0.0.345.iso
+2018-10-01 16:52:15: Newer version of sfinstall available.
+This version: 2018.09.01.130, latest version: 2018.06.05.901.
+The latest version of the HealthTools can be downloaded from:
+https://mysupport.netapp.com/NOW/cgi-bin/software/ or rerun with --skip-version-check
+----
++
+Veja o trecho de exemplo a seguir de uma atualização bem-sucedida. Os eventos de atualização podem ser usados para monitorar o progresso da atualização.
+
++
+[listing]
+----
+# sfinstall 10.117.0.161 -u admin solidfire-rtfi-sodium-11.0.0.761.iso
+2018-10-11 18:28
+Checking connectivity to MVIP 10.117.0.161
+Checking connectivity to node 10.117.0.23
+Checking connectivity to node 10.117.0.24
+...
+Successfully connected to cluster and all nodes
+###################################################################
+You are about to start a new upgrade
+10.117.0.161
+10.3.0.161
+solidfire-rtfi-sodium-11.0.0.761.iso
+Nodes:
+10.117.0.23 nlabp1023 SF3010 10.3.0.161
+10.117.0.24 nlabp1025 SF3010 10.3.0.161
+10.117.0.26 nlabp1027 SF3010 10.3.0.161
+10.117.0.28 nlabp1028 SF3010 10.3.0.161
+###################################################################
+Do you want to continue? ['Yes', 'No']: yes
+...
+Watching for new network faults. Existing fault IDs are set([]).
+Checking for legacy network interface names that need renaming
+Upgrading from 10.3.0.161 to 11.0.0.761 upgrade method=rtfi
+Waiting 300 seconds for cluster faults to clear
+Waiting for caches to fall below threshold
+...
+Installing mip=[10.117.0.23] nodeID=[1] (1 of 4 nodes)
+Starting to move primaries.
+Loading volume list
+Moving primary slice=[7] away from mip[10.117.0.23] nodeID[1] ssid[11] to new ssid[15]
+Moving primary slice=[12] away from mip[10.117.0.23] nodeID[1] ssid[11] to new ssid[15]
+...
+Installing mip=[10.117.114.24] nodeID=[2] (2 of 4 nodes)
+Starting to move primaries.
+Loading volume list
+Moving primary slice=[5] away from mip[10.117.114.24] nodeID[2] ssid[7] to new ssid[11]
+...
+Install of solidfire-rtfi-sodium-11.0.0.761 complete.
+Removing old software
+No staged builds present on nodeID=[1]
+No staged builds present on nodeID=[2]
+...
+Starting light cluster block service check
+----
+
+
+
+IMPORTANT: Se você estiver atualizando um nó da série H610S para o elemento 12,3.x e o nó estiver executando uma versão do elemento anterior a 11,8, será necessário executar etapas adicionais de atualização (<<Atualizando H610S nós de storage para o elemento 12,3.x (fase 2),fase 2>>) para cada nó de storage. Se você estiver executando o elemento 11,8 ou posterior, as etapas adicionais de atualização (fase 2) não serão necessárias.
+
+
+
+== Atualize o software Element em sites escuros usando HealthTools
+
+Você pode usar o conjunto de ferramentas HealthTools para atualizar o software NetApp Element em um site escuro que não tem conetividade externa.
+
+.O que você vai precisar
+. Vá para o software NetApp HCI https://mysupport.netapp.com/site/products/all/details/netapp-hci/downloads-tab["página de transferências"^] .
+. Selecione a versão correta do software e transfira a imagem mais recente do nó de armazenamento para um computador que não seja o nó de gestão.
++
+
+NOTE: Você precisa da versão mais recente do HealthTools para atualizar o software de armazenamento Element.
+
+. Faça o download https://library.netapp.com/ecm/ecm_get_file/ECMLP2840740["Ficheiro JSON"^] do site de suporte da NetApp em um computador que não seja o nó de gerenciamento e renomeie-o para `metadata.json`.
+. Copie o arquivo ISO para o nó de gerenciamento em um local acessível, como `/tmp`.
++
+
+TIP: Você pode fazer isso usando, por exemplo, SCP. Ao carregar o ficheiro ISO, certifique-se de que o nome do ficheiro não é alterado, caso contrário, os passos posteriores falharão.
+
+
+
+.Passos
+. Execute o `sfupdate-healthtools` comando:
++
+[listing]
+----
+sfupdate-healthtools <path-to-healthtools-package>
+----
+. Verifique a versão instalada:
++
+[listing]
+----
+sfupdate-healthtools -v
+----
+. Verifique a versão mais recente em relação ao arquivo JSON de metadados:
++
+[listing]
+----
+sfupdate-healthtools -l --metadata=<path-to-metadata-json>
+----
+. Certifique-se de que o cluster está pronto:
++
+[listing]
+----
+sudo sfupgradecheck -u <cluster_username> -p <cluster_password> MVIP --metadata=<path-to-metadata-json>
+----
+. Execute o `sfinstall` comando com o caminho para o arquivo ISO e o arquivo JSON de metadados:
++
+[listing]
+----
+sfinstall -u <cluster_username> <MVIP> <path-toinstall-file-ISO> --metadata=<path-to-metadata-json-file>
+----
++
+Veja o seguinte comando de entrada de amostra:
+
++
+[listing]
+----
+sfinstall -u admin 10.117.78.244 /tmp/solidfire-rtfi-11.3.0.345.iso --metadata=/tmp/metadata.json
+----
++
+*Opcional* você pode adicionar o `--stage` sinalizador ao `sfinstall` comando para pré-estágio da atualização com antecedência.
+
+
+
+
+IMPORTANT: Se você estiver atualizando um nó da série H610S para o elemento 12,3.x e o nó estiver executando uma versão do elemento anterior a 11,8, será necessário executar etapas adicionais de atualização (<<Atualizando H610S nós de storage para o elemento 12,3.x (fase 2),fase 2>>) para cada nó de storage. Se você estiver executando o elemento 11,8 ou posterior, as etapas adicionais de atualização (fase 2) não serão necessárias.
+
+
+
+== O que acontece se uma atualização falhar usando HealthTools
+
+Se a atualização do software falhar, você pode pausar a atualização.
+
+
+TIP: Você deve pausar uma atualização apenas com Ctrl-C. isso permite que o sistema se limpe.
+
+Quando `sfinstall` aguarda que as avarias do grupo de instrumentos sejam eliminadas e, se alguma avaria fizer com que as avarias permaneçam, `sfinstall` não avance para o nó seguinte.
+
+.Passos
+. Você deve parar `sfinstall` com Ctrl C.
+. Entre em Contato com o suporte da NetApp para ajudar na investigação de falha.
+. Retomar a atualização com o mesmo `sfinstall` comando.
+. Quando uma atualização é pausada usando Ctrl, se a atualização estiver atualizando um nó no momento, escolha uma destas opções:
++
+** *Wait*: Permita que o nó atualmente atualizando termine antes de redefinir as constantes do cluster.
+** *Continuar*: Continue a atualização, que cancela a pausa.
+** *Abort*: Redefina as constantes do cluster e aborte a atualização imediatamente.
++
+
+NOTE: Abortar a atualização do cluster enquanto um nó está sendo atualizado pode resultar na remoção desgraciosa das unidades do nó. Se as unidades forem removidas sem graça, adicionar as unidades de volta durante uma atualização exigirá intervenção manual pelo suporte da NetApp. O nó pode estar demorando mais para fazer atualizações de firmware ou atividades de sincronização pós-atualização. Se o progresso da atualização parecer interrompido, entre em Contato com o suporte da NetApp para obter assistência.
+
+
+
+
+
+
+
+== Atualizando H610S nós de storage para o elemento 12,3.x (fase 2)
+
+Se você estiver atualizando um nó da série H610S para o elemento 12,3.x e o nó estiver executando uma versão do elemento anterior a 11,8, o processo de atualização envolve duas fases.
+
+A fase 1, que é realizada primeiro, segue os mesmos passos que a atualização padrão para o processo do elemento 12,3.x. Ele instala o Element Software e todas as atualizações de firmware do 5 de forma contínua no cluster, um nó de cada vez. Devido à carga útil do firmware, estima-se que o processo leve de aproximadamente 1,5 a 2 horas por nó H610S, incluindo um único ciclo de inicialização a frio no final da atualização para cada nó.
+
+A fase 2 envolve a conclusão de etapas para executar um desligamento completo do nó e desconexão de energia para cada nó H610S descrito em um https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/H_Series/NetApp_H610S_storage_node_power_off_and_on_procedure["KB"^] necessário . Estima-se que essa fase leve aproximadamente uma hora por nó de H610S.
+
+
+IMPORTANT: Depois de concluir a fase 1, quatro das cinco atualizações de firmware são ativadas durante a inicialização a frio em cada nó H610S; no entanto, o firmware do dispositivo lógico programável complexo (CPLD) requer uma desconexão completa de energia e reconexão para instalação completa. A atualização de firmware CPLD protege contra falhas NVDIMM e despejo de unidade de metadados durante futuras reinicializações ou ciclos de energia. Estima-se que essa reinicialização de energia leve aproximadamente uma hora por nó H610S. Isso requer o desligamento do nó, a remoção de cabos de alimentação ou a desconexão de energia através de uma PDU inteligente, aguardando aproximadamente 3 minutos e reconetando a energia.
+
+.Antes de começar
+* Você concluiu a fase 1 do processo de atualização de H610S e atualizou seus nós de storage usando um dos procedimentos padrão de atualização de storage Element.
+
+
+
+NOTE: A fase 2 requer pessoal no local.
+
+.Passos
+. (Fase 2) conclua o processo de redefinição de energia necessário para cada nó H610S no cluster:
+
+
+
+NOTE: Se o cluster também tiver nós não H610S, esses nós não H610S estarão isentos da fase 2 e não precisarão ser desligados ou ter sua energia desconetada.
+
+. Entre em Contato com o suporte da NetApp para obter assistência e agendar esta atualização.
+. Siga o procedimento de atualização da fase 2 neste https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/H_Series/NetApp_H610S_storage_node_power_off_and_on_procedure["KB"^] que é necessário para concluir uma atualização para cada nó H610S.
+
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

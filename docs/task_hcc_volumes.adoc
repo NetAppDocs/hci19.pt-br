@@ -1,0 +1,84 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hcc_volumes.html 
+summary: Você pode monitorar volumes no sistema usando a página volumes do Hybrid Cloud Control. 
+keywords: netapp, hci, on premise, volumes, storage, access groups, initiators, capacity, data protection, QoS 
+---
+= Monitore volumes no cluster de storage
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+O sistema SolidFire provisiona o storage usando volumes. Os volumes são dispositivos de bloco acessados pela rede por clientes iSCSI ou Fibre Channel. Você pode monitorar detalhes sobre grupos de acesso, contas, iniciadores, capacidade usada, status de proteção de dados Snapshot, número de sessões iSCSI e política de qualidade do serviço (QoS) associada ao volume.
+
+Você também pode ver detalhes sobre volumes ativos e excluídos.
+
+Com essa exibição, você pode primeiro querer monitorar a coluna capacidade usada.
+
+Você só poderá acessar essas informações se tiver o Privileges administrativo do Controle de nuvem híbrida da NetApp.
+
+.Passos
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web. Por exemplo:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage da NetApp HCI.
+. Na caixa azul de navegação à esquerda, selecione a instalação do NetApp HCI.
++
+O dashboard de controle da nuvem híbrida é exibido.
+
+. Na navegação à esquerda, selecione o cluster e selecione *Storage* > *volumes*.
++
+image::hcc_volumes_overview_active.png[Página volumes HCC > imagem do separador Visão geral]
+
+. Na página volumes, use as seguintes opções:
++
+image::hcc_volumes_icons.png[Ícones da página volumes HCC]
+
++
+.. Filtre os resultados clicando no ícone *filtro*.
+.. Ocultar ou mostrar colunas clicando no ícone *Ocultar/Mostrar*.
+.. Atualize os dados clicando no ícone *Refresh*.
+.. Faça o download de um arquivo CSV clicando no ícone *Download*.
+
+
+. Monitore a coluna capacidade usada. Se os limites de aviso, erro ou crítico forem atingidos, a cor representa o status da capacidade usada:
++
+.. Aviso - Amarelo
+.. Erro - Laranja
+.. Crítico - Vermelho
+
+
+. Na visualização volumes, clique nas guias para ver detalhes adicionais sobre os volumes:
++
+.. *Grupos de acesso*: Você pode ver os grupos de acesso de volume que são mapeados de iniciadores para uma coleção de volumes para acesso seguro.
++
+Consulte informações sobre link:concept_hci_volume_access_groups.html["grupos de acesso de volume"]o .
+
+.. * Contas*: Você pode ver as contas de usuário, que permitem que os clientes se conetem a volumes em um nó. Quando você cria um volume, ele é atribuído a uma conta de usuário específica.
++
+Consulte informações sobre link:concept_cg_hci_accounts.html["Contas de usuário do NetApp HCI"]o .
+
+.. *Iniciadores*: Você pode ver o iniciador iSCSI IQN ou WWPNs Fibre Channel para o volume. Cada IQN adicionado a um grupo de acesso pode acessar cada volume no grupo sem exigir autenticação CHAP. Cada WWPN adicionado a um grupo de acesso permite o acesso à rede Fibre Channel aos volumes no grupo de acesso.
+.. *Políticas de QoS*: Você pode ver a política de QoS aplicada ao volume. Uma política de QoS aplica configurações padronizadas para IOPS mínimo, IOPS máximo e IOPS bursting a vários volumes.
++
+Consulte informações sobre link:concept_hci_performance#qos-performance.html["Políticas de performance e QoS"]o .
+
+
+
+
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/element-software/index.html["Documentação do SolidFire e do Element"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

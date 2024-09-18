@@ -1,0 +1,423 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hcc_upgrade_element_prechecks.html 
+summary: Como parte de uma atualização do sistema NetApp HCI, você precisa executar verificações de integridade do software NetApp Element. 
+keywords: netapp, storage prechecks, element upgrade, healthtools, sfupgradecheck 
+---
+= Execute verificações de integridade do storage Element antes de atualizar o storage
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você deve executar verificações de integridade antes de atualizar o storage Element para garantir que todos os nós de storage no cluster estejam prontos para a próxima atualização de storage Element.
+
+.O que você vai precisar
+* *Serviços de gerenciamento*: Você atualizou para o pacote de serviços de gerenciamento mais recente (2.10.27 ou posterior).
++
+
+IMPORTANT: Você deve atualizar para o pacote de serviços de gerenciamento mais recente antes de atualizar o software Element.
+
+* *Nó de gerenciamento*: Você está executando o nó de gerenciamento 11,3 ou posterior.
+* *Software Element*: A versão do cluster está executando o software NetApp Element 11,3 ou posterior.
+* *Contrato de Licença de Usuário final (EULA)*: Começando com os serviços de gerenciamento 2.20.69, você deve aceitar e salvar o EULA antes de usar a IU ou API de Controle de nuvem híbrida da NetApp para executar verificações de integridade do armazenamento de elementos:
++
+.. Abra o endereço IP do nó de gerenciamento em um navegador da Web:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+.. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage.
+.. Selecione *Upgrade* perto do canto superior direito da interface.
+.. O EULA aparece. Role para baixo, selecione *Aceito para atualizações atuais e futuras* e selecione *Salvar*.
+
+
+
+
+.Opções de verificação de integridade
+Você pode executar verificações de integridade usando a IU do Controle de nuvem híbrida (HCC) da NetApp, a API HCC ou o pacote HealthTools:
+
+* <<Use o controle de nuvem híbrida da NetApp para executar verificações de integridade do storage Element antes de atualizar o storage>> (Método preferido)
+* <<Use a API para executar verificações de integridade do storage Element antes de atualizar o storage>>
+* <<Use o HealthTools para executar verificações de integridade do storage Element antes de atualizar o armazenamento>>
+
+
+Você também pode saber mais sobre as verificações de integridade do storage executadas pelo serviço:
+
+* <<Verificações de integridade do armazenamento feitas pelo serviço>>
+
+
+
+
+== Use o controle de nuvem híbrida da NetApp para executar verificações de integridade do storage Element antes de atualizar o storage
+
+Com o Controle de nuvem híbrida (HCC) da NetApp, você pode verificar se um cluster de storage está pronto para ser atualizado.
+
+.Passos
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage.
+. Selecione *Upgrade* perto do canto superior direito da interface.
+. Na página *Upgrades*, selecione a guia *Storage*.
+. Selecione a verificação de integridade image:hcc_healthcheck_icon.png["ícone"]do cluster que deseja verificar se há disponibilidade de atualização.
+. Na página *Verificação do estado do armazenamento*, selecione *Executar Verificação do estado*.
+. Se houver problemas, faça o seguinte:
++
+.. Vá para o artigo específico da KB listado para cada problema ou execute o recurso especificado.
+.. Se um KB for especificado, conclua o processo descrito no artigo da KB relevante.
+.. Depois de resolver problemas de cluster, selecione *Re-Run Health Check*.
+
+
+
+
+Depois que a verificação de integridade for concluída sem erros, o cluster de armazenamento estará pronto para ser atualizado. Consulte a atualização do nó de storage link:task_hcc_upgrade_element_software.html["instruções"]para continuar.
+
+
+
+== Use a API para executar verificações de integridade do storage Element antes de atualizar o storage
+
+Você pode usar a API REST para verificar se um cluster de storage está pronto para ser atualizado. A verificação de integridade verifica se não há obstáculos na atualização, como nós pendentes, problemas de espaço em disco e falhas de cluster.
+
+.Passos
+. Localize a ID do cluster de armazenamento:
++
+.. Abra a IU da API REST do nó de gerenciamento no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/mnode
+----
+.. Selecione *autorizar* e preencha o seguinte:
++
+... Introduza o nome de utilizador e a palavra-passe do cluster.
+... Introduza a ID do cliente como `mnode-client` se o valor ainda não estivesse preenchido.
+... Selecione *autorizar* para iniciar uma sessão.
+... Feche a janela autorização.
+
+
+.. Na IU da API REST, `GET /assets`selecione .
+.. Selecione *Experimente*.
+.. Selecione *Executar*.
+.. A partir da resposta, copie o `"id"` da `"storage"` seção do cluster que você pretende verificar a disponibilidade da atualização.
++
+
+NOTE: Não use o `"parent"` valor nesta seção porque esta é a ID do nó de gerenciamento, não a ID do cluster de armazenamento.
+
++
+[listing, subs="+quotes"]
+----
+"config": {},
+"credentialid": "12bbb2b2-f1be-123b-1234-12c3d4bc123e",
+"host_name": "SF_DEMO",
+*"id": "12cc3a45-e6e7-8d91-a2bb-0bdb3456b789",*
+"ip": "10.123.12.12",
+"parent": "d123ec42-456e-8912-ad3e-4bd56f4a789a",
+"sshcredentialid": null,
+"ssl_certificate": null
+----
+
+
+. Execute verificações de integridade no cluster de armazenamento:
++
+.. Abra a IU da API REST de storage no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/storage/1/
+----
+.. Selecione *autorizar* e preencha o seguinte:
++
+... Introduza o nome de utilizador e a palavra-passe do cluster.
+... Introduza a ID do cliente como `mnode-client` se o valor ainda não estivesse preenchido.
+... Selecione *autorizar* para iniciar uma sessão.
+... Feche a janela autorização.
+
+
+.. Selecione *POST /Health-checks*.
+.. Selecione *Experimente*.
+.. No campo Parameter (parâmetro), introduza a ID do cluster de armazenamento obtida no passo 1.
++
+[listing]
+----
+{
+  "config": {},
+  "storageId": "123a45b6-1a2b-12a3-1234-1a2b34c567d8"
+}
+----
+.. Selecione *execute* para executar uma verificação de integridade no cluster de armazenamento especificado.
++
+A resposta deve indicar o estado `initializing`:
+
++
+[listing]
+----
+{
+  "_links": {
+    "collection": "https://10.117.149.231/storage/1/health-checks",
+    "log": "https://10.117.149.231/storage/1/health-checks/358f073f-896e-4751-ab7b-ccbb5f61f9fc/log",
+    "self": "https://10.117.149.231/storage/1/health-checks/358f073f-896e-4751-ab7b-ccbb5f61f9fc"
+  },
+  "config": {},
+  "dateCompleted": null,
+  "dateCreated": "2020-02-21T22:11:15.476937+00:00",
+  "healthCheckId": "358f073f-896e-4751-ab7b-ccbb5f61f9fc",
+  "state": "initializing",
+  "status": null,
+  "storageId": "c6d124b2-396a-4417-8a47-df10d647f4ab",
+  "taskId": "73f4df64-bda5-42c1-9074-b4e7843dbb77"
+}
+----
+.. Copie `healthCheckID` o que faz parte da resposta.
+
+
+. Verificar os resultados das verificações de saúde:
++
+.. Selecione *GET ​/health-checks​/(healthCheckId)*.
+.. Selecione *Experimente*.
+.. Introduza a ID da verificação de integridade no campo parâmetro.
+.. Selecione *Executar*.
+.. Role até a parte inferior do corpo de resposta.
++
+Se todas as verificações de integridade forem bem-sucedidas, o retorno será semelhante ao seguinte exemplo:
+
++
+[listing]
+----
+"message": "All checks completed successfully.",
+"percent": 100,
+"timestamp": "2020-03-06T00:03:16.321621Z"
+----
+
+
+. Se o `message` retorno indicar que houve problemas em relação à integridade do cluster, faça o seguinte:
++
+.. Selecione *GET ​/health-checks​/(healthCheckId/log*
+.. Selecione *Experimente*.
+.. Introduza a ID da verificação de integridade no campo parâmetro.
+.. Selecione *Executar*.
+.. Revise quaisquer erros específicos e obtenha os links de artigos da KB associados.
+.. Vá para o artigo específico da KB listado para cada problema ou execute o recurso especificado.
+.. Se um KB for especificado, conclua o processo descrito no artigo da KB relevante.
+.. Depois de resolver problemas de cluster, execute *GET ​/Health-checks​//log* novamente.
+
+
+
+
+
+
+== Use o HealthTools para executar verificações de integridade do storage Element antes de atualizar o armazenamento
+
+Você pode verificar se o cluster de armazenamento está pronto para ser atualizado usando o `sfupgradecheck` comando. Este comando verifica informações como nós pendentes, espaço em disco e falhas de cluster.
+
+Se o nó de gerenciamento estiver em um local escuro sem conetividade externa, a verificação de prontidão de atualização precisará do `metadata.json` arquivo que você baixou durante link:task_upgrade_element_latest_healthtools.html["Atualizações do HealthTools"] para ser executado com êxito.
+
+.Sobre esta tarefa
+Este procedimento descreve como lidar com verificações de atualização que produzem um dos seguintes resultados:
+
+* Executar o `sfupgradecheck` comando é executado com sucesso. O cluster está pronto para atualização.
+* Verificações dentro da `sfupgradecheck` ferramenta falham com uma mensagem de erro. Seu cluster não está pronto para atualização e etapas adicionais são necessárias.
+* Sua verificação de atualização falha com uma mensagem de erro informando que o HealthTools está desatualizado.
+* Sua verificação de atualização falha porque seu nó de gerenciamento está em um site escuro.
+
+
+.Passos
+. Execute o `sfupgradecheck` comando:
++
+[listing]
+----
+sfupgradecheck -u <cluster-user-name> MVIP
+----
++
+
+NOTE: Para senhas que contêm carateres especiais, adicione uma barra invertida (`\`) antes de cada caractere especial. Por exemplo, `mypass!@1` deve ser introduzido como `mypass\!\@`.
+
++
+Comando de entrada de amostra com saída de amostra no qual não aparecem erros e você está pronto para atualizar:
+
++
+[listing]
+----
+sfupgradecheck -u admin 10.117.78.244
+----
++
+[listing]
+----
+check_pending_nodes:
+Test Description: Verify no pending nodes in cluster
+More information: https://kb.netapp.com/support/s/article/ka11A0000008ltOQAQ/pendingnodes
+check_cluster_faults:
+Test Description: Report any cluster faults
+check_root_disk_space:
+Test Description: Verify node root directory has at least 12 GBs of available disk space
+Passed node IDs: 1, 2, 3
+More information: https://kb.netapp.com/support/s/article/ka11A0000008ltTQAQ/
+SolidFire-Disk-space-error
+check_mnode_connectivity:
+Test Description: Verify storage nodes can communicate with management node
+Passed node IDs: 1, 2, 3
+More information: https://kb.netapp.com/support/s/article/ka11A0000008ltYQAQ/mNodeconnectivity
+check_files:
+Test Description: Verify options file exists
+Passed node IDs: 1, 2, 3
+check_cores:
+Test Description: Verify no core or dump files exists
+Passed node IDs: 1, 2, 3
+check_upload_speed:
+Test Description: Measure the upload speed between the storage node and the
+management node
+Node ID: 1 Upload speed: 90063.90 KBs/sec
+Node ID: 3 Upload speed: 106511.44 KBs/sec
+Node ID: 2 Upload speed: 85038.75 KBs/sec
+----
+. Se houver erros, ações adicionais são necessárias. Consulte as subseções a seguir para obter detalhes.
+
+
+
+
+=== O cluster não está pronto para atualização
+
+Se você vir uma mensagem de erro relacionada a uma das verificações de integridade, siga estas etapas:
+
+. Reveja a `sfupgradecheck` mensagem de erro.
++
+Resposta da amostra:
+
+
+
+[listing]
+----
+The following tests failed:
+check_root_disk_space:
+Test Description: Verify node root directory has at least 12 GBs of available disk space
+Severity: ERROR
+Failed node IDs: 2
+Remedy: Remove unneeded files from root drive
+More information: https://kb.netapp.com/support/s/article/ka11A0000008ltTQAQ/SolidFire-
+Disk-space-error
+check_pending_nodes:
+Test Description: Verify no pending nodes in cluster
+More information: https://kb.netapp.com/support/s/article/ka11A0000008ltOQAQ/pendingnodes
+check_cluster_faults:
+Test Description: Report any cluster faults
+check_root_disk_space:
+Test Description: Verify node root directory has at least 12 GBs of available disk space
+Passed node IDs: 1, 3
+More information: https://kb.netapp.com/support/s/article/ka11A0000008ltTQAQ/SolidFire-
+Disk-space-error
+check_mnode_connectivity:
+Test Description: Verify storage nodes can communicate with management node
+Passed node IDs: 1, 2, 3
+More information: https://kb.netapp.com/support/s/article/ka11A0000008ltYQAQ/mNodeconnectivity
+check_files:
+Test Description: Verify options file exists
+Passed node IDs: 1, 2, 3
+check_cores:
+Test Description: Verify no core or dump files exists
+Passed node IDs: 1, 2, 3
+check_upload_speed:
+Test Description: Measure the upload speed between the storage node and the management node
+Node ID: 1 Upload speed: 86518.82 KBs/sec
+Node ID: 3 Upload speed: 84112.79 KBs/sec
+Node ID: 2 Upload speed: 93498.94 KBs/sec
+----
+Neste exemplo, o nó 1 está com pouco espaço em disco. Você pode encontrar mais informações no https://kb.netapp.com["base de conhecimento"^] artigo (KB) listado na mensagem de erro.
+
+
+
+=== HealthTools está desatualizado
+
+Se você vir uma mensagem de erro indicando que o HealthTools não é a versão mais recente, siga estas instruções:
+
+. Revise a mensagem de erro e observe que a verificação de atualização falha.
++
+Resposta da amostra:
+
++
+[listing]
+----
+sfupgradecheck failed: HealthTools is out of date:
+installed version: 2018.02.01.200
+latest version: 2020.03.01.09.
+The latest version of the HealthTools can be downloaded from: https://mysupport.netapp.com/NOW/cgi-bin/software/
+Or rerun with the -n option
+----
+. Siga as instruções descritas na resposta.
+
+
+
+
+=== Seu nó de gerenciamento está em um local escuro
+
+. Revise a mensagem e observe que a verificação de atualização falha:
++
+Resposta da amostra:
+
++
+[listing]
+----
+sfupgradecheck failed: Unable to verify latest available version of healthtools.
+----
+. Faça o download de um link:https://library.netapp.com/ecm/ecm_get_file/ECMLP2840740["Ficheiro JSON"^] do site de suporte da NetApp em um computador que não seja o nó de gerenciamento e renomeie-o para `metadata.json`.
+. Execute o seguinte comando:
++
+[listing]
+----
+sfupgradecheck -l --metadata=<path-to-metadata-json>
+----
+. Para obter detalhes, consulte link:task_upgrade_element_latest_healthtools.html["Atualizações do HealthTools"]informações adicionais para sites escuros.
+. Verifique se o pacote HealthTools está atualizado executando o seguinte comando:
++
+[listing]
+----
+sfupgradecheck -u <cluster-user-name> -p <cluster-password> MVIP
+----
+
+
+
+
+== Verificações de integridade do armazenamento feitas pelo serviço
+
+As verificações de integridade do armazenamento fazem as seguintes verificações por cluster.
+
+|===
+| Nome de verificação | Nó/cluster | Descrição 
+
+
+| check_async_results | Cluster | Verifica se o número de resultados assíncronos no banco de dados está abaixo de um número de limite. 
+
+
+| check_cluster_faults | Cluster | Verifica se não há falhas de cluster de bloqueio de atualização (conforme definido na fonte do elemento). 
+
+
+| check_upload_speed | Nó | Mede a velocidade de upload entre o nó de armazenamento e o nó de gerenciamento. 
+
+
+| connection_speed_check | Nó | Verifica se os nós têm conetividade com o nó de gerenciamento que serve pacotes de atualização e estima a velocidade da conexão. 
+
+
+| check_cores | Nó | Verifica o despejo de falhas do kernel e arquivos de núcleo no nó. A verificação falha para qualquer falha em um período de tempo recente (limite de 7 dias). 
+
+
+| check_root_disk_space | Nó | Verifica se o sistema de arquivos raiz tem espaço livre suficiente para executar uma atualização. 
+
+
+| check_var_log_disk_space | Nó | Verifica se `/var/log` o espaço livre atende a algum limite de porcentagem livre. Se não o fizer, a verificação irá rodar e purgar os registos mais antigos, de forma a ficar abaixo do limite. A verificação falha se não for bem sucedida em criar espaço livre suficiente. 
+
+
+| check_pending_nodes | Cluster | Verifica se não há nós pendentes no cluster. 
+|===
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

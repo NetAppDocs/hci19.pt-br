@@ -1,0 +1,46 @@
+---
+sidebar: sidebar 
+permalink: docs/hcc_inventory.html 
+summary: Você pode ver o inventário do seu sistema no Hybrid Cloud Control. 
+keywords: netapp, hci, hcc, on premise, inventory, hybrid cloud control 
+---
+= Veja seu inventário do NetApp HCI no controle de nuvem híbrida
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você pode visualizar o inventário do seu sistema NetApp HCI no controle de nuvem híbrida.
+
+
+
+== Passos
+
+. Vá para a https://fabric.netapp.io["Orquestrador de malha do NetApp"^] página Login.
+. Insira suas credenciais de login do Cloud Central e clique em *Login*.
++
+
+TIP: Se você não encontrar nenhum sistema listado, certifique-se de que o administrador do NetApp HCI seja adicionado à sua conta do NetApp Cloud Central.
+
+. Se você não tiver uma conta do Cloud Central, na página Login do Cloud Central, clique em *Inscrever-se*.
++
+Usando o Cloud Central, você pode configurar contas como contas individuais ou como contas federadas:
+
++
+.. Você pode criar uma nova conta com nome, e-mail e senha e, em seguida, você será logado.este é o tipo mais simples de conta.
+.. Se você fizer parte de uma organização federada do Cloud Central, digite seu e-mail e será encaminhado para o login da organização.
+
+
+. Em outros produtos Cloud Central, selecione *Produtos* > *orquestrador de malha NetApp*.
+
+
+[discrete]
+== Encontre mais informações
+
+* https://cloud.netapp.com/home["Centro de nuvem da NetApp"^]
+* https://docs.netapp.com/us-en/cloud/["Documentação da nuvem do NetApp"^]
+

@@ -1,0 +1,265 @@
+---
+sidebar: sidebar 
+permalink: docs/rn_storage_firmware_2.146.html 
+summary: Obtenha links para notas de lançamento dos pacotes de firmware que você pode baixar e aplicar aos nós do NetApp HCI. 
+keywords: netapp, hci, storage firmware 
+---
+= Notas de lançamento do pacote de firmware de armazenamento 2,146
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+A partir do Element 12,0 e dos serviços de gerenciamento versão 2,14, é possível fazer atualizações somente de firmware nos nós de storage usando a IU e a API REST do NetApp Hybrid Cloud Control. Esse procedimento não atualiza o software Element e permite que você atualize o firmware de storage fora de uma versão do elemento principal.
+
+
+
+== Novidades
+
+O pacote de firmware de armazenamento versão 2,146 contém várias correções de bugs e novos recursos, incluindo correções de vulnerabilidades de segurança. Pode atualizar o firmware de armazenamento utilizando as instruções em link:task_hcc_upgrade_storage_firmware.html["Atualize o firmware de armazenamento"].
+
+
+
+=== Componentes de firmware atualizados
+
+Este pacote de firmware contém as seguintes versões de firmware para componentes de hardware, com versões atualizadas em negrito:
+
+
+
+==== H610S
+
+|===
+| Componente | H610S 
+
+
+| BIOS | *3B11* 
+
+
+| BMC | *3.94.07* 
+
+
+| NIC / Mellanox | 14.25.1020 
+
+
+| NVIDIMM, Smart Gen1 | 3,1 
+
+
+| NVIDIMM, Smart Gen2 | *3,3* 
+
+
+| BPM, Smart Gen1 | 2,16 
+
+
+| BPM, Smart Gen2 | 2,16 
+
+
+| NVIDIMM, Micron Gen1 | 26.2c 
+
+
+| NVIDIMM, Micron Gen2 | 25.3c 
+
+
+| PGEM, mícron | 1,40 
+
+
+| PM963, SED | CXV8202Q 
+
+
+| PM963, N-SED | CXV8501Q 
+
+
+| PM983, SED | *EDA5602Q* 
+
+
+| PM983, N-SED | *EDA5900Q* 
+
+
+| *PM9A3, SED* | *GDC5502Q* 
+
+
+| CD5, SED | 0109 
+
+
+| CD5, N-SED | 0109 
+
+
+| CD5 TB, FIPS | 0108 
+
+
+| *PE8010, SED* | *11092A10* 
+
+
+| *PE8010, N-SED* | *110B2A10* 
+|===
+
+
+==== H410S
+
+|===
+| Componente | H410S 
+
+
+| BIOS | *NAT3.4* 
+
+
+| BMC | *6.98.00* 
+
+
+| NIC / Mellanox | 14.25.1020 
+
+
+| RMS200 | ae3b8cc 
+
+
+| RMS300 | 7d8422bc 
+
+
+| PM863, SED | GXT5404Q 
+
+
+| PM863, N-SED | GXT5103Q 
+
+
+| PM883, SED | *HXT7A04Q* 
+
+
+| Hawk-4, SED | 8ENP7101 
+
+
+| Hawk-4, N-seD | 8ENP6101 
+|===
+
+
+==== SF38410, SF19210, SF9605 e SF4805
+
+|===
+| Componente | SF38410, SF19210, SF9605 e SF4805 
+
+
+| NIC Broadcom | 7.10.18 
+
+
+| RMS200 | ae3b8cc 
+
+
+| RMS300 | 7d8422bc 
+
+
+| Adaptador SAS | 16.00.01.00 
+
+
+| PM863, SED | GXT5404Q 
+
+
+| PM863, N-SED | GXT5103Q 
+
+
+| PM883, SED | *HXT7A04Q* 
+
+
+| Hawk-4, SED | 8ENP7101 
+
+
+| Hawk-4, N-seD | 8ENP6101 
+|===
+
+NOTE: A tabela a seguir especifica as versões de firmware de componentes compatíveis nesta versão do pacote de firmware de armazenamento para SF38410, SFG19210, SF9605 e SF4805. No entanto, este firmware de componente não pode ser atualizado através do pacote de firmware de armazenamento.
+
+|===
+| Componente | SF38410, SF19210, SF9605 e SF4805 
+
+
+| BIOS | 2.8.0 
+
+
+| IDRAC | 2.75.75.75 
+|===
+
+
+== Alterações nos componentes de firmware de armazenamento
+
+|===
+| Componente | Melhoria/mudança 
+
+
+| *H610S 3B11*  a| 
+* Microcódigo IPU 2020,2
+* Registro aprimorado de eventos PPR no SEL
+* Desarmar NVDIMM e desativar ADR quando o UECC ocorre no NVDIMM
+* Relata o status DO NVDIMM ARM no log SEL
+
+
+
+
+| *H610S 3.94.07*  a| 
+* Suporte ao log NVDIMM adicionado na WebUI
+* Análise de log de eventos PPR do BIOS no BMC SEL
+
+
+
+
+| *H410S NA3,4*  a| 
+* Ativar reparação pós-pacote (PPR)
+* Microcódigo IPU 2020,2
+
+
+
+
+| *H410S 6.98.00*  a| 
+* Comprimento do campo ID de VINCULAÇÃO LDAP a 128 carateres
+* Desative o TLS 1,0 e o TLS 1,1
+
+
+|===
+
+
+== Problemas resolvidos e conhecidos
+
+Consulte o https://mysupport.netapp.com/site/bugs-online/product["Ferramenta Bugs Online"^] para obter detalhes sobre os problemas que foram resolvidos e sobre quaisquer problemas novos.
+
+
+
+=== Acessando a ferramenta Bugs Online
+
+. Navegue até o  https://mysupport.netapp.com/site/bugs-online/product["Ferramenta Bugs Online"^] e selecione *Element Software* na lista suspensa:
++
+image::bol_dashboard.png[Notas de lançamento do pacote de firmware de armazenamento]
+
+. No campo de pesquisa de palavra-chave, digite "Storage firmware Bundle" e clique em *New Search*:
++
+image::storage_firmware_bundle_choice.png[Notas de lançamento do pacote de firmware de armazenamento]
+
+. Uma lista de bugs resolvidos ou abertos é exibida. Você pode refinar ainda mais os resultados, conforme mostrado:
++
+image::bol_list_bugs_found.png[Notas de lançamento do pacote de firmware de armazenamento]
+
+
+
+
+
+== Vulnerabilidades de segurança resolvidas
+
+A seguir estão vulnerabilidades de segurança que foram resolvidas nesta versão:
+
+* CVE-2021-23840, CVE-2021-23841
+* CVE-2021-20265
+* CVE-2021-29650
+* CVE-2020-14386, CVE-2020-14314, CVE-2020-25641
+* CVE-2020-35508, CVE-2020-36312
+* CVE-2020-20811, CVE-2020-20812
+* CVE-2020-15436
+* CVE-2020-29372
+* CVE-2019-0151, CVE-2019-0123, CVE-2019-0117
+
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/hci/index.jsp["Centro de Documentação do NetApp HCI"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* https://kb.netapp.com/Advice_and_Troubleshooting/Flash_Storage/SF_Series/How_to_update_iDRAC%2F%2FBIOS_firmware_on_SF_Series_nodes["KB: Como atualizar o firmware iDRAC/BIOS em nós da série SF"^]
+

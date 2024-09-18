@@ -1,0 +1,40 @@
+---
+sidebar: sidebar 
+permalink: docs/concept_nde_access_overview.html 
+summary: Acesse o mecanismo de implantação do NetApp antes de implantar o NetApp HCI usando um de vários métodos, dependendo do ambiente. 
+keywords: netapp, hci, netapp deployment engine, deployment, engine, deploy, access, vcp, element, management services, firmware 
+---
+= Visão geral das opções de acesso ao mecanismo de implantação do NetApp
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Para implantar o NetApp HCI, você precisa acessar o mecanismo de implantação do NetApp em um dos nós de storage da NetApp série H por meio do endereço IPv4 atribuído à interface Bond1G, que é a interface lógica que combina as portas A e B para nós de storage. Esse nó de storage se torna o nó de storage de controle para o processo de implantação. Dependendo do seu ambiente, você precisa configurar o endereço IPv4 ou recuperá-lo de um dos nós de storage.
+
+
+NOTE: Você só pode acessar o mecanismo de implantação do NetApp usando a interface Bond1G de um nó de storage. Usando a interface Bond10G, a interface lógica que combina as portas C e D para nós de storage não é suportada.
+
+Use um dos seguintes métodos que melhor descreve seu ambiente de rede para acessar o mecanismo de implantação do NetApp:
+
+|===
+| Cenário | Método 
+
+
+| Você não tem DHCP em seu ambiente | link:task_nde_access_no_dhcp.html["Acesse o mecanismo de implantação do NetApp em ambientes sem DHCP"] 
+
+
+| Você tem DHCP em seu ambiente | link:task_nde_access_dhcp.html["Acesse o mecanismo de implantação do NetApp em ambientes com DHCP"] 
+
+
+| Você deseja atribuir todos os endereços IP manualmente | link:task_nde_access_manual_ip.html["Atribua manualmente endereços IP para acessar o mecanismo de implantação do NetApp"] 
+|===
+[discrete]
+== Encontre mais informações
+
+* link:task_nde_access_ui_fqdn.html["Configure o acesso totalmente qualificado à IU da Web do Domain Name"^]
+

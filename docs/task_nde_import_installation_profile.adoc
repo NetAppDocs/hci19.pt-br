@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: docs/task_nde_import_installation_profile.html 
+summary: Saiba como importar um perfil de instalação do NetApp HCI que permitirá que o NetApp HCI preencha automaticamente os campos do assistente do mecanismo de implantação do NetApp. 
+keywords: netapp, hci, deployment, compatibility, nodes, installation, profile, import, settings, auto, fill 
+---
+= Importar um perfil de instalação
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Se você obteve a saída do perfil do NetApp https://configbuilder.netapp.com/["ConfigBuilder"^] para sua instalação, você pode importá-la durante o processo de instalação do NetApp HCI para preencher automaticamente os campos no mecanismo de implantação do NetApp. Este é um passo opcional.
+
+.Sobre esta tarefa
+Se você importar um perfil de instalação, ainda precisará inserir credenciais para que o NetApp HCI use na página *credenciais* do mecanismo de implantação do NetApp.
+
+
+NOTE: Se os campos no perfil de instalação forem deixados em branco ou inseridos incorretamente, talvez seja necessário inserir ou corrigir manualmente as informações nas páginas do mecanismo de implantação do NetApp. Se precisar adicionar ou corrigir informações, certifique-se de atualizar as informações nos seus registos e no perfil de instalação.
+
+.Importar um perfil
+. Na página *Perfil de Instalação*, clique em *Procurar* para pesquisar e carregar o seu perfil de instalação.
+. Na caixa de diálogo de arquivo, selecione e abra o arquivo JSON de perfil.
+. Depois que o perfil for importado com sucesso, clique em *continuar*.
++
+Você pode percorrer cada página do mecanismo de implantação do NetApp e verificar as configurações importadas do perfil de instalação.
+
+
+
+.Continue sem importar um perfil
+. Para ignorar a etapa de importação, na página *Perfil de Instalação*, clique em *continuar*.
+
+
+
+
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+

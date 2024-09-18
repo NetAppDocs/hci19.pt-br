@@ -1,0 +1,43 @@
+---
+sidebar: sidebar 
+permalink: docs/concept_hci_volumes.html 
+summary: Um volume 
+keywords: netapp, hci, storage volume, solidfire volume, element volume, persistent volume 
+---
+= Volumes
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+O storage é provisionado no sistema NetApp Element como volumes. Os volumes são dispositivos de bloco acessados pela rede usando clientes iSCSI ou Fibre Channel.
+
+O plug-in do NetApp Element para vCenter Server permite criar, exibir, editar, excluir, clonar, fazer backup ou restaurar volumes para contas de usuário. Você também pode gerenciar cada volume em um cluster e adicionar ou remover volumes em grupos de acesso de volume.
+
+
+
+== Volumes persistentes
+
+Os volumes persistentes permitem que os dados de configuração do nó de gerenciamento sejam armazenados em um cluster de storage especificado, em vez de localmente com uma VM, para que os dados possam ser preservados em caso de perda ou remoção do nó de gerenciamento. Volumes persistentes são uma configuração de nó de gerenciamento opcional, mas recomendada.
+
+Se você estiver implantando um nó de gerenciamento para o NetApp HCI usando o mecanismo de implantação do NetApp, os volumes persistentes serão ativados e configurados automaticamente.
+
+Uma opção para ativar volumes persistentes está incluída nos scripts de instalação e atualização ao implantar um novo nó de gerenciamento. Os volumes persistentes são volumes em um cluster de storage baseado em software Element que contém informações de configuração de nó de gerenciamento para a VM do nó de gerenciamento de host que permanecem além da vida útil da VM. Se o nó de gerenciamento for perdido, uma VM de nó de gerenciamento de substituição poderá se reconetar e recuperar dados de configuração da VM perdida.
+
+A funcionalidade de volumes persistentes, se ativada durante a instalação ou atualização, cria automaticamente vários volumes com o NetApp-HCI- previamente anexado ao nome no cluster atribuído. Esses volumes, como qualquer volume baseado no software Element, podem ser visualizados usando a interface da Web do software Element, o plug-in do NetApp Element para vCenter Server ou a API, dependendo de sua preferência e instalação. Os volumes persistentes devem estar ativos e em execução com uma conexão iSCSI ao nó de gerenciamento para manter os dados de configuração atuais que podem ser usados para recuperação.
+
+
+NOTE: Volumes persistentes associados a serviços de gerenciamento são criados e atribuídos a uma nova conta durante a instalação ou atualização. Se você estiver usando volumes persistentes, não modifique ou exclua os volumes ou a conta associada
+
+
+
+== Encontre mais informações
+
+* link:task_hcc_manage_vol_management.html["Gerenciar volumes"]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* http://docs.netapp.com/sfe-122/index.jsp["Centro de Documentação de Software SolidFire e Element"^]
+

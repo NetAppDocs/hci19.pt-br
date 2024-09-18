@@ -1,0 +1,79 @@
+---
+sidebar: sidebar 
+permalink: docs/hci_prereqs_network_configuration_option_B.html 
+summary: Saiba mais sobre a opção de configuração de rede NetApp HCI B. 
+keywords: netapp, hci, cabling, network configuration 
+---
+= Configuração de rede
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+O NetApp HCI pode utilizar várias configurações de cabeamento de rede e VLAN diferentes. A primeira configuração, opção B, usa seis cabos de rede para cada nó de computação.
+
+
+
+== Opção de configuração B: Seis cabos para nós de computação
+
+Como uma opção de configuração de rede secundária, os nós de computação do H410C suportam o uso de seis cabos de rede para conetividade a todas as redes NetApp HCI. Essa configuração requer que o armazenamento, o vMotion e qualquer rede de máquinas virtuais usem a marcação VLAN. Você pode usar essa configuração com os switches vSphere Standard ou os switches distribuídos vSphere (que exigem o licenciamento do VMware vSphere Enterprise Plus).
+
+A documentação do NetApp HCI usa letras para se referir às portas de rede no painel traseiro dos nós da série H.
+
+Aqui estão as portas de rede e os locais no nó de computação H410C:
+
+[#H35700E_H410C]
+image::HCI_ISI_compute_6cable.png[Portas de rede de nós de computação NetApp H410C]
+
+
+
+=== Configuração VLAN
+
+Quando você implantar nós de computação usando seis cabos e nós de storage usando quatro cabos, como prática recomendada, você deve configurar os segmentos de rede necessários em todas as portas de switch que os nós estão usando. Por exemplo:
+
+|===
+| Nome da rede | ID DA VLAN | Configuração da porta do switch 
+
+
+| Gerenciamento | 100 | Nativo 
+
+
+| Armazenamento | 105 | Marcado 
+
+
+| VMotion | 107 | Marcado 
+
+
+| Máquinas virtuais | 200, 201 | Marcado 
+|===
+A ilustração a seguir mostra a configuração de cabeamento recomendada para nós de computação de seis cabos e nós de storage de quatro cabos. Todas as portas de switch neste exemplo compartilham a mesma configuração.
+
+image::hci_networking_config_scenario_2.png[Imagem da opção B de configuração de rede HCI]
+
+
+
+=== Exemplo de comandos do switch
+
+Você pode usar os seguintes comandos de exemplo para configurar todas as portas de switch usadas para nós de NetApp HCI. Esses comandos são baseados em uma configuração Cisco, mas podem exigir apenas pequenas alterações para serem aplicadas aos switches Mellanox. Consulte a documentação do switch para obter os comandos específicos necessários para implementar esta configuração. Substitua o nome da interface, a descrição e as VLANs pelos valores do ambiente.
+
+`interface {interface name, such as EthernetX/Y or GigabitEthernetX/Y/Z}`
+`description {desired description, such as NetApp-HCI-NodeX-PortY}`
+`mtu 9216`
+`switchport mode trunk`
+`switchport trunk native vlan 100`
+`switchport trunk allowed vlan 105,107,200,201`
+`spanning-tree port type edge trunk`
+
+
+NOTE: Alguns switches podem exigir a inclusão da VLAN nativa na lista de VLAN permitida. Consulte a documentação para o modelo de switch específico e a versão de software.
+
+[discrete]
+== Encontre mais informações
+
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+

@@ -1,0 +1,58 @@
+---
+sidebar: sidebar 
+permalink: docs/task_nde_disable_lacp_individual.html 
+summary: 'Saiba como desativar o `lacp-individual` comando em switches configurados depois de implantar o NetApp HCI.' 
+keywords: netapp, hci, deployment, review, deploy 
+---
+= Desative o comando "lacp-Individual" em switches configurados
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Por padrão, o comando Mellanox switch `lacp-individual` e o comando Cisco switch `lacp suspend-individual` permanecem configurados após a implantação. Este comando não é necessário após a instalação; se ele permanecer configurado, ele pode causar problemas de acesso ao volume ao solucionar problemas ou reiniciar um switch. Após a implantação, você deve verificar cada configuração do switch Mellanox e do switch Cisco e remover o `lacp-individual` comando ou `lacp suspend-individual`.
+
+.Passos
+. Usando SSH, abra uma sessão para o switch.
+. Mostrar a configuração em execução:
++
+`show running-config`
+
+. Verifique a saída de configuração do interrutor para o `lacp-individual` comando ou `lacp suspend-individual`.
++
+
+NOTE:  `xxx-xxx`O é o(s) número(s) de interface fornecido(s) pelo utilizador. Se necessário, você pode acessar o número da interface exibindo as interfaces do Grupo de agregação de links de vários gabinetes: `show mlag interfaces`
+
++
+.. Para um comutador Mellanox, verifique se a saída contém a seguinte linha:
++
+`interface mlag-port-channel xxx-xxx lacp-individual enable force`
+
+.. Para um switch Cisco, verifique se a saída contém a seguinte linha:
++
+`interface mlag-port-channel xxx-xxx lacp suspend-individual enable force`
+
+
+
+. Se o comando estiver presente, retirá-lo da configuração.
++
+.. Para um switch Mellanox:
++
+`no interface mlag-port-channel xxx-xxx lacp-individual enable force`
+
+.. Para um switch Cisco:
+`no interface mlag-port-channel xxx-xxx lacp suspend-individual enable force`
+
+
+. Repita estas etapas para cada switch em sua configuração.
+
+
+[discrete]
+== Encontre mais informações
+
+* https://kb.netapp.com/Advice_and_Troubleshooting/Flash_Storage/SF_Series/SolidFire_Bond10G_goes_down_when_flapping_an_interface_during_troubleshooting["O nó de storage cai durante a solução de problemas"^]
+

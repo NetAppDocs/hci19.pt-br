@@ -1,0 +1,50 @@
+---
+sidebar: sidebar 
+permalink: docs/task_mnode_remove_assets.html 
+summary: Saiba como remover ativos de nós de computação do seu sistema usando a API REST. 
+keywords: netapp, hci, api, REST, remove, compute, asset 
+---
+= Remova um ativo do nó de gerenciamento
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Se você substituir fisicamente um nó de computação ou precisar removê-lo do cluster do NetApp HCI, remova o ativo do nó de computação usando as APIs do nó de gerenciamento.
+
+.O que você vai precisar
+* O cluster de storage está executando o software NetApp Element 11,3 ou posterior.
+* Você implantou um nó de gerenciamento executando a versão 11,3 ou posterior.
+
+
+.Passos
+. Introduza o endereço IP do nó de gestão seguido de `/mnode/1/`:
++
+[listing]
+----
+https://<ManagementNodeIP>/mnode/1/
+----
+. Clique em *autorizar* ou em qualquer ícone de bloqueio e insira credenciais de administrador de cluster para obter permissões para usar APIs.
++
+.. Introduza o nome de utilizador e a palavra-passe do cluster.
+.. Selecione *corpo do pedido* na lista suspensa tipo se o valor ainda não estiver selecionado.
+.. Introduza a ID do cliente como `mnode-client` se o valor ainda não estivesse preenchido.
+.. Não insira um valor para o segredo do cliente.
+.. Clique em *autorizar* para iniciar uma sessão.
+.. Feche a janela.
+
+
+. Feche a caixa de diálogo *autorizações disponíveis*.
+. Clique em *GET/Assets*.
+. Clique em *Experimente*.
+. Clique em *Executar*.
+. Role para baixo no corpo da resposta até a seção *Compute* e copie os `parent` valores e `id` para o nó de computação com falha.
+. Clique em *DELETE/assets/(Asset_id)/Compute-nonos/(Compute_id)*.
+. Clique em *Experimente*.
+. Introduza os `parent` valores e `id` que copiou numa etapa anterior.
+. Clique em *Executar*.
+

@@ -1,0 +1,32 @@
+---
+sidebar: sidebar 
+permalink: docs/firmware_driver_versions.html 
+keywords: documentation, earlier, previous, versions 
+summary: Versões de firmware e driver suportadas no software NetApp HCI e NetApp Element. 
+---
+= Versões de firmware e driver ESXi compatíveis para versões de NetApp HCI e firmware para nós de storage NetApp HCI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:keywords: hci, earlier, documentation, versions
+
+
+[role="lead"]
+Versões de firmware e driver ESXi compatíveis para versões de NetApp HCI e firmware para nós de storage NetApp HCI.
+
+link:fw_storage_nodes.html["Nós de storage"]
+
+* H610S
+* H410S
+
+
+link:fw_compute_nodes.html["Nós de computação"]
+
+* H615C
+* H610C
+* H410C
+* H300E/H500E/H700E
+

@@ -1,0 +1,60 @@
+---
+sidebar: sidebar 
+permalink: docs/hci_prereqs_network_switch.html 
+summary: Saiba o que há de novo nesta versão do NetApp HCI. 
+keywords: netapp, hci, network, switch, requirements 
+---
+= Requisitos de rede e switch
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Os switches que você usa para NetApp HCI exigem configuração específica para garantir uma implantação bem-sucedida. Consulte a documentação do switch para obter instruções específicas sobre a implementação de cada um dos seguintes requisitos para o seu ambiente.
+
+Uma implantação do NetApp HCI requer pelo menos três segmentos de rede, um para cada um dos seguintes tipos de tráfego:
+
+* Gerenciamento
+* VMware vMotion
+* Armazenamento/dados
+
+
+Dependendo dos modelos de nós de computação e armazenamento da série H da NetApp e da configuração de cabeamento planejada, você pode separar fisicamente essas redes usando switches separados ou separá-las logicamente usando VLANs. No entanto, para a maioria das implantações, você precisa separar logicamente essas redes (e quaisquer outras redes de máquinas virtuais adicionais) usando VLANs.
+
+Os nós de computação e storage precisam ser capazes de se comunicar antes, durante e após a implantação. Se você estiver implementando redes de gerenciamento separadas para nós de storage e computação, certifique-se de que essas redes de gerenciamento tenham rotas de rede entre elas. Essas redes devem ter gateways atribuídos e deve haver uma rota entre os gateways. Certifique-se de que cada novo nó tenha um gateway atribuído para facilitar a comunicação entre nós e redes de gerenciamento.
+
+O NetApp HCI tem os seguintes requisitos de switch:
+
+* Todas as portas do switch conetadas aos nós do NetApp HCI devem ser configuradas como portas de borda da árvore de abrangência.
++
+** Nos switches Cisco, dependendo do modelo do switch, versão do software e tipo de porta, você pode fazer isso com um dos seguintes comandos:
++
+*** `spanning-tree port type edge`
+*** `spanning-tree port type edge trunk`
+*** `spanning-tree portfast`
+*** `spanning-tree portfast trunk`
+
+
+** Nos switches Mellanox, você pode fazer isso com o `spanning-tree port type edge` comando.
+
+
+* Os nós de NetApp HCI têm portas redundantes para todas as funções de rede, exceto gerenciamento fora da banda. Para obter a melhor resiliência, divida essas portas em dois switches com uplinks redundantes para uma arquitetura hierárquica tradicional ou uma arquitetura de coluna e folha de camada 2.
+* Os switches que manipulam armazenamento, máquina virtual e tráfego vMotion devem suportar velocidades de pelo menos 10GbE por porta (até 25GbE por porta é suportada).
+* Os switches que manipulam o tráfego de gerenciamento devem suportar velocidades de pelo menos 1GbE por porta.
+* Você deve configurar quadros jumbo nas portas do switch que manipulam armazenamento e tráfego vMotion. Os hosts devem ser capazes de enviar pacotes de 9000 bytes de ponta a ponta para uma instalação bem-sucedida.
+* Você deve configurar as portas de switch de rede de gerenciamento para permitir MTU de tamanho para que as portas de NIC de gerenciamento em cada host estejam configuradas. Por exemplo, se as portas de rede de gerenciamento de host usarem um tamanho de MTU de 1750 bytes, as portas de switch de rede de gerenciamento devem ser configuradas para permitir pelo menos uma MTU de 1750 bytes (a rede de gerenciamento não requer uma MTU de 9000 bytes). As configurações de MTU devem ser consistentes de ponta a ponta
+* A latência de rede de ida e volta entre todos os nós de computação e storage não deve exceder 2ms ms.
+
+
+Todos os nós do NetApp HCI fornecem recursos adicionais de gerenciamento fora da banda por meio de uma porta de gerenciamento dedicada. Os nós NetApp H300S, H300E, H500S, H500E, H700S, H700E e H410C também permitem acesso IPMI via porta A. como prática recomendada, você deve facilitar o gerenciamento remoto do NetApp HCI configurando o gerenciamento fora da banda para todos os nós em seu ambiente.
+
+[discrete]
+== Encontre mais informações
+
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+

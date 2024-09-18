@@ -1,0 +1,65 @@
+---
+sidebar: sidebar 
+permalink: docs/task_mnode_api_get_authorizationtouse.html 
+summary: Você deve autorizar antes de usar APIs para serviços de gerenciamento na IU da API REST. 
+keywords: netapp, hci, management node, mnode, api, token 
+---
+= Obter autorização para usar APIs REST
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você deve autorizar antes de usar APIs para serviços de gerenciamento na IU da API REST. Você faz isso obtendo um token de acesso.
+
+Para obter um token, você fornece credenciais de administrador de cluster e um ID de cliente. Cada token dura aproximadamente dez minutos. Depois que um token expirar, você pode autorizar novamente para um novo token de acesso.
+
+A funcionalidade autorização é configurada para você durante a instalação e implantação do nó de gerenciamento. O serviço de token é baseado no cluster de armazenamento que você definiu durante a configuração.
+
+.Antes de começar
+* A versão do cluster deve estar executando o software NetApp Element 11,3 ou posterior.
+* Você deve ter implantado um nó de gerenciamento executando a versão 11,3 ou posterior.
+
+
+.Comando API
+[listing]
+----
+TOKEN=`curl -k -X POST https://MVIP/auth/connect/token -F client_id=mnode-client -F grant_type=password -F username=CLUSTER_ADMIN -F password=CLUSTER_PASSWORD|awk -F':' '{print $2}'|awk -F',' '{print $1}'|sed s/\"//g`
+----
+.ETAPAS DA IU DA API REST
+. Acesse a IU da API REST do serviço inserindo o endereço IP do nó de gerenciamento seguido do nome do serviço, por exemplo `/mnode/`:
++
+[listing]
+----
+https://<ManagementNodeIP>/mnode/
+----
+. Clique em *autorizar*.
++
+
+NOTE: Como alternativa, você pode clicar em um ícone de cadeado ao lado de qualquer API de serviço.
+
+. Preencha o seguinte:
++
+.. Introduza o nome de utilizador e a palavra-passe do cluster.
+.. Introduza a ID do cliente como `mnode-client`.
+.. Não insira um valor para o segredo do cliente.
+.. Clique em *autorizar* para iniciar uma sessão.
+
+
+. Feche a caixa de diálogo *autorizações disponíveis*.
++
+
+NOTE: Se você tentar executar um comando após o token expirar, uma `401 Error: UNAUTHORIZED` mensagem será exibida. Se você vir isso, autorize novamente.
+
+
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

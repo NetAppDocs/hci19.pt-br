@@ -1,0 +1,61 @@
+---
+sidebar: sidebar 
+permalink: docs/task_nde_select_inventory.html 
+summary: Saiba como selecionar o inventário do nó do NetApp HCI durante a implantação. 
+keywords: netapp, hci, deployment, compatibility, nodes 
+---
+= Selecione inventário
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Na página *Inventário*, o mecanismo de implantação do NetApp deteta automaticamente nós de computação e storage disponíveis, permitindo selecionar e adicionar todos os recursos do NetApp HCI à implantação. Se um nó não atender aos requisitos de implantação, ele não será selecionável e os problemas serão indicados como erros. Você pode posicionar o cursor sobre o erro na linha do nó para ver uma explicação. Ao escolher o inventário de nós na página Inventário, o nó de armazenamento que está hospedando o mecanismo de implantação do NetApp é selecionado automaticamente e você não pode desmarcá-lo.
+
+.O que você vai precisar
+Os frames grandes devem estar ativados para a deteção adequada do inventário. Se nenhum nó ou apenas um subconjunto de nós aparecer no inventário, verifique se as portas do switch usadas para nós NetApp HCI (todas as interfaces SFP mais/SFP28) estão configuradas com quadros jumbo.
+
+.Passos
+. Na página *Inventário*, veja a lista de nós disponíveis.
++
+Se o sistema não conseguir detetar nenhum inventário, ele exibirá um erro. Corrija o erro antes de continuar. Se o sistema usar DHCP para atribuição de endereço IP, os recursos de armazenamento e computação podem não aparecer no inventário imediatamente.
+
+. Opcional: Se um recurso não aparecer no inventário imediatamente ou se você resolver um erro e precisar atualizar o inventário, clique em *Atualizar inventário*. Talvez seja necessário atualizar o inventário várias vezes.
+. Opcional: Para filtrar o inventário em atributos de nó, como tipo de nó:
++
+.. Clique em *Filter* no cabeçalho das listas *Compute Nodes* ou *Storage Nodes*.
+.. Escolha critérios nas listas suspensas.
+.. Abaixo das listas suspensas, insira informações para satisfazer os critérios.
+.. Clique em *Adicionar filtro*.
+.. Limpe filtros individuais clicando em *X* ao lado de um filtro ativo ou limpe todos os filtros clicando em *X* acima da lista de filtros.
+
+
+. Selecione todos os nós de computação fornecidos com seu sistema na lista *nós de computação*.
++
+Você precisa selecionar pelo menos dois nós de computação para prosseguir com a implantação.
+
+. Selecione todos os nós de storage fornecidos com o sistema na lista *Storage Nodes*.
++
+Você precisa selecionar pelo menos dois nós de storage para prosseguir com a implantação.
+
+. Opcional: Se uma caixa de seleção de nó de armazenamento for sinalizada, esse nó de armazenamento excederá 33% da capacidade total do cluster de armazenamento. Faça o seguinte:
++
+** Desmarque a caixa de seleção do nó de armazenamento sinalizado.
+** Selecione nós de storage adicionais para distribuir de forma mais equitativa a capacidade do cluster de storage entre nós.
+
+
+. Clique em *continuar*.
+
+
+
+
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/element-software/index.html["Documentação do software SolidFire e Element"^]
+

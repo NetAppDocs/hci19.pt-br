@@ -1,0 +1,41 @@
+---
+sidebar: sidebar 
+permalink: docs/task_nde_disable_smartd.html 
+summary: 'Saiba como desativar o `smartd` serviço em nós de computação depois de implantar o NetApp HCI.' 
+keywords: netapp, hci, netapp deployment engine, deployment, vsphere, ESXi, compute, smartd, polling 
+---
+= Desative o serviço smartd em nós de computação do NetApp HCI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Por padrão, o `smartd` serviço faz pesquisas periódicas nas unidades em seus nós de computação. Você deve desativar esse serviço em todos os nós de computação depois de implantar o NetApp HCI.
+
+.Passos
+. Usando SSH ou uma sessão de console local, faça login no VMware ESXi no nó de computação usando credenciais raiz.
+. Parar o serviço em `smartd` execução:
++
+[listing]
+----
+/etc/init.d/smartd stop
+----
+. Evite que `smartd` o serviço inicie na inicialização:
++
+[listing]
+----
+chkconfig smartd off
+----
+. Repita essas etapas no restante dos nós de computação em sua instalação.
+
+
+[discrete]
+== Encontre mais informações
+
+* https://kb.netapp.com/Advice_and_Troubleshooting/Flash_Storage/SF_Series/SolidFire%3A_Turning_off_smartd_on_the_ESXi_hosts_makes_the_cmd_0x85_and_subsequent_%22state_in_doubt%22_messages_stop["Desative o serviço smartd no VMware ESXi"^]
+* https://kb.vmware.com/s/article/2133286["Artigo da base de dados de conhecimento da VMware 2133286"^]
+

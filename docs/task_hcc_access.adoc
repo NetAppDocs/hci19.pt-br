@@ -1,0 +1,47 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hcc_access.html 
+summary: Você pode fazer login no controle de nuvem híbrida da NetApp. 
+keywords: netapp, hci, on premise, hybrid cloud control, hcc 
+---
+= Acesse o controle de nuvem híbrida da NetApp HCI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+O controle de nuvem híbrida da NetApp permite que você gerencie o NetApp HCI.
+
+Você faz login no Controle de nuvem híbrida da NetApp navegando até o endereço IP do nó de gerenciamento.
+
+Com o controle de nuvem híbrida, você pode fazer o seguinte:
+
+* link:task_hcc_dashboard.html["Monitore a instalação do NetApp HCI"]
+* link:concept_hci_upgrade_overview.html["Atualize seu sistema NetApp HCI"]
+* link:concept_hcc_expandoverview.html["Expanda seus recursos de storage ou computação do NetApp HCI"]
+
+
+*Passos*
+
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web. Por exemplo:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage da NetApp HCI.
++
+A interface de controle de nuvem híbrida da NetApp é exibida.
+
+
+
+[discrete]
+== Encontre mais informações
+
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+

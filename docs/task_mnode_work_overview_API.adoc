@@ -1,0 +1,57 @@
+---
+sidebar: sidebar 
+permalink: docs/task_mnode_work_overview_API.html 
+summary: 'Você pode usar a API do nó de gerenciamento (mNode) para atualizar serviços do sistema, gerenciar ativos e configurações de cluster, executar testes e utilitários do sistema, configurar o Active IQ para monitoramento do sistema e ativar ou desativar o acesso SSH de suporte do NetApp para solução de problemas.' 
+keywords: netapp, mnode api, management node api, rest api 
+---
+= Visão geral da IU da API REST do nó de gerenciamento
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Usando a IU da API REST incorporada (`https://<ManagementNodeIP>/mnode`), você pode executar ou entender APIs relacionadas aos serviços do nó de gerenciamento, incluindo configuração do servidor proxy, atualizações de nível de serviço ou gerenciamento de ativos.
+
+Tarefas que você pode executar com APIs REST:
+
+
+
+== Autorização
+
+* link:task_mnode_api_get_authorizationtouse.html["Obter autorização para usar APIs REST"]
+
+
+
+
+== Configuração de ativos
+
+* link:task_mnode_enable_activeIQ.html["Ative o monitoramento Active IQ e NetApp HCI"]
+* link:task_mnode_configure_proxy_server.html["Configure um servidor proxy para o nó de gerenciamento"]
+* link:task_mnode_multi_vcenter_config.html["Configurar o controle de nuvem híbrida do NetApp para vários vCenters"]
+* link:task_mnode_add_assets.html["Adicione ativos de computação e controlador ao nó de gerenciamento"]
+* link:task_mnode_manage_storage_cluster_assets.html["Criar e gerenciar ativos de cluster de storage"]
+
+
+
+
+== Gerenciamento de ativos
+
+* link:task_mnode_edit_vcenter_assets.html["Visualizar ou editar ativos de controlador existentes"]
+* link:task_mnode_manage_storage_cluster_assets.html["Criar e gerenciar ativos de cluster de storage"]
+* link:task_mnode_remove_assets.html["Remova um ativo do nó de gerenciamento"]
+* link:task_hcc_collectlogs.html#use-the-rest-api-to-collect-netapp-hci-logs["Use a API REST para coletar logs do NetApp HCI"]
+* link:task_mnode_api_find_mgmt_svcs_version.html["Verifique as versões do SO e dos serviços do nó de gerenciamento"]
+* link:task_mnode_logs.html["Obtendo logs de serviços de gerenciamento"]
+
+
+[discrete]
+== Encontre mais informações
+
+* link:task_mnode_access_ui.html["Acesse o nó de gerenciamento"]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

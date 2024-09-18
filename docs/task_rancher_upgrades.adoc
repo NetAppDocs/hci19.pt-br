@@ -1,0 +1,337 @@
+---
+sidebar: sidebar 
+permalink: docs/task_rancher_upgrades.html 
+summary: Você pode usar o Controle de nuvem híbrida da NetApp para atualizar componentes da implantação do Rancher no NetApp HCI que você instalou anteriormente usando o HCC. 
+keywords: netapp, hci, rancher, upgrade, hcc 
+---
+= Atualize Rancher no NetApp HCI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Para atualizar o software Rancher, você pode usar a IU do NetApp Hybrid Cloud Control (HCC) ou a API REST. O HCC fornece um processo de botão fácil para atualizar os componentes da implantação do Rancher, incluindo o servidor Rancher, o Rancher Kubernetes Engine (RKE) e o sistema operacional do nó do cluster de gerenciamento (para atualizações de segurança). Você também pode usar a API para ajudar a automatizar atualizações.
+
+As atualizações estão disponíveis por componente em vez de um pacote cumulativo. Como tal, algumas atualizações de componentes, como o Ubuntu os, estão disponíveis em uma cadência mais rápida. As atualizações afetam apenas a instância do servidor Rancher e o cluster de gerenciamento no qual o Rancher Server está implantado. As atualizações para o sistema operacional Ubuntu do nó do cluster de gerenciamento são apenas para patches de segurança críticos e não atualizam o sistema operacional. Os clusters de usuários não podem ser atualizados a partir do controle de nuvem híbrida da NetApp.
+
+.O que você vai precisar
+* *Admin Privileges*: Você tem permissões de administrador de cluster de armazenamento para executar a atualização.
+* *Serviços de gerenciamento*: Você atualizou seu pacote de serviços de gerenciamento para a versão mais recente.
+
+
+
+IMPORTANT: Você deve atualizar para o pacote de serviços de gerenciamento mais recente 2,17 ou posterior para a funcionalidade Rancher.
+
+* *Portas do sistema*: Se você estiver usando o Controle de nuvem híbrida da NetApp para atualizações, você garantiu que as portas necessárias estejam abertas. Consulte link:rancher_prereqs_overview.html#required-ports["Portas de rede"] para obter mais informações.
+* *Contrato de Licença de Usuário final (EULA)*: Começando com os serviços de gerenciamento 2.20.69, você deve aceitar e salvar o EULA antes de usar a IU ou API de Controle de nuvem híbrida da NetApp para atualizar uma implantação do Rancher:
++
+.. Abra o endereço IP do nó de gerenciamento em um navegador da Web:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+.. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage.
+.. Selecione *Upgrade* perto do canto superior direito da interface.
+.. O EULA aparece. Role para baixo, selecione *Aceito para atualizações atuais e futuras* e selecione *Salvar*.
+
+
+
+
+.Opções de atualização
+Escolha um dos seguintes processos de atualização:
+
+* <<Use a IU do Controle de nuvem híbrida da NetApp para atualizar uma implantação de Rancher>>
+* <<Use a API de controle de nuvem híbrida da NetApp para atualizar uma implantação de Rancher>>
+
+
+
+
+== Use a IU do Controle de nuvem híbrida da NetApp para atualizar uma implantação de Rancher
+
+Com a IU do Controle de nuvem híbrida da NetApp, você pode atualizar qualquer um desses componentes na implantação do Rancher:
+
+* Servidor rancher
+* Rancher Kubernetes Engine (RKE)
+* Atualizações de segurança do SO do nó
+
+
+.O que você vai precisar
+* Uma boa conexão com a Internet. Atualizações de sites obscuros (upgrades em um site sem conetividade externa) não estão disponíveis.
+
+
+.Passos
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage.
+. Selecione *Upgrade* perto do canto superior direito da interface.
+. Na página *Upgrades*, selecione *Rancher*.
+. Selecione o menu *ações* para o software que deseja atualizar.
++
+** Servidor rancher
+** Rancher Kubernetes Engine (RKE)
+** Atualizações de segurança do SO do nó
+
+
+. Selecione *Upgrade* para atualizações de servidor Rancher ou RKE ou *Apply Upgrade* para atualizações de segurança do Node os.
++
+
+NOTE: Para o SO do nó, as atualizações automáticas para patches de segurança são executadas diariamente, mas o nó não é reinicializado automaticamente. Ao aplicar atualizações, você está reiniciando cada nó para que as atualizações de segurança entrem em vigor.
+
+
+
+Aparece um banner indicando que a atualização do componente foi bem-sucedida. Pode haver um atraso de até 2 minutos antes que a IU do Controle de nuvem híbrida da NetApp mostre o número da versão atualizada.
+
+
+
+== Use a API de controle de nuvem híbrida da NetApp para atualizar uma implantação de Rancher
+
+Você pode usar APIs para atualizar qualquer um desses componentes na implantação do Rancher:
+
+* Servidor rancher
+* Rancher Kubernetes Engine (RKE)
+* SO do nó (para atualizações de segurança)
+
+
+Você pode usar uma ferramenta de automação de sua escolha para executar as APIs ou a IU da API REST disponível no nó de gerenciamento.
+
+.Opções
+* <<Atualize o Rancher Server>>
+* <<Atualize RKE>>
+* <<Aplique atualizações de segurança do SO nó>>
++
+
+NOTE: Para o SO do nó, as atualizações automáticas para patches de segurança são executadas diariamente, mas o nó não é reinicializado automaticamente. Ao aplicar atualizações, você está reiniciando cada nó para que as atualizações de segurança entrem em vigor.
+
+
+
+
+
+=== Atualize o Rancher Server
+
+.Comandos API
+. Inicie a solicitação de versões de atualização de lista:
++
+[listing]
+----
+curl -X POST "https://<managementNodeIP>/k8sdeployer/1/upgrade/rancher-versions" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}"
+----
++
+
+NOTE: Você pode encontrar o `${TOKEN}` portador usado pelo comando API quando link:task_mnode_api_get_authorizationtouse.html["autorizar"]você . O portador `${TOKEN}` está na resposta de ondulação.
+
+. Obter o status da tarefa usando o ID da tarefa do comando anterior e copiar o número da versão mais recente da resposta:
++
+[listing]
+----
+curl -X GET "https://<mNodeIP>/k8sdeployer/1/task/<taskID>" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}"
+----
+. Iniciar solicitação de atualização do servidor Rancher:
++
+[listing]
+----
+curl -X PUT "https://<mNodeIP>/k8sdeployer/1/upgrade/rancher/<version number>" -H "accept: application/json" -H "Authorization: Bearer"
+----
+. Obter status da tarefa usando o ID da tarefa da resposta do comando de atualização:
++
+[listing]
+----
+curl -X GET "https://<mNodeIP>/k8sdeployer/1/task/<taskID>" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}"
+----
+
+
+.ETAPAS DA IU DA API REST
+. Abra a IU da API REST do nó de gerenciamento no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/k8sdeployer/api/
+----
+. Selecione *autorizar* e preencha o seguinte:
++
+.. Introduza o nome de utilizador e a palavra-passe do cluster.
+.. Introduza a ID do cliente como `mnode-client`.
+.. Selecione *autorizar* para iniciar uma sessão.
+.. Feche a janela autorização.
+
+
+. Verifique o pacote de atualização mais recente:
++
+.. Na IU da API REST, execute *POST /upgrade​/rancher-versions*.
+.. A partir da resposta, copie o ID da tarefa.
+.. Execute *GET /task​/
+
+
+. A partir da resposta */task​/
+. Execute a atualização do Rancher Server:
++
+.. Na interface do usuário da API REST, execute *PUT /rancher​/upgrade​/
+.. A partir da resposta, copie o ID da tarefa.
+.. Execute *GET /task​/
+
+
+
+
+A atualização foi concluída com êxito quando o `PercentComplete` `100` indica e `results` indica o número da versão atualizada.
+
+
+
+=== Atualize RKE
+
+.Comandos API
+. Inicie a solicitação de versões de atualização de lista:
++
+[listing]
+----
+curl -X POST "https://<mNodeIP>/k8sdeployer/1/upgrade/rke-versions" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}"
+----
++
+
+NOTE: Você pode encontrar o `${TOKEN}` portador usado pelo comando API quando link:task_mnode_api_get_authorizationtouse.html["autorizar"]você . O portador `${TOKEN}` está na resposta de ondulação.
+
+. Obter o status da tarefa usando o ID da tarefa do comando anterior e copiar o número da versão mais recente da resposta:
++
+[listing]
+----
+curl -X GET "https://<mNodeIP>/k8sdeployer/1/task/<taskID>" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}"
+----
+. Inicie o pedido de atualização RKE
++
+[listing]
+----
+curl -X PUT "https://<mNodeIP>/k8sdeployer/1/upgrade/rke/<version number>" -H "accept: application/json" -H "Authorization: Bearer"
+----
+. Obter status da tarefa usando o ID da tarefa da resposta do comando de atualização:
++
+[listing]
+----
+curl -X GET "https://<mNodeIP>/k8sdeployer/1/task/<taskID>" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}"
+----
+
+
+.ETAPAS DA IU DA API REST
+. Abra a IU da API REST do nó de gerenciamento no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/k8sdeployer/api/
+----
+. Selecione *autorizar* e preencha o seguinte:
++
+.. Introduza o nome de utilizador e a palavra-passe do cluster.
+.. Introduza a ID do cliente como `mnode-client`.
+.. Selecione *autorizar* para iniciar uma sessão.
+.. Feche a janela autorização.
+
+
+. Verifique o pacote de atualização mais recente:
++
+.. Na IU da API REST, execute *POST /upgrade​/rke-versions*.
+.. A partir da resposta, copie o ID da tarefa.
+.. Execute *GET /task​/
+
+
+. A partir da resposta */task​/
+. Execute a atualização RKE:
++
+.. Na interface do usuário da API REST, execute *PUT /upgrade/rke/(version)* com o número de versão mais recente da etapa anterior.
+.. Copie o ID da tarefa da resposta.
+.. Execute *GET /task​/
+
+
+
+
+A atualização foi concluída com êxito quando o `PercentComplete` `100` indica e `results` indica o número da versão atualizada.
+
+
+
+=== Aplique atualizações de segurança do SO nó
+
+.Comandos API
+. Inicie a solicitação de verificação de upgrades:
++
+[listing]
+----
+curl -X GET "https://<mNodeIP>/k8sdeployer/1/upgrade/checkNodeUpdates" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}"
+----
++
+
+NOTE: Você pode encontrar o `${TOKEN}` portador usado pelo comando API quando link:task_mnode_api_get_authorizationtouse.html["autorizar"]você . O portador `${TOKEN}` está na resposta de ondulação.
+
+. Obter status da tarefa usando o ID da tarefa do comando anterior e verificar se um número de versão mais recente está disponível na resposta:
++
+[listing]
+----
+curl -X GET "https://<mNodeIP>/k8sdeployer/1/task/<taskID>" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}"
+----
+. Aplique as atualizações do nó:
++
+[listing]
+----
+curl -X POST "https://<mNodeIP>/k8sdeployer/1/upgrade/applyNodeUpdates" -H "accept: application/json" -H "Authorization: Bearer"
+----
++
+
+NOTE: Para o SO do nó, as atualizações automáticas para patches de segurança são executadas diariamente, mas o nó não é reinicializado automaticamente. Ao aplicar atualizações, você está reinicializando cada nó sequencialmente para que as atualizações de segurança entrem em vigor.
+
+. Obter o status da tarefa usando o ID da tarefa da resposta de atualização `applyNodeUpdates`:
++
+[listing]
+----
+curl -X GET "https://<mNodeIP>/k8sdeployer/1/task/<taskID>" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}"
+----
+
+
+.ETAPAS DA IU DA API REST
+. Abra a IU da API REST do nó de gerenciamento no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/k8sdeployer/api/
+----
+. Selecione *autorizar* e preencha o seguinte:
++
+.. Introduza o nome de utilizador e a palavra-passe do cluster.
+.. Introduza a ID do cliente como `mnode-client`.
+.. Selecione *autorizar* para iniciar uma sessão.
+.. Feche a janela autorização.
+
+
+. Verifique se um pacote de atualização está disponível:
++
+.. Na IU da API REST, execute *GET /upgrade/checkNodeUpdates*.
+.. A partir da resposta, copie o ID da tarefa.
+.. Execute *GET /task​/
+.. A partir da resposta */task​/
+
+
+. Aplique as atualizações do SO do nó:
++
+
+NOTE: Para o SO do nó, as atualizações automáticas para patches de segurança são executadas diariamente, mas o nó não é reinicializado automaticamente. Ao aplicar atualizações, você está reinicializando cada nó sequencialmente para que as atualizações de segurança entrem em vigor.
+
++
+.. Na IU da API REST, execute *POST /upgrade​/applyNodeUpdates*.
+.. A partir da resposta, copie o ID da tarefa.
+.. Execute *GET /task​/
+.. A partir da resposta */task​/
+
+
+
+
+A atualização foi concluída com êxito quando o `PercentComplete` `100` indica e `results` indica o número da versão atualizada.
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

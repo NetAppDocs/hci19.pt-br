@@ -1,0 +1,67 @@
+---
+sidebar: sidebar 
+permalink: docs/task_nde_hci_power_off_storage.html 
+summary: Saiba como desativar os nós de computação do NetApp HCI. 
+keywords: netapp, hci, netapp deployment engine, deployment, vsphere 
+---
+= Desligue os recursos de armazenamento de um sistema NetApp HCI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Quando você desliga os recursos de storage do NetApp HCI, precisa usar o `Shutdown` método API Element para interromper corretamente os nós de storage.
+
+.Passos
+Depois de desligar os recursos de computação, use um navegador da Web para encerrar todos os nós do cluster de storage do NetApp HCI.
+
+. Inicie sessão no cluster de armazenamento e verifique se está ligado ao MVIP correto.
+. (Opcional) Verifique se todas as operações de e/S dos hosts pararam:
++
+.. Silencie a I/o do lado do host usando os comandos apropriados para um ou mais hipervisores em uso.
+.. Na IU do Cluster, selecione *Reporting* > *Overview*. Não deve haver nenhuma atividade no gráfico "Cluster Input/Output" (Entrada/saída do cluster).
+.. Depois que todas as operações de e/S tiverem sido interrompidas, aguarde 20 minutos antes de desligar o cluster.
+
+
+. Verifique se a contagem de sessão iSCSI é zero.
+. Navegue até *Cluster > Nodes > ative* e Registre as IDs de nó de todos os nós ativos no cluster.
+. Para desligar o cluster de storage do NetApp HCI, abra um navegador da Web e use o seguinte URL para chamar o procedimento de desligamento e parada, `{MVIP}` onde está o endereço IP de gerenciamento do sistema de storage NetApp HCI e o `nodes=[]` array inclui as IDs de nó que você registrou na etapa 4. Por exemplo:
++
+[listing]
+----
+https://{MVIP}/json-rpc/1.0?method=Shutdown&nodes=[1,2,3,4]&option=halt
+----
++
+
+NOTE: Você pode executar o comando em uma janela anônima para evitar executá-lo novamente em um estágio posterior a partir do URL salvo.
+
+. Introduza o nome de utilizador e a palavra-passe do administrador do cluster.
+. Valide se a chamada de API foi retornada com sucesso, verificando se todos os nós de cluster de storage estão incluídos na `successful` seção do resultado da API.
++
+Você desativou com sucesso todos os nós de storage do NetApp HCI.
+
+. Feche o navegador ou guia para evitar selecionar o botão "voltar" e repetir a chamada da API.
+
+
+[NOTE]
+====
+Ao reiniciar o cluster, você deve seguir determinadas etapas para verificar se todos os nós estão online:
+
+. Verifique se todas as falhas críticas de gravidade e `volumesOffline` cluster foram resolvidas.
+. Aguarde 10 a 15 minutos para que o cluster se assente.
+. Comece a trazer os hosts para acessar os dados.
+
+
+Se você quiser permitir mais tempo ao ligar os nós e verificar se eles estão em boas condições após a manutenção, entre em Contato com o suporte técnico para obter assistência com o atraso da sincronização de dados para evitar a sincronização desnecessária de bin.
+
+====
+
+
+== Encontre mais informações
+
+* link:firmware_driver_versions.html["Versões de firmware e driver ESXi compatíveis para versões de NetApp HCI e firmware para nós de storage NetApp HCI"]
+

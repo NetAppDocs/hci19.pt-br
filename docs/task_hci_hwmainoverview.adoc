@@ -1,0 +1,41 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hci_hwmainoverview.html 
+summary: Você pode executar tarefas de manutenção de hardware, como substituir seus nós, substituir as unidades nos nós de storage, substituir unidades de fonte de alimentação etc. 
+keywords: netapp, hci, on premise, activeiq, active iq, cluster, performance, rails, h-series, nodes 
+---
+= Visão geral da manutenção de hardware da série H.
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você deve executar tarefas de manutenção de hardware, como substituir nós com defeito, substituir unidades com defeito nos nós de storage, etc., para garantir que o sistema funcione de forma otimizada.
+
+Aqui estão os links para as tarefas de manutenção de hardware:
+
+* link:task_hci_hserieschassisrepl.html["Substitua o chassi da série H 2U"]
+* link:task_hci_dcpsurepl.html["Substitua as unidades de fonte de alimentação CC em H615C e H610S nós"]
+* link:task_hci_dimmcomputerepl.html["Substitua DIMMs em nós de computação"]
+* link:task_hci_driverepl.html["Substitua unidades por nós de storage"]
+* link:task_hci_h410crepl.html["Substitua H410C nós"]
+* link:task_hci_h410srepl.html["Substitua H410S nós"]
+* link:task_hci_h610ch615crepl.html["Substitua os nós H610C e H615C"]
+* link:task_hci_h610srepl.html["Substitua H610S nós"]
+* link:task_hci_psurepl.html["Substitua as unidades da fonte de alimentação"]
+* link:task_hci_snswitches.html["Substitua os interrutores SN2010, SN2100 e SN2700"]
+* link:task_hci_2noderepl.html["Substitua o nó de storage em um cluster de dois nós"]
+
+
+[discrete]
+== Encontre mais informações
+
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/pdf.html?item=/media/9413-tr4820pdf.pdf["_TR-4820: Guia de Planejamento rápido de redes NetApp HCI_"^]
+* https://mysupport.netapp.com/site/tools["Consultor de configuração do NetApp"^] ferramenta de validação de rede 5.8.1 ou posterior
+

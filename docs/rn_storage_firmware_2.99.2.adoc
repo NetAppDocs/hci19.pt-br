@@ -1,0 +1,160 @@
+---
+sidebar: sidebar 
+permalink: docs/rn_storage_firmware_2.99.2.html 
+summary: Obtenha links para notas de lançamento dos pacotes de firmware que você pode baixar e aplicar aos nós do NetApp HCI. 
+keywords: netapp, hci, storage firmware 
+---
+= Notas de lançamento do pacote de firmware de armazenamento 2.99.2
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+A partir do Element 12,0 e dos serviços de gerenciamento versão 2,14, é possível fazer atualizações somente de firmware nos nós de storage usando a IU e a API REST do NetApp Hybrid Cloud Control. Esse procedimento não atualiza o software Element e permite que você atualize o firmware de storage fora de uma versão do elemento principal.
+
+
+
+== Novidades
+
+O pacote de firmware de armazenamento versão 2.99.2 contém várias correções de bugs e novos recursos, incluindo correções de vulnerabilidades de segurança. Pode atualizar o firmware de armazenamento utilizando as instruções em link:task_hcc_upgrade_storage_firmware.html["Atualize o firmware de armazenamento"].
+
+
+
+=== Componentes de firmware atualizados
+
+Este pacote de firmware contém as seguintes versões de firmware para componentes de hardware, com versões atualizadas em negrito:
+
+|===
+| Componente | Série SF da SolidFire | H410S | H610S 
+
+
+| BIOS | Não incluído | NA2.1 | 3B06 
+
+
+| BMC | Não incluído | 6.84.00 | *3.91.07* 
+
+
+| NIC / Mellanox | Não incluído | 14.25.1020 | 14.25.1020 
+
+
+| RMS200 | ae3b8cc | ae3b8cc | - 
+
+
+| RMS300 | 7d8422bc | 7d8422bc | - 
+
+
+| NVDIMM, inteligente | - | - | 3,1 
+
+
+| BPM, inteligente | - | - | 2,16 
+
+
+| NVDIMM, Micron Gen1 | - | - | 26.2c 
+
+
+| NVDIMM, Micron Gen2 | - | - | 25.3c 
+
+
+| PGEM, mícron | - | - | 1,40 
+
+
+| PM863, SED | GXT5404Q | GXT5404Q | - 
+
+
+| PM863, NSED | GXT5103Q | GXT5103Q | - 
+
+
+| PM883, SED | HXT7904Q | HXT7904Q | - 
+
+
+| Hawk-4, SED | 8ENP7101 | 8ENP7101 | - 
+
+
+| Hawk-4, NSED | 8ENP6101 | 8ENP6101 | - 
+
+
+| PM963, SED | - | - | CXV8202Q 
+
+
+| PM963, NSED | - | - | CXV8501Q 
+
+
+| PM983, SED | - | - | EDA5402Q 
+
+
+| PM983, NSED | - | - | EDA5700Q 
+
+
+| CD5, SED | - | - | 0109 
+
+
+| CD5, NSED | - | - | 0109 
+
+
+| CD5 TB, FIPS | - | - | 0108 
+|===
+
+
+== Alterações nos componentes de firmware de armazenamento
+
+|===
+
+
+| Componente | Melhoria/mudança 
+
+
+| H610S BMC 3.91.07  a| 
+* Melhorar a utilização do desgaste do flash BMC
+
+
+|===
+
+
+== Problemas resolvidos e conhecidos
+
+Consulte o https://mysupport.netapp.com/site/bugs-online/product["Ferramenta Bugs Online"^] para obter detalhes sobre os problemas que foram resolvidos e sobre quaisquer problemas novos.
+
+
+
+=== Acessando a ferramenta Bugs Online
+
+. Navegue até o  https://mysupport.netapp.com/site/bugs-online/product["Ferramenta Bugs Online"^] e selecione *Element Software* na lista suspensa:
++
+image::bol_dashboard.png[Notas de lançamento do pacote de firmware de armazenamento]
+
+. No campo de pesquisa de palavra-chave, digite "Storage firmware Bundle" e clique em *New Search*:
++
+image::storage_firmware_bundle_choice.png[Notas de lançamento do pacote de firmware de armazenamento]
+
+. Uma lista de bugs resolvidos ou abertos é exibida. Você pode refinar ainda mais os resultados, conforme mostrado:
++
+image::bol_list_bugs_found.png[Notas de lançamento do pacote de firmware de armazenamento]
+
+
+
+
+
+== Vulnerabilidades de segurança resolvidas
+
+A seguir estão vulnerabilidades de segurança que foram resolvidas nesta versão:
+
+
+
+=== H610S BMC 3.91.07
+
+* CVE-2019-20636
+* CVE-2019-11599, CVE-2020-12826, CVE-2020-12464, CVE-2020-12114
+* CVE-2016-3706, CVE-2011-5320, CVE-2015-8984, CVE-2015-8983, CVE-2015-8982, CVE-2006-7254, CVE-2005-3590
+
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/hci/index.jsp["Centro de Documentação do NetApp HCI"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* https://kb.netapp.com/Advice_and_Troubleshooting/Flash_Storage/SF_Series/How_to_update_iDRAC%2F%2FBIOS_firmware_on_SF_Series_nodes["KB: Como atualizar o firmware iDRAC/BIOS em nós da série SF"^]
+

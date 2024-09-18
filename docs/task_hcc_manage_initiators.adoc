@@ -1,0 +1,138 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hcc_manage_initiators.html 
+summary: Saiba como adicionar iniciadores de criação e gerenciamento que permitem a comunicação entre clientes externos e volumes de armazenamento de elementos. 
+keywords: netapp, hci, initiator, storage, element, access group 
+---
+= Criar e gerenciar iniciadores
+:allow-uri-read: 
+
+
+[role="lead"]
+Você pode usar link:concept_hci_initiators.html["iniciadores"] para acesso baseado em CHAP em vez de baseado em conta a volumes. Você pode criar e excluir iniciadores e dar a eles aliases amigáveis para simplificar a administração e o acesso ao volume. Quando você adiciona um iniciador a um grupo de acesso de volume, esse iniciador habilita o acesso a todos os volumes do grupo.
+
+.O que você vai precisar
+* Você tem credenciais de administrador de cluster.
+* Você atualizou seus serviços de gerenciamento para pelo menos a versão 2,17. O gerenciamento do iniciador do controle de nuvem híbrida da NetApp não está disponível em versões anteriores do pacote de serviços.
+
+
+.Opções
+* <<Crie um iniciador>>
+* <<Adicionar iniciadores a um grupo de acesso de volume>>
+* <<Alterar um alias do iniciador>>
+* <<Eliminar iniciadores>>
+
+
+
+
+== Crie um iniciador
+
+Você pode criar iniciadores iSCSI ou Fibre Channel e, opcionalmente, atribuí-los aliases.
+
+.Sobre esta tarefa
+O formato aceito de um iniciador IQN é `iqn.yyyy-mm` onde y e m são dígitos seguidos por texto que só deve conter dígitos, carateres alfabéticos em letras minúsculas, um ponto (`.`), dois pontos ) (`:`ou traço (`-`). Uma amostra do formato é a seguinte:
+
+[listing]
+----
+iqn.2010-01.com.solidfire:c2r9.fc0.2100000e1e09bb8b
+----
+O formato aceito de um iniciador WWPN de Fibre Channel é `:Aa:bB:CC:dd:11:22:33:44` ou `AabBCCdd11223344`. Uma amostra do formato é a seguinte:
+
+[listing]
+----
+5f:47:ac:c0:5c:74:d4:02
+----
+.Passos
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage Element.
+. No Dashboard, expanda o nome do cluster de armazenamento no menu de navegação à esquerda.
+. Selecione *volumes*.
+. Selecione a guia *iniciadores*.
+. Selecione o botão *criar iniciadores*.
++
+|===
+| Opção | Passos 
+
+
+| Crie um ou mais iniciadores  a| 
+.. Introduza o IQN ou WWPN para o iniciador no campo *IQN/WWPN*.
+.. Digite um nome amigável para o iniciador no campo *Alias*.
+.. (Opcional) Selecione *Add Initiator* para abrir novos campos do iniciador ou use a opção bulk create.
+.. Selecione *criar iniciadores*.
+
+
+
+
+| Criar iniciadores em massa  a| 
+.. Selecione *Bulk Add IQNs/WWPNs*.
+.. Insira uma lista de IQNs ou WWPNs na caixa de texto. Cada IQN ou WWPN deve ser vírgula ou espaço separado ou em sua própria linha.
+.. Selecione *Adicionar IQNs/WWPNs*.
+.. (Opcional) Adicione aliases exclusivos a cada iniciador.
+.. Remova qualquer iniciador da lista que já possa existir na instalação.
+.. Selecione *criar iniciadores*.
+
+
+|===
+
+
+
+
+== Adicionar iniciadores a um grupo de acesso de volume
+
+Você pode adicionar iniciadores a um grupo de acesso de volume. Quando você adiciona um iniciador a um grupo de acesso de volume, o iniciador habilita o acesso a todos os volumes nesse grupo de acesso de volume.
+
+.Passos
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage Element.
+. No Dashboard, expanda o nome do cluster de armazenamento no menu de navegação à esquerda.
+. Selecione *volumes*.
+. Selecione a guia *iniciadores*.
+. Selecione um ou mais iniciadores que deseja adicionar.
+. Selecione *ações > Adicionar ao Grupo de Acesso*.
+. Selecione o grupo de acesso.
+. Confirme as alterações selecionando *Add Initiator*.
+
+
+
+
+== Alterar um alias do iniciador
+
+Você pode alterar o alias de um iniciador existente ou adicionar um alias se um ainda não existir.
+
+.Passos
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage Element.
+. No Dashboard, expanda o nome do cluster de armazenamento no menu de navegação à esquerda.
+. Selecione *volumes*.
+. Selecione a guia *iniciadores*.
+. Na coluna *ações*, expanda o menu de opções do iniciador.
+. Selecione *Editar*.
+. Faça as alterações necessárias ao alias ou adicione um novo alias.
+. Selecione *Guardar*.
+
+
+
+
+== Eliminar iniciadores
+
+Pode eliminar um ou mais iniciadores. Quando você exclui um iniciador, o sistema o remove de qualquer grupo de acesso de volume associado. Quaisquer conexões usando o iniciador permanecem válidas até que a conexão seja redefinida.
+
+.Passos
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage Element.
+. No Dashboard, expanda o nome do cluster de armazenamento no menu de navegação à esquerda.
+. Selecione *volumes*.
+. Selecione a guia *iniciadores*.
+. Eliminar um ou mais iniciadores:
++
+.. Selecione um ou mais iniciadores que pretende eliminar.
+.. Selecione *ações > Excluir*.
+.. Confirme a operação de eliminação e selecione *Yes*.
+
+
+
+
+[discrete]
+== Encontre mais informações
+
+* link:concept_hci_initiators.html["Saiba mais sobre iniciadores"]
+* link:concept_hci_volume_access_groups.html["Saiba mais sobre grupos de acesso de volume"]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

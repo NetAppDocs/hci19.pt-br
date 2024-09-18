@@ -1,0 +1,53 @@
+---
+sidebar: sidebar 
+permalink: docs/task_mnode_locate_hardware_tag.html 
+summary: Você precisa que a tag de hardware adicione seus ativos de nó de computação à configuração do nó de gerenciamento usando a IU da API REST. 
+keywords: netapp, management node, rest api, hci, hardware tag 
+---
+= Como localizar uma tag de hardware para um nó de computação
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você precisa que a tag de hardware adicione seus ativos de nó de computação à configuração do nó de gerenciamento usando a IU da API REST.
+
+[role="tabbed-block"]
+====
+.VMware vSphere 8,0 e 7,0
+--
+Localize a etiqueta de hardware de um nó de computação no VMware vSphere Web Client 8,0 e 7,0.
+
+.Passos
+. Selecione o host no navegador vSphere Web Client.
+. Selecione a guia *Configure*.
+. Na barra lateral, selecione *hardware* > *Visão geral*. Verifique se a etiqueta de hardware está listada na `System` tabela.
++
+image:../media/hw_tag_70.PNG["Captura de tela da tabela sistema"]
+
+. Copie e salve o valor para *Tag*.
+. xref:task_mnode_add_assets.adoc[Adicione seus ativos de computação e controlador ao nó de gerenciamento].
+
+
+--
+.VMware vSphere 6,7 e 6,5
+--
+Localize a etiqueta de hardware de um nó de computação no VMware vSphere Web Client 6,7 e 6,5.
+
+.Passos
+. Selecione o host no navegador vSphere Web Client.
+. Selecione a guia *Monitor* e *integridade do hardware*.
+. Verifique se a etiqueta está listada com o fabricante do BIOS e o número do modelo.
++
+image:../media/hw_tag_67.PNG["Captura de tela da tabela sistema"]
+
+. Copie e salve o valor para *Tag*.
+. xref:task_mnode_add_assets.adoc[Adicione seus ativos de computação e controlador ao nó de gerenciamento].
+
+
+--
+====

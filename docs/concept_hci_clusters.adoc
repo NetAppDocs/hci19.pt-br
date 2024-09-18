@@ -1,0 +1,93 @@
+---
+sidebar: sidebar 
+permalink: docs/concept_hci_clusters.html 
+summary: Um cluster é composto por uma coleção de nós de storage. Um cluster de storage do NetApp HCI precisa ter no mínimo dois nós de storage. Um cluster aparece na rede como um único grupo lógico e pode ser acessado como armazenamento de bloco. 
+keywords: netapp, hci, storage nodes, clusters, two-node cluster, three-node cluster, 2-node cluster, 3-node cluster 
+---
+= Clusters
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Um cluster é um grupo de nós, funcionando como um todo coletivo, que fornecem recursos de storage ou computação. A partir do NetApp HCI 1,8, você pode ter um cluster de storage com dois nós. Um cluster de armazenamento aparece na rede como um único grupo lógico e pode ser acessado como armazenamento de bloco.
+
+A camada de storage no NetApp HCI é fornecida pelo software NetApp Element e a camada de gerenciamento é fornecida pelo plug-in NetApp Element para vCenter Server. Um nó de armazenamento é um servidor que contém uma coleção de unidades que se comunicam entre si através da interface de rede Bond10G. Cada nó de storage é conetado a duas redes, armazenamento e gerenciamento, cada um com dois links independentes para redundância e desempenho. Cada nó requer um endereço IP em cada rede. Você pode criar um cluster com novos nós de storage ou adicionar nós de storage a um cluster existente para aumentar a capacidade de storage e a performance.
+
+
+
+== Clusters de storage autoritativo
+
+O cluster de armazenamento autorizado é o cluster de armazenamento que o NetApp Hybrid Cloud Control usa para autenticar usuários.
+
+Se o seu nó de gerenciamento tiver apenas um cluster de storage, ele será o cluster autoritativo. Se o nó de gerenciamento tiver dois ou mais clusters de storage, um desses clusters será atribuído como o cluster autoritativo e somente os usuários desse cluster poderão fazer login no controle de nuvem híbrida da NetApp. Para descobrir qual cluster é o cluster autorizado, você pode usar a `GET /mnode/about` API. Na resposta, o endereço IP `token_url` no campo é o endereço IP virtual de gerenciamento (MVIP) do cluster de armazenamento autorizado. Se você tentar fazer login no Controle de nuvem híbrida do NetApp como um usuário que não está no cluster autoritativo, a tentativa de login falhará.
+
+Muitos recursos de controle de nuvem híbrida da NetApp foram desenvolvidos para funcionar com vários clusters de storage, mas a autenticação e a autorização têm limitações. A limitação em torno da autenticação e autorização é que o usuário do cluster autorizado pode executar ações em outros clusters vinculados ao Controle de nuvem híbrida NetApp mesmo que não seja um usuário nos outros clusters de armazenamento. Antes de prosseguir com o gerenciamento de vários clusters de storage, você deve garantir que os usuários definidos nos clusters autoritativos sejam definidos em todos os outros clusters de storage com as mesmas permissões.
+
+Você pode gerenciar usuários com o controle de nuvem híbrida da NetApp.
+
+Antes de prosseguir com o gerenciamento de vários clusters de storage, você deve garantir que os usuários definidos nos clusters autoritativos sejam definidos em todos os outros clusters de storage com as mesmas permissões. Consulte link:task_mnode_manage_storage_cluster_assets.html["Criar e gerenciar ativos de cluster de storage"] para obter mais informações sobre como trabalhar com ativos de cluster de storage de nós de gerenciamento.
+
+
+
+== Capacidade ociosa
+
+Se um nó recém-adicionado representar mais de 50% da capacidade total do cluster, parte da capacidade desse nó será inutilizável ("encalhado"), de modo que esteja em conformidade com a regra de capacidade. Esse continua sendo o caso até que mais capacidade de storage seja adicionada. Se um nó muito grande for adicionado que também desobedeça à regra de capacidade, o nó anteriormente encalhado não ficará mais encalhado, enquanto o nó recém-adicionado fica encalhado. A capacidade deve ser sempre adicionada em pares para evitar que isso aconteça. Quando um nó fica preso, uma falha de cluster apropriada é lançada.
+
+
+
+== Clusters de storage de dois nós
+
+A partir do NetApp HCI 1,8, é possível configurar um cluster de storage com dois nós de storage.
+
+* Você pode usar certos tipos de nós para formar o cluster de storage de dois nós.  https://library.netapp.com/ecm/ecm_download_file/ECMLP2865021["Notas de versão do NetApp HCI 1,8"^]Consulte .
++
+
+NOTE: Em um cluster de dois nós, os nós de storage são limitados a nós com unidades de 480GB TB e 960GB TB, e os nós devem ser do mesmo tipo de modelo.
+
+* Os clusters de storage de dois nós são mais adequados para implantações de pequena escala com workloads que não dependem de grandes requisitos de capacidade e alta performance.
+* Além de dois nós de storage, um cluster de storage de dois nós também inclui dois nós de testemunha do NetApp HCI*.
++
+
+NOTE: Saiba mais sobre link:concept_hci_nodes.html["Nós de testemunhas."]
+
+* É possível escalar um cluster de storage de dois nós para um cluster de storage de três nós. Os clusters de três nós aumentam a resiliência, fornecendo a capacidade de recuperação automática de falhas nos nós de storage.
+* Os clusters de storage de dois nós fornecem os mesmos recursos e funcionalidades de segurança dos clusters de storage de quatro nós tradicionais.
+* Os clusters de storage de dois nós usam as mesmas redes que os clusters de storage de quatro nós. As redes são configuradas durante a implantação do NetApp HCI usando o assistente do mecanismo de implantação do NetApp.
+
+
+
+
+=== Quorum do cluster de storage
+
+O software Element cria um cluster de storage a partir de nós selecionados, que mantém um banco de dados replicado da configuração do cluster. É necessário um mínimo de três nós para participar do conjunto de cluster para manter o quorum para resiliência de cluster. Nós de testemunha em um cluster de dois nós são usados para garantir que haja nós de armazenamento suficientes para formar um quórum de ensemble válido. Para a criação de conjunto, os nós de storage são preferidos em vez de nós de testemunha. Para o conjunto mínimo de três nós envolvendo um cluster de armazenamento de dois nós, dois nós de armazenamento e um nó de testemunha são usados.
+
+
+TIP: Em um conjunto de três nós com dois nós de armazenamento e um nó de testemunha, se um nó de armazenamento ficar offline, o cluster entra em um estado degradado. Dos dois nós de testemunhas, apenas um pode estar ativo no conjunto. O segundo nó testemunha não pode ser adicionado ao conjunto, porque ele executa a função de backup. O cluster permanece em estado degradado até que o nó de armazenamento offline volte a um estado online ou um nó de substituição se junte ao cluster.
+
+Se um nó de testemunha falhar, o nó de testemunha restante junta-se ao conjunto para formar um conjunto de três nós. Você pode implantar um novo nó testemunha para substituir o nó testemunha com falha.
+
+
+
+=== Autorrecuperação e manipulação de falhas em clusters de storage de dois nós
+
+Se um componente de hardware falhar em um nó que faz parte de um cluster tradicional, o cluster poderá rebalancear os dados que estavam no componente que falhou em relação a outros nós disponíveis no cluster. Essa capacidade de recuperação automática não está disponível em um cluster de storage de dois nós, porque é necessário que um mínimo de três nós de storage físico esteja disponível para o cluster para recuperação automática. Quando um nó em um cluster de dois nós falha, o cluster de dois nós não requer a regeneração de uma segunda cópia de dados. Novas gravações são replicadas para dados de bloco no nó de storage ativo restante. Quando o nó com falha é substituído e se junta ao cluster, os dados são rebalanceados entre os dois nós de storage físico.
+
+
+
+== Clusters de storage com três ou mais nós
+
+A expansão de dois nós de storage para três nós de storage torna o cluster mais resiliente, permitindo a recuperação automática em caso de falhas de nó e de unidade, mas não fornece capacidade adicional. Pode expandir utilizando o link:task_hcc_expand_storage.html["IU do controle de nuvem híbrida da NetApp"]. Ao expandir de um cluster de dois nós para um cluster de três nós, a capacidade pode ser perdida (<<Capacidade ociosa>>consulte ). O assistente da IU mostra avisos sobre a capacidade perdida antes da instalação. Um nó de testemunha único ainda está disponível para manter o quorum do conjunto no caso de uma falha do nó de armazenamento, com um segundo nó de testemunha em espera. Quando você expande um cluster de storage de três nós para um cluster de quatro nós, a capacidade e o desempenho aumentam. Em um cluster de quatro nós, os nós de testemunha não são mais necessários para formar o quorum do cluster. É possível expandir para até 64 nós de computação e 40 nós de storage.
+
+
+
+== Encontre mais informações
+
+* https://www.netapp.com/pdf.html?item=/media/9489-tr-4823.pdf["Cluster de storage de dois nós NetApp HCI | TR-4823"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* http://docs.netapp.com/sfe-122/index.jsp["Centro de Documentação de Software SolidFire e Element"^]
+

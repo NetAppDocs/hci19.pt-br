@@ -1,0 +1,65 @@
+---
+sidebar: sidebar 
+permalink: docs/task_mnode_run_system_utilities.html 
+summary: Você pode criar ou excluir pacotes de suporte de cluster, redefinir configurações de nó ou reiniciar a rede. 
+keywords: netapp, element, management node ui, mnode ui, system utilities 
+---
+= Execute utilitários do sistema a partir do nó de gerenciamento
+:allow-uri-read: 
+
+
+[role="lead"]
+Você pode usar a IU por nó para o nó de gerenciamento para criar ou excluir pacotes de suporte de cluster, redefinir configurações de nó ou reiniciar a rede.
+
+.Passos
+. Abra a IU do nó de gerenciamento por nó usando as credenciais de administrador do nó de gerenciamento.
+. Clique em *Utilitários do sistema*.
+. Clique no botão do utilitário que você deseja executar:
++
+.. *Potência de controle*: Reinicializa, ciclos de energia ou desliga o nó. Especifique qualquer uma das seguintes opções.
++
+
+IMPORTANT: Esta operação causa perda temporária de conetividade de rede.
+
++
+*** *Ação*: As opções incluem `Restart` e `Halt` (desligado).
+*** *Atraso de ativação*: Qualquer tempo adicional antes do nó voltar online.
+
+
+.. *Criar pacote de suporte de cluster*: Cria o pacote de suporte de cluster para auxiliar as avaliações de diagnóstico de suporte da NetApp de um ou mais nós em um cluster. Especifique as seguintes opções:
++
+*** *Nome do pacote*: Nome exclusivo para cada pacote de suporte criado. Se nenhum nome for fornecido, então "supportbundle" e o nome do nó serão usados como o nome do arquivo.
+*** *Mvip*: O MVIP do cluster. Os pacotes são coletados de todos os nós do cluster. Este parâmetro é necessário se o parâmetro nodes não for especificado.
+*** * Nós*: Os endereços IP dos nós a partir dos quais reunir pacotes. Use nós ou Mvip, mas não ambos, para especificar os nós a partir dos quais reunir pacotes. Este parâmetro é necessário se o Mvip não for especificado.
+*** *Nome de usuário*: O nome de usuário do administrador do cluster.
+*** *Password*: A senha de administrador do cluster.
+*** *Permitir incompleto*: Permite que o script continue sendo executado se os pacotes não puderem ser coletados de um ou mais nós.
+*** * Extra args*: Este parâmetro é alimentado para `sf_make_support_bundle` o script. Este parâmetro deve ser utilizado apenas a pedido do suporte NetApp.
+
+
+.. *Excluir todos os pacotes de suporte*: Exclui todos os pacotes de suporte atuais no nó de gerenciamento.
+.. *Reset Node*: Redefine o nó de gerenciamento para uma nova imagem de instalação. Isso altera todas as configurações, exceto a configuração de rede para o estado padrão. Especifique as seguintes opções:
++
+*** *Build*: O URL para uma imagem de software de elemento remoto para a qual o nó será redefinido.
+*** *Opções*: Especificações para executar as operações de redefinição. Os detalhes são fornecidos pelo suporte da NetApp, se necessário.
++
+
+IMPORTANT: Esta operação causa perda temporária de conetividade de rede.
+
+
+
+.. *Restart Networking*: Reinicia todos os serviços de rede no nó de gerenciamento.
++
+
+IMPORTANT: Esta operação causa perda temporária de conetividade de rede.
+
+
+
+
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

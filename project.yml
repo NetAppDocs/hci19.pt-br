@@ -1,0 +1,389 @@
+---
+settings:
+  name: HCI
+  downlevel: true
+  internal:
+    pdf_enabled: true
+  prod:
+    pdf_enabled: true
+    harmony_enabled: false
+  versions:
+  - version-number: '1.9'
+    url: "/hci19"
+  - version-number: '1.10'
+    url: "/hci"
+  - version-number: '1.8'
+    url: "/hci18"
+  langs: pt-br,us-en,ja-jp,ko-kr,zh-cn,zh-tw,de-de,es-es,fr-fr,it-it
+sidebar:
+  entries:
+  - title: Documentação do NetApp HCI 1,9
+    url: "/index.html"
+  - title: Soluções de HCI da NetApp
+    url: "/docs/hci_solutions_index.html"
+  - title: Notas de versão
+    entries:
+    - title: O que há de novo no NetApp HCI
+      url: "/docs/rn_whatsnew.html"
+    - title: Informações adicionais sobre a versão
+      url: "/docs/rn_relatedrn.html"
+  - title: Conceitos
+    entries:
+    - title: Visão geral do produto
+      url: "/docs/concept_hci_product_overview.html"
+    - title: Contas
+      url: "/docs/concept_cg_hci_accounts.html"
+    - title: Proteção de dados
+      url: "/docs/concept_hci_dataprotection.html"
+    - title: Clusters
+      url: "/docs/concept_hci_clusters.html"
+    - title: Nós
+      url: "/docs/concept_hci_nodes.html"
+    - title: Armazenamento
+      entries:
+      - title: Modo de manutenção
+        url: "/docs/concept_hci_storage_maintenance_mode.html"
+      - title: Volumes
+        url: "/docs/concept_hci_volumes.html"
+      - title: Grupos de acesso de volume
+        url: "/docs/concept_hci_volume_access_groups.html"
+      - title: Iniciadores
+        url: "/docs/concept_hci_initiators.html"
+      - title: Domínios de proteção personalizados
+        url: "/docs/concept_hcc_custom_protection_domains.html"
+    - title: Licenciamento
+      url: "/docs/concept_cg_hci_licensing.html"
+    - title: Valores máximos de configuração do Controle de nuvem híbrida da NetApp
+      url: "/docs/reference_hcc_config_maximums.html"
+    - title: Segurança
+      url: "/docs/concept_cg_hci_security.html"
+    - title: Desempenho
+      url: "/docs/concept_hci_performance.html"
+  - title: Requisitos e tarefas de pré-implantação
+    entries:
+    - title: Requisitos para implantação do NetApp HCI
+      url: "/docs/hci_prereqs_overview.html"
+    - title: Requisitos de nó de gerenciamento
+      url: "/docs/hci_prereqs_management_node.html"
+    - title: Requisitos de porta de rede
+      url: "/docs/hci_prereqs_required_network_ports.html"
+    - title: Requisitos de rede e switch
+      url: "/docs/hci_prereqs_network_switch.html"
+    - title: Requisitos do cabo de rede
+      url: "/docs/hci_prereqs_network_cables.html"
+    - title: Requisitos de endereço IP
+      url: "/docs/hci_prereqs_ip_address.html"
+    - title: Configuração de rede
+      entries:
+      - title: Descrição geral das opções de configuração de rede
+        url: "/docs/hci_prereqs_network_configuration.html"
+      - title: Opção de configuração de rede A
+        url: "/docs/hci_prereqs_network_configuration_option_A.html"
+      - title: Opção de configuração de rede B
+        url: "/docs/hci_prereqs_network_configuration_option_B.html"
+      - title: Configuração de rede opção C
+        url: "/docs/hci_prereqs_network_configuration_option_C.html"
+    - title: Requisitos de DNS e timekeeping
+      url: "/docs/hci_prereqs_timekeeping.html"
+    - title: Requisitos ambientais
+      url: "/docs/hci_prereqs_environmental.html"
+    - title: Domínios de proteção
+      url: "/docs/hci_prereqs_protection_domains.html"
+    - title: Testemunhe os requisitos de recursos do Node para clusters de storage
+        de dois nós
+      url: "/docs/hci_prereqs_witness_nodes.html"
+  - title: Comece a usar o NetApp HCI
+    entries:
+    - title: Visão geral da instalação e implantação do NetApp HCI
+      url: "/docs/task_hci_getstarted.html"
+    - title: Instale as ferragens da série H.
+      url: "/docs/task_hci_installhw.html"
+    - title: Configure o LACP para um desempenho de armazenamento ideal
+      url: "/docs/hci_prereqs_LACP_configuration.html"
+    - title: Valide seu ambiente com o Active IQ Config Advisor
+      url: "/docs/hci_prereqs_task_validate_config_advisor.html"
+    - title: Configure o IPMI para cada nó
+      url: "/docs/hci_prereqs_final_prep.html"
+  - title: Implante o NetApp HCI
+    entries:
+    - title: Acesse o mecanismo de implantação do NetApp
+      entries:
+      - title: Visão geral das opções de acesso ao mecanismo de implantação do NetApp
+        url: "/docs/concept_nde_access_overview.html"
+      - title: Acesse o mecanismo de implantação do NetApp em ambientes sem DHCP
+        url: "/docs/task_nde_access_no_dhcp.html"
+      - title: Acesse o mecanismo de implantação do NetApp em ambientes com DHCP
+        url: "/docs/task_nde_access_dhcp.html"
+      - title: Atribua manualmente endereços IP para acessar o mecanismo de implantação
+          do NetApp
+        url: "/docs/task_nde_access_manual_ip.html"
+    - title: Inicie sua implantação
+      url: "/docs/task_nde_start_deployment.html"
+    - title: Importar um perfil de instalação
+      url: "/docs/task_nde_import_installation_profile.html"
+    - title: Configurar o VMware vSphere
+      entries:
+      - title: Visão geral da configuração do vSphere
+        url: "/docs/concept_nde_config_vsphere_overview.html"
+      - title: Configure um novo ambiente VMware vSphere
+        url: "/docs/task_nde_configure_new_vsphere.html"
+      - title: Participe de uma implantação existente do VMware vSphere
+        url: "/docs/task_nde_join_existing_vsphere.html"
+    - title: Configurar credenciais do NetApp HCI
+      url: "/docs/task_nde_configure_credentials.html"
+    - title: Selecione uma topologia de rede
+      url: "/docs/task_nde_select_net_topology.html"
+    - title: Seleção de inventário
+      entries:
+      - title: Seleção de inventário e compatibilidade de nós
+        url: "/docs/concept_nde_node_compatibility.html"
+      - title: Selecione inventário
+        url: "/docs/task_nde_select_inventory.html"
+    - title: Configure as definições de rede
+      url: "/docs/task_nde_configure_net_settings.html"
+    - title: Revise e implante
+      url: "/docs/task_nde_review_deploy.html"
+    - title: Tarefas pós-implantação
+      entries:
+      - title: Visão geral das tarefas pós-implantação
+        url: "/docs/concept_nde_post_deployment_overview.html"
+      - title: Alterações de rede suportadas
+        url: "/docs/task_nde_supported_net_changes.html"
+      - title: Desative o serviço smartd em nós de computação do NetApp HCI
+        url: "/docs/task_nde_disable_smartd.html"
+      - title: Desative o comando "lacp-Individual" em switches configurados
+        url: "/docs/task_nde_disable_lacp_individual.html"
+      - title: Crie uma função NetApp HCC no vCenter
+        url: "/docs/task_mnode_create_netapp_hcc_role_vcenter.html"
+      - title: Mantenha o VMware vSphere atualizado
+        url: "/docs/task_nde_update_vsphere.html"
+      - title: Instalar drivers de GPU para nós de computação habilitados para GPU
+        url: "/docs/task_nde_install_GPU_drivers.html"
+      - title: Acesse o controle de nuvem híbrida da NetApp
+        url: "/docs/task_nde_access_hcc.html"
+      - title: Reduzir o desgaste da Mídia de inicialização em um nó de computação
+          do NetApp HCI
+        url: "/docs/task_reduce_boot_media_wear.html"
+  - title: Gerenciar o NetApp HCI
+    entries:
+    - title: Visão geral do Manage NetApp HCI
+      url: "/docs/task_hci_manage_overview.html"
+    - title: Configure o acesso totalmente qualificado à IU da Web do Domain Name
+      url: "/docs/task_nde_access_ui_fqdn.html"
+    - title: Alterar credenciais no NetApp HCI
+      url: "/docs/task_post_deploy_credentials.html"
+    - title: Atualize as credenciais do vCenter e do ESXi
+      url: "/docs/task_hci_credentials_vcenter_esxi.html"
+    - title: Gerenciar o storage do NetApp HCI
+      entries:
+      - title: Visão geral do armazenamento do NetApp HCI
+        url: "/docs/task_hcc_manage_storage_overview.html"
+      - title: Criar e gerenciar contas de usuário
+        url: "/docs/task_hcc_manage_accounts.html"
+      - title: Adicionar e gerenciar clusters de storage
+        url: "/docs/task_hcc_manage_storage_clusters.html"
+      - title: Criar e gerenciar volumes
+        url: "/docs/task_hcc_manage_vol_management.html"
+      - title: Criar e gerenciar grupos de acesso de volume
+        url: "/docs/task_hcc_manage_vol_access_groups.html"
+      - title: Criar e gerenciar iniciadores
+        url: "/docs/task_hcc_manage_initiators.html"
+      - title: Criar e gerenciar políticas de QoS de volume
+        url: "/docs/task_hcc_qos_policies.html"
+    - title: Trabalhe com o nó de gerenciamento
+      entries:
+      - title: Visão geral do nó de gerenciamento
+        url: "/docs/task_mnode_work_overview.html"
+      - title: Instale ou recupere um nó de gerenciamento
+        entries:
+        - title: Instale um nó de gerenciamento
+          url: "/docs/task_mnode_install.html"
+        - title: Configurar um controlador de interface de rede (NIC) de armazenamento
+          url: "/docs/task_mnode_install_add_storage_NIC.html"
+        - title: Recuperar um nó de gerenciamento
+          url: "/docs/task_mnode_recover.html"
+      - title: Acesse o nó de gerenciamento
+        url: "/docs/task_mnode_access_ui.html"
+      - title: Altere o certificado SSL padrão do nó de gerenciamento
+        url: "/docs/reference_change_mnode_default_ssl_certificate.html"
+      - title: Trabalhe com a IU do nó de gerenciamento
+        entries:
+        - title: Visão geral da IU do nó de gerenciamento
+          url: "/docs/task_mnode_work_overview_UI.html"
+        - title: Configure o monitoramento de alertas no NetApp HCI
+          url: "/docs/task_mnode_enable_alerts.html"
+        - title: Modifique e teste as configurações de rede, cluster e sistema do
+            nó de gerenciamento
+          url: "/docs/task_mnode_settings.html"
+        - title: Execute utilitários do sistema a partir do nó de gerenciamento
+          url: "/docs/task_mnode_run_system_utilities.html"
+      - title: Trabalhe com a API REST do nó de gerenciamento
+        entries:
+        - title: Visão geral da IU da API REST do nó de gerenciamento
+          url: "/docs/task_mnode_work_overview_API.html"
+        - title: Obter autorização para usar APIs REST
+          url: "/docs/task_mnode_api_get_authorizationtouse.html"
+        - title: Ative o monitoramento Active IQ e NetApp HCI
+          url: "/docs/task_mnode_enable_activeIQ.html"
+        - title: Configurar o controle de nuvem híbrida do NetApp para vários vCenters
+          url: "/docs/task_mnode_multi_vcenter_config.html"
+        - title: Adicione ativos de computação e controlador ao nó de gerenciamento
+          url: "/docs/task_mnode_add_assets.html"
+        - title: Como localizar uma tag de hardware para nó de computação
+          url: "/docs/task_mnode_locate_hardware_tag.html"
+        - title: Criar e gerenciar ativos de cluster de storage
+          url: "/docs/task_mnode_manage_storage_cluster_assets.html"
+        - title: Visualizar ou editar ativos de controlador existentes
+          url: "/docs/task_mnode_edit_vcenter_assets.html"
+        - title: Remova um ativo do nó de gerenciamento
+          url: "/docs/task_mnode_remove_assets.html"
+        - title: Configure um servidor proxy para o nó de gerenciamento
+          url: "/docs/task_mnode_configure_proxy_server.html"
+        - title: Verifique as versões do SO e dos serviços do nó de gerenciamento
+          url: "/docs/task_mnode_api_find_mgmt_svcs_version.html"
+        - title: Obtendo logs de serviços de gerenciamento
+          url: "/docs/task_mnode_logs.html"
+      - title: Gerenciar conexões de suporte
+        entries:
+        - title: Inicie uma sessão remota de suporte do NetApp
+          url: "/docs/task_mnode_enable_remote_support_connections.html"
+        - title: Gerencie a funcionalidade SSH no nó de gerenciamento
+          url: "/docs/task_mnode_ssh_management.html"
+    - title: Desligue ou ligue o sistema NetApp HCI
+      entries:
+      - title: Visão geral da alimentação do NetApp HCI
+        url: "/docs/concept_nde_hci_power_off_on.html"
+      - title: Desligue os recursos de computação para um sistema NetApp HCI
+        url: "/docs/task_nde_hci_power_off_compute.html"
+      - title: Desligue os recursos de armazenamento de um sistema NetApp HCI
+        url: "/docs/task_nde_hci_power_off_storage.html"
+      - title: Ligue os recursos de storage para um sistema NetApp HCI
+        url: "/docs/task_nde_hci_power_on_storage.html"
+      - title: Ative os recursos de computação para um sistema NetApp HCI
+        url: "/docs/task_nde_hci_power_on_compute.html"
+  - title: Monitore seu sistema NetApp HCI com o controle de nuvem híbrida da NetApp
+    entries:
+    - title: Veja recursos no painel do controle de nuvem híbrida da NetApp
+      url: "/docs/task_hcc_dashboard.html"
+    - title: Veja seu inventário na página nós do controle de nuvem híbrida da NetApp
+      url: "/docs/task_hcc_nodes.html"
+    - title: Edite as informações de conexão do BMC com o controle de nuvem híbrida
+        da NetApp
+      url: "/docs/task_hcc_edit_bmc_info.html"
+    - title: Monitore volumes no cluster de storage com o controle de nuvem híbrida
+        da NetApp
+      url: "/docs/task_hcc_volumes.html"
+    - title: Monitore o desempenho, a capacidade e a integridade do cluster com as
+        conexões de controle de nuvem híbrida da NetApp ao Active IQ
+      url: "/docs/task_hcc_activeiq.html"
+    - title: Recolha registos para resolução de problemas
+      url: "/docs/task_hcc_collectlogs.html"
+  - title: Atualize o seu sistema NetApp HCI versão 1,9 ou 1.9P1
+    entries:
+    - title: Descrição geral da sequência de atualização
+      url: "/docs/concept_hci_upgrade_overview.html"
+    - title: Procedimentos de atualização do sistema
+      entries:
+      - title: Atualizar serviços de gestão
+        url: "/docs/task_hcc_update_management_services.html"
+      - title: Atualize para as mais recentes HealthTools
+        url: "/docs/task_upgrade_element_latest_healthtools.html"
+      - title: Execute verificações de integridade do storage Element antes de atualizar
+          o storage
+        url: "/docs/task_hcc_upgrade_element_prechecks.html"
+      - title: Atualize o software Element
+        url: "/docs/task_hcc_upgrade_element_software.html"
+      - title: Atualize o firmware de armazenamento
+        url: "/docs/task_hcc_upgrade_storage_firmware.html"
+      - title: Atualizar um nó de gerenciamento
+        url: "/docs/task_hcc_upgrade_management_node.html"
+      - title: Atualize o plug-in do NetApp Element para o vCenter Server
+        url: "/docs/task_vcp_upgrade_plugin.html"
+      - title: Execute verificações de integridade do nó de computação antes de atualizar
+          o firmware da computação
+        url: "/docs/task_upgrade_compute_prechecks.html"
+      - title: Atualizar drivers de nós de computação
+        url: "/docs/task_hcc_upgrade_compute_node_drivers.html"
+      - title: Atualizar o firmware do nó de computação
+        url: "/docs/task_hcc_upgrade_compute_node_firmware.html"
+      - title: Automatize as atualizações de firmware de nós de computação com o Ansible
+        url: "/docs/task_hcc_upgrade_compute_firmware_ansible.html"
+    - title: Atualize seus componentes vSphere para um sistema NetApp HCI com o plug-in
+        Element para vCenter Server
+      url: "/docs/task_hci_upgrade_all_vsphere.html"
+  - title: Expanda o seu sistema NetApp HCI
+    entries:
+    - title: Expanda a visão geral
+      url: "/docs/concept_hcc_expandoverview.html"
+    - title: Expanda os recursos de storage do NetApp HCI
+      url: "/docs/task_hcc_expand_storage.html"
+    - title: Expanda os recursos de computação do NetApp HCI
+      url: "/docs/task_hcc_expand_compute.html"
+    - title: Expanda os recursos de computação e storage do NetApp
+      url: "/docs/task_hcc_expand_compute_and_storage.html"
+    - title: Remova os nós de testemunhas após expandir o cluster
+      url: "/docs/task_hci_removewn.html"
+  - title: Use o Rancher no NetApp HCI
+    entries:
+    - title: Rancher no NetApp HCI visão geral
+      url: "/docs/concept_rancher_product_overview.html"
+    - title: Conceitos
+      url: "/docs/concept_rancher_concepts.html"
+    - title: Requisitos para Rancher no NetApp HCI
+      url: "/docs/rancher_prereqs_overview.html"
+    - title: Implantar o Rancher no NetApp HCI
+      url: "/docs/task_rancher_deploy.html"
+    - title: Tarefas pós-implantação
+      entries:
+      - title: Visão geral das tarefas pós-implantação
+        url: "/docs/concept_rancher_post_deployment_overview.html"
+      - title: Garanta a paridade do suporte do Rancher
+        url: "/docs/task_rancher_ensure_rancher_support_parity.html"
+      - title: Aprimorar a resiliência da VM Rancher
+        url: "/docs/task_rancher_config_anti_affinity.html"
+      - title: Configurar a monitorização
+        url: "/docs/task_rancher_enable_monitoring.html"
+      - title: Instale o Trident
+        url: "/docs/task_rancher_trident.html"
+      - title: Habilite o suporte do Trident para clusters de usuários
+        url: "/docs/task_trident_configure_networking.html"
+    - title: Implante clusters de usuários e aplicações
+      url: "/docs/task_rancher_deploy_user_clusters.html"
+    - title: Gerenciar Rancher no NetApp HCI
+      url: "/docs/task_rancher_manage.html"
+    - title: Monitore o Rancher no NetApp HCI
+      url: "/docs/task_rancher_monitor.html"
+    - title: Atualize Rancher no NetApp HCI
+      url: "/docs/task_rancher_upgrades.html"
+    - title: Remova uma instalação do Rancher no NetApp HCI
+      url: "/docs/task_rancher_remove_deployment.html"
+  - title: Mantenha o hardware da série H.
+    entries:
+    - title: Visão geral da manutenção de hardware da série H.
+      url: "/docs/task_hci_hwmainoverview.html"
+    - title: Substitua o chassi da série H 2U
+      url: "/docs/task_hci_hserieschassisrepl.html"
+    - title: Substitua as unidades de fonte de alimentação CC em H615C e H610S nós
+      url: "/docs/task_hci_dcpsurepl.html"
+    - title: Substitua DIMMs em nós de computação
+      url: "/docs/task_hci_dimmcomputerepl.html"
+    - title: Substitua unidades por nós de storage
+      url: "/docs/task_hci_driverepl.html"
+    - title: Substitua H410C nós
+      url: "/docs/task_hci_h410crepl.html"
+    - title: Substitua H410S nós
+      url: "/docs/task_hci_h410srepl.html"
+    - title: Substitua os nós H610C e H615C
+      url: "/docs/task_hci_h610ch615crepl.html"
+    - title: Substitua H610S nós
+      url: "/docs/task_hci_h610srepl.html"
+    - title: Substitua as unidades da fonte de alimentação
+      url: "/docs/task_hci_psurepl.html"
+    - title: Substitua os interrutores SN2010, SN2100 e SN2700
+      url: "/docs/task_hci_snswitches.html"
+    - title: Substitua o nó de storage em um cluster de dois nós
+      url: "/docs/task_hci_2noderepl.html"
+  - title: Versões anteriores
+    url: "/docs/reference_earlier_versions.html"
+  - title: Avisos legais
+    url: "/docs/reference_notices_hci.html"

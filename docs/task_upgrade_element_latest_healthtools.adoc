@@ -1,0 +1,88 @@
+---
+sidebar: sidebar 
+permalink: docs/task_upgrade_element_latest_healthtools.html 
+summary: Como parte de uma atualização do sistema, você deve atualizar para o software HealthTools para NetApp Element mais recente. 
+keywords: netapp, HealthTools upgrade, sfupdate-healthtools, element 
+---
+= Atualize para as mais recentes HealthTools
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Antes de iniciar uma atualização de armazenamento de elemento a partir do 11,1 ou anterior, você deve atualizar seu pacote HealthTools. A atualização do HealthTools só é necessária se o nó de gerenciamento e o software Element que você está executando for 11,1 ou anterior. HealthTools não são necessários para link:task_hcc_upgrade_element_software.html["Realização de atualizações do Element com o controle de nuvem híbrida da NetApp"].
+
+
+IMPORTANT: O software Element 12.3.2 é a versão final para a qual você pode atualizar usando o NetApp HealthTools. Se você estiver executando o software Element 11,3 ou posterior, use o Controle de nuvem híbrida da NetApp para atualizar o software Element. Você pode atualizar as versões do Element 11,1 ou anteriores usando o NetApp HealthTools.
+
+.O que você vai precisar
+* Você está executando o nó de gerenciamento 11,0, 11,1 ou posterior.
+* Você atualizou seus serviços de gerenciamento para pelo menos a versão 2.1.326.
++
+As atualizações do controle de nuvem híbrida da NetApp não estão disponíveis em versões anteriores do pacote de serviços.
+
+* Você baixou a versão mais recente https://mysupport.netapp.com/site/products/all/details/element-healthtools/downloads-tab["HealthTools"^] e copiou o arquivo de instalação para o nó de gerenciamento.
++
+
+TIP: Você pode verificar a versão instalada localmente do HealthTools executando o `sfupdate-healthtools -v` comando.
+
+* Para usar o HealthTools com sites escuros, você precisa fazer estes passos adicionais:
++
+** Faça o download de um link:https://library.netapp.com/ecm/ecm_get_file/ECMLP2840740["Ficheiro JSON"^] do site de suporte da NetApp em um computador que não seja o nó de gerenciamento e renomeie-o para `metadata.json`.
+** Coloque o nó de gerenciamento em funcionamento no local escuro.
+
+
+
+
+.Sobre esta tarefa
+Os comandos no pacote HealthTools requerem Privileges escalado para serem executados. Prefácio comandos `sudo` ou encaminhar o usuário para o Privileges raiz.
+
+
+NOTE: A versão do HealthTools que você usa pode estar mais atualizada do que a entrada de amostra e a resposta abaixo.
+
+.Passos
+. Execute o `sfupdate-healthtools <path to install file>` comando para instalar o novo software HealthTools.
++
+Entrada de amostra:
+
++
+[listing]
+----
+sfupdate-healthtools /tmp/solidfire-healthtools-2020.03.01.09.tgz
+----
++
+Resposta da amostra:
+
++
+[listing]
+----
+Checking key signature for file /tmp/solidfirehealthtools-2020.03.01.09/components.tgz
+installing command sfupdate-healthtools
+Restarting on version 2020.03.01.09
+sfupdate-healthtools /sf/bin/sfupdate-healthtools -r 2020.03.01.09
+installing command sfupgradecheck
+installing command sfinstall
+installing command sfresetupgrade
+----
+. Execute o `sfupdate-healthtools -v` comando para verificar se a versão instalada foi atualizada.
++
+Resposta da amostra:
+
++
+[listing]
+----
+Currently installed version of HealthTools:
+2020.03.01.09
+----
+
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

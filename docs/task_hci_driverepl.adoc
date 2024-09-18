@@ -1,0 +1,176 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hci_driverepl.html 
+summary: Se uma unidade falhar ou se o nível de desgaste da unidade cair abaixo de um limite, você deve substituí-la. Você pode trocar a quente uma unidade com falha. 
+keywords: netapp, hci, SSDs, drives, replace drives, H410S, H610S 
+---
+= Substitua unidades por nós de storage
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Se uma unidade estiver avariada ou se o nível de desgaste da unidade descer abaixo de um limite, deve substituí-la. Os alarmes na IU do software Element e no VMware vSphere Web Client notificam você quando uma unidade falhou ou falhará. Você pode trocar a quente uma unidade com falha.
+
+.Sobre esta tarefa
+Este procedimento destina-se à substituição de unidades em nós de storage H410S e H610S. Remover uma unidade coloca a unidade offline. Todos os dados na unidade são removidos e migrados para outras unidades no cluster. A migração de dados para outras unidades ativas no sistema pode levar alguns minutos a uma hora, dependendo da utilização da capacidade e e/S ativa no cluster.
+
+
+
+== Práticas recomendadas para manuseio de unidades
+
+Você deve seguir estas práticas recomendadas para manusear unidades:
+
+* Mantenha a unidade no saco ESD até que esteja pronto para instalá-la.
+* Abra o saco ESD à mão ou corte a parte superior com uma tesoura.
+* Utilize sempre uma pulseira antiestática ligada à terra a uma superfície não pintada no chassis.
+* Utilize sempre as duas mãos ao remover, instalar ou transportar uma unidade.
+* Nunca force uma unidade no chassis.
+* Utilize sempre embalagens aprovadas ao enviar unidades.
+* Não empilhar unidades umas sobre as outras.
+
+
+
+
+== Práticas recomendadas para adicionar e remover unidades
+
+Siga estas práticas recomendadas para adicionar unidades ao cluster e remover unidades do cluster:
+
+* Adicione todas as unidades de bloco e certifique-se de que a sincronização de bloco está concluída antes de adicionar as unidades de corte.
+* Para o software Element 10.x e posterior, adicione todas as unidades de bloco de uma só vez. Certifique-se de que você não faz isso para mais de três nós de uma só vez.
+* Para o software Element 9.x e anteriores, adicione três unidades de uma só vez, permitindo que elas sincronizem completamente antes de adicionar o próximo grupo de três.
+* Remova a unidade de corte e certifique-se de que a sincronização de cortes está concluída antes de remover as unidades de bloco.
+* Remova todas as unidades de bloco de um único nó de uma só vez. Certifique-se de que toda a sincronização de blocos esteja concluída antes de passar para o nó seguinte.
+
+
+.Passos
+. Remova a unidade do cluster usando a IU do software NetApp Element ou o ponto de extensão do NetApp Element Management no plug-in Element para vCenter Server.
++
+[cols="2*"]
+|===
+| Opção | Passos 
+
+
+| Usando a IU do Element  a| 
+.. Na IU do Element, selecione *Cluster > Drives*.
+.. Clique em *Failed* para ver a lista de unidades com falha.
+.. Anote o número do slot da unidade com falha. Você precisa dessas informações para localizar a unidade com falha no chassi.
+.. Clique em *ações* para a unidade que deseja remover.
+.. Clique em *Remover*.
+
+
+Agora você pode remover fisicamente a unidade do chassi.
+
+
+
+| Usando o plug-in Element para IU do vCenter Server  a| 
+.. No ponto de extensão Gerenciamento do NetApp Element do vSphere Web Client, selecione *Gerenciamento do NetApp Element > Cluster*.
+.. Se forem adicionados dois ou mais clusters, certifique-se de que o cluster que pretende utilizar para a tarefa está selecionado na barra de navegação.
+.. Selecione *All* na lista suspensa para exibir a lista completa de unidades.
+.. Marque a caixa de seleção para cada unidade que deseja remover.
+.. Selecione *Remover unidades*.
+.. Confirme a ação.
++
+
+NOTE: Se não houver capacidade suficiente para remover unidades ativas antes de remover um nó, uma mensagem de erro será exibida quando você confirmar a remoção da unidade. Depois de resolver o erro, agora você pode remover fisicamente a unidade do chassi.
+
+
+
+|===
+. Substitua a unidade do chassis:
++
+.. Desembale a unidade de substituição e coloque-a numa superfície plana e sem estática perto do rack. Guarde os materiais de embalagem para quando devolver a unidade com falha ao NetApp. Aqui está a visão frontal dos nós de storage H610S e H410S com as unidades:
++
+image::h610s_h410s.png[Mostra a visualização frontal dos nós de storage H610S e H410S.]
+
+.. Execute as etapas com base no modelo do nó:
++
+[cols="2*"]
+|===
+| Modelo de nó | Passos 
+
+
+| H410S  a| 
+... Identifique o nó fazendo a correspondência do número de série (etiqueta de serviço) com o número anotado na IU do elemento. O número de série encontra-se num autocolante na parte de trás de cada nó. Depois de identificar o nó, você pode usar as informações do slot para identificar o slot em que a unidade com falha está. As unidades são organizadas alfabeticamente De A A D e de 0 a 5.
+... Retire a moldura.
+... Pressione o botão de liberação na unidade com falha:
++
+image::h410s_drive.png[Mostra o botão de liberação na unidade para H410S nós de storage.]
+
++
+Quando prime o botão de libertação, a pega do excêntrico nas molas de transmissão abre parcialmente e a unidade solta-se do plano médio.
+
+... Abra a pega do came e deslize a unidade cuidadosamente para fora utilizando ambas as mãos.
+... Coloque a unidade numa superfície plana e antiestática.
+... Insira a unidade de substituição na ranhura totalmente no chassis utilizando as duas mãos.
+... Pressione a pega do came para baixo até ouvir um estalido.
+... Volte a instalar a moldura.
+... Notifique o suporte da NetApp sobre a substituição da unidade. O suporte da NetApp fornecerá instruções para retornar a unidade com falha.
+
+
+
+
+| H610S  a| 
+... Faça corresponder o número do slot da unidade com falha da IU do elemento com o número no chassi. O LED na unidade com falha está aceso a âmbar.
+... Retire a moldura.
+... Pressione o botão de liberação e remova a unidade com falha, conforme mostrado na ilustração a seguir:
++
+image::h610s_driveremove.png[Mostra a unidade que está sendo removida do nó H610S.]
+
++
+
+NOTE: Certifique-se de que a alça da bandeja esteja totalmente aberta antes de tentar deslizar a unidade para fora do chassi.
+
+... Deslize a unidade para fora e coloque-a sobre uma superfície plana e livre de estática.
+... Pressione o botão de liberação na unidade de substituição antes de inseri-la no compartimento da unidade. As molas do manípulo do tabuleiro de unidades abrem.
++
+image::H600S_driveinstall.png[Mostra a unidade que está sendo instalada no nó H610S.]
+
+... Introduza a unidade de substituição sem utilizar força excessiva. Quando a unidade estiver totalmente inserida, você ouvirá um clique.
+... Feche cuidadosamente a pega do tabuleiro de unidades.
+... Volte a instalar a moldura.
+... Notifique o suporte da NetApp sobre a substituição da unidade. O suporte da NetApp fornecerá instruções para retornar a unidade com falha.
+
+
+|===
+
+
+. Adicione a unidade de volta ao cluster usando a IU do Element ou o ponto de extensão de gerenciamento do NetApp Element no plug-in Element para vCenter Server.
++
+
+NOTE: Quando você instala uma nova unidade em um nó existente, a unidade se Registra automaticamente como *disponível* na IU do elemento. Você deve adicionar a unidade ao cluster antes que ela possa participar do cluster.
+
++
+[cols="2*"]
+|===
+| Opção | Passos 
+
+
+| Usando a IU do Element  a| 
+.. Na IU do Element, selecione *Cluster > Drives*.
+.. Selecione *Available* para ver a lista de unidades disponíveis.
+.. Selecione o ícone ações para a unidade que deseja adicionar e selecione *Adicionar*.
+
+
+
+
+| Usando o plug-in Element para IU do vCenter Server  a| 
+.. No ponto de extensão Gerenciamento do NetApp Element do vSphere Web Client, selecione *Gerenciamento do NetApp Element > Cluster > Drives*.
+.. Na lista suspensa disponível, selecione a unidade e selecione *Adicionar*.
+.. Confirme a ação.
+
+
+|===
+
+
+
+
+== Encontre mais informações
+
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+* http://docs.netapp.com/sfe-122/index.jsp["Centro de Documentação de Software SolidFire e Element"^]
+

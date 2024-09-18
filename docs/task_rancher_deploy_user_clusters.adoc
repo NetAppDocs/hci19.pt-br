@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: docs/task_rancher_deploy_user_clusters.html 
+summary: Depois de implantar o Rancher no NetApp HCI, é possível configurar clusters de usuários e adicionar aplicativos a esses clusters. 
+keywords: netapp, hci, rancher, deploy, cluster, kubernetes, control plane,  user cluster, workload 
+---
+= Implante clusters de usuários e aplicações
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Depois de implantar o Rancher no NetApp HCI, é possível configurar clusters de usuários e adicionar aplicativos a esses clusters.
+
+
+
+== Implantar clusters de usuários
+
+Após a implantação, as equipes de desenvolvimento e operações podem implantar clusters de usuários do Kubernetes, semelhante a qualquer implantação do Rancher, em que podem implantar aplicações.
+
+. Acesse a IU do Rancher usando esse URL fornecido ao final da implantação do Rancher.
+. Crie clusters de usuários. Consulte a documentação do Rancher sobre https://rancher.com/docs/rancher/v2.x/en/quick-start-guide/workload/["implantação de workloads"^].
+. Provisionar clusters de usuários em Rancher no NetApp HCI. Consulte a documentação do Rancher sobre https://rancher.com/docs/rancher/v2.x/en/cluster-provisioning/["Configuração de clusters do Kubernetes em Rancher"^].
+
+
+
+
+== Implantar aplicações nos clusters de usuários
+
+De forma semelhante a qualquer implantação do Rancher, você adiciona aplicações nos clusters do Kubernetes.
+
+Consulte a documentação do Rancher sobre https://rancher.com/docs/rancher/v2.x/en/deploy-across-clusters/["implantação de aplicativos entre clusters"^].
+
+[discrete]
+== Encontre mais informações
+
+* https://rancher.com/docs/rancher/v2.x/en/overview/architecture/["Documentação do rancher sobre arquitetura"^]
+* https://rancher.com/docs/rancher/v2.x/en/overview/concepts/["Terminologia do Kubernetes para Rancher"^]
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+

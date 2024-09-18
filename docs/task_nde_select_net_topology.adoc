@@ -1,0 +1,42 @@
+---
+sidebar: sidebar 
+permalink: docs/task_nde_select_net_topology.html 
+summary: Saiba como configurar o VMware vSphere durante a implantação do NetApp HCI. 
+keywords: netapp, hci, netapp deployment engine, deployment, vsphere 
+---
+= Selecione uma topologia de rede
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Ao fazer cabeamento de nós de NetApp HCI, você tem a opção de usar diferentes configurações de cabos de rede, dependendo de suas necessidades. Para cada nó de computação, você pode usar todas as seis portas de rede, com diferentes tipos de tráfego atribuídos a cada par de portas, ou usar duas portas com todos os tipos de tráfego atribuídos às portas. Os nós de storage usam a configuração padrão de quatro cabos. Sua escolha afeta quais nós de computação são selecionáveis no inventário.
+
+.O que você vai precisar
+Se você escolher a topologia de rede de dois cabos para nós de computação, considere os seguintes requisitos:
+
+* Você tem uma licença do VMware vSphere Enterprise Plus pronta para ser aplicada após a conclusão da implantação.
+* Verificou-se que a configuração dos comutadores de rede e rede está correta.
+* A marcação de VLAN é necessária para redes de storage e vMotion para todos os nós de computação e storage.
+
+
+.Passos
+. Na página *topologia de rede*, selecione uma topologia de nó de computação que se adapte à maneira como você instalou nós de computação para NetApp HCI:
++
+** *Opção de cabo 6*: A opção de seis cabos fornece portas dedicadas para cada tipo de tráfego (gerenciamento, máquina virtual e armazenamento). Opcionalmente, você pode ativar o vSphere Distributed Switch (VDS). A ativação do VDS configura um switch distribuído, permitindo o gerenciamento simplificado e centralizado da configuração de rede da máquina virtual após a conclusão da implantação do NetApp HCI. Se você ativá-lo, você deve ter uma licença do vSphere Enterprise Plus pronta para ser aplicada após a implantação.
+** *Opção de cabo 2*: A opção de dois cabos combina gerenciamento, máquina virtual e tráfego de armazenamento em duas portas ligadas. Essa opção de cabeamento requer VDS e a ativa automaticamente. Você deve ter uma licença do vSphere Enterprise Plus pronta para ser aplicada após a implantação.
+
+
+. Algumas opções de cabeamento exibem várias visualizações do painel traseiro de diferentes tipos de hardware de nó. Percorra as visualizações do painel traseiro para ver como conetar os cabos de rede para esse modelo de nó específico e opção de cabeamento.
+. Quando terminar, clique em *continuar*.
+
+
+[discrete]
+== Encontre mais informações
+
+* link:firmware_driver_versions.html["Versões de firmware e driver ESXi compatíveis para versões de NetApp HCI e firmware para nós de storage NetApp HCI"]
+

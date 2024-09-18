@@ -1,0 +1,95 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hci_dcpsurepl.html 
+summary: Os nós de H615C e H610S suportam duas unidades de fonte de alimentação de –48 V a –60 V DC. Essas unidades estão disponíveis como complementos opcionais quando você solicita H615C ou H610S nós. Você pode usar o mesmo conjunto de instruções para remover as unidades de fonte de alimentação CA no chassi e substituí-las por unidades de fonte de alimentação CC, ou substituir uma unidade de fonte de alimentação CC defeituosa por uma nova unidade de fonte de alimentação CC. 
+keywords: netapp, hci, psu, replace power supply, H610S, H615C, DC 
+---
+= Substitua as unidades de fonte de alimentação CC em H615C e H610S nós
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Os nós de H615C e H610S suportam duas unidades de fonte de alimentação de –48 V a –60 V DC. Essas unidades estão disponíveis como complementos opcionais quando você solicita H615C ou H610S nós. Pode utilizar estas instruções para remover as unidades de fonte de alimentação CA no chassis e substituí-las por unidades de fonte de alimentação CC, ou para substituir uma unidade de fonte de alimentação CC avariada por uma nova unidade de fonte de alimentação CC.
+
+.O que você vai precisar
+* Se estiver a substituir uma fonte de alimentação CC avariada, adquiriu uma fonte de alimentação CC de substituição.
+* Se você estiver trocando as unidades de fonte de alimentação CA em seu chassi por unidades DC, você levou em consideração o tempo de inatividade para o procedimento.
+* Você tem uma pulseira de descarga eletrostática (ESD) ou tomou outras precauções antiestáticas.
+* Você garantiu que os requisitos da fonte de alimentação sejam atendidos:
++
+** Tensão de alimentação: – (48-60V) V DC
+** Consumo de corrente: 37AmA (máximo)
+** Requisitos do disjuntor: 40A disjuntor
+
+
+* Você garantiu que os materiais em seu ambiente aderem às especificações RoHS.
+* Você garantiu que os requisitos do cabo sejam atendidos:
++
+** Um cabo preto UL 10 AWG, máximo de 2 m (encalhado) [–(48-60) V DC]
+** Um cabo vermelho UL 10 AWG, máximo de 2 m (encalhado) [V DC Return]
+** Um cabo UL 10 AWG, máximo de 2 m verde/amarelo, verde com uma faixa amarela, fio encalhado (terra de segurança)
+
+
+
+
+.Sobre esta tarefa
+O procedimento aplica-se aos seguintes modelos de nós:
+
+* Uma unidade de rack (1U U) e um chassi de computação de H615C U
+* Chassi de storage de 1U H610S U.
++
+
+NOTE: No caso do H615C e do H610S, os termos "nó" e "chassi" são usados de forma intercambiável porque nó e chassi não são componentes separados, ao contrário do que acontece no chassi de quatro nós 2U.
+
+
+
+
+CAUTION: Não é possível misturar unidades de alimentação CA e CC na sua instalação.
+
+.Passos
+. Desligue as unidades da fonte de alimentação e desconete os cabos de alimentação. Se você estiver substituindo uma fonte de alimentação CC com defeito, desligue a fonte de alimentação e remova todos os cabos inseridos no conetor azul.
+. Levante o manípulo do excêntrico e prima o trinco azul para deslizar para fora a unidade da fonte de alimentação.
++
+image::psu-remove.gif[Mostra o manípulo do came a ser levantado e a unidade de alimentação a ser deslizada para fora do chassis.]
+
++
+
+NOTE: A ilustração é um exemplo. A localização da fonte de alimentação no chassis e a cor do botão de libertação variam consoante o tipo de chassis que tem.
+
++
+
+IMPORTANT: Certifique-se de que utiliza ambas as mãos para suportar o peso da fonte de alimentação.
+
+. Utilizando ambas as mãos, alinhe as extremidades da unidade de alimentação com a abertura no chassis, empurre cuidadosamente a unidade para dentro do chassis utilizando a pega do excêntrico até encaixar no devido lugar e volte a colocar a pega do excêntrico na posição vertical.
++
+image::psu-install.gif[Mostra a unidade de fonte de alimentação que está sendo instalada no chassi.]
+
+. Coloque o cabo das unidades de alimentação CC. Certifique-se de que a fonte de alimentação está desligada durante o cabeamento da unidade de fonte de alimentação CC e da fonte de alimentação.
++
+.. Insira os cabos preto, vermelho e verde/amarelo nos conetores azuis.
+.. Insira o conetor azul nas unidades de fonte de alimentação CC e na fonte de alimentação.
++
+image::dc-psu.png[Mostra o cabeamento na unidade de fonte de alimentação CC.]
+
+
+
+. Ligue as unidades de alimentação CC.
++
+
+TIP: Os LEDs da fonte de alimentação acendem-se quando a unidade da fonte de alimentação CC se liga. As luzes LED verdes indicam que as unidades da fonte de alimentação estão a funcionar corretamente.
+
+. Devolva a unidade avariada à NetApp seguindo as instruções na caixa que lhe foi enviada.
+
+
+
+
+== Encontre mais informações
+
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+* http://docs.netapp.com/sfe-122/index.jsp["Centro de Documentação de Software SolidFire e Element"^]
+

@@ -1,0 +1,252 @@
+---
+sidebar: sidebar 
+permalink: docs/task_mnode_manage_storage_cluster_assets.html 
+summary: Você pode adicionar, remover e alterar os ativos de cluster de storage de nós de gerenciamento usando a IU da API REST. 
+keywords: netapp, mnode, management node, rest api, hci, assets 
+---
+= Criar e gerenciar ativos de cluster de storage
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você pode adicionar novos ativos de cluster de storage ao nó de gerenciamento, editar as credenciais armazenadas para ativos de cluster de storage conhecidos e excluir ativos de cluster de storage do nó de gerenciamento usando a API REST.
+
+.O que você vai precisar
+* Verifique se a versão do cluster de storage está executando o software NetApp Element 11,3 ou posterior.
+* Certifique-se de que implantou um nó de gerenciamento executando a versão 11,3 ou posterior.
+
+
+.Opções de gerenciamento de ativos de cluster de storage
+Escolha uma das seguintes opções:
+
+* <<Recupere a ID de instalação e a ID de cluster de um ativo de cluster de armazenamento>>
+* <<Adicionar um novo ativo de cluster de storage>>
+* <<Edite as credenciais armazenadas para um ativo de cluster de storage>>
+* <<Excluir um ativo de cluster de armazenamento>>
+
+
+
+
+== Recupere a ID de instalação e a ID de cluster de um ativo de cluster de armazenamento
+
+Você pode usar a API REST obter o ID de instalação e o ID do cluster de armazenamento. Você precisa do ID de instalação para adicionar um novo ativo de cluster de armazenamento e o ID do cluster para modificar ou excluir um ativo de cluster de armazenamento específico.
+
+.Passos
+. Acesse a IU da API REST do serviço de inventário inserindo o endereço IP do nó de gerenciamento seguido de `/inventory/1/`:
++
+[listing]
+----
+https://<ManagementNodeIP>/inventory/1/
+----
+. Clique em *autorizar* ou em qualquer ícone de cadeado e complete o seguinte:
++
+.. Introduza o nome de utilizador e a palavra-passe do cluster.
+.. Introduza a ID do cliente como `mnode-client`.
+.. Clique em *autorizar* para iniciar uma sessão.
+.. Feche a janela.
+
+
+. Clique em *GET /installations*.
+. Clique em *Experimente*.
+. Clique em *Executar*.
++
+A API retorna uma lista de todas as instalações conhecidas.
+
+. No corpo de resposta do código 200, salve o valor no `id` campo, que você pode encontrar na lista de instalações. Esta é a ID de instalação. Por exemplo:
++
+[listing, subs="+quotes"]
+----
+"installations": [
+    {
+      *"id": "1234a678-12ab-35dc-7b4a-1234a5b6a7ba",*
+      "name": "my-hci-installation",
+      "_links": {
+        "collection": "https://localhost/inventory/1/installations",
+        "self": "https://localhost/inventory/1/installations/1234a678-12ab-35dc-7b4a-1234a5b6a7ba"
+      }
+    }
+  ]
+----
+. Acesse a IU da API REST do serviço de storage inserindo o endereço IP do nó de gerenciamento seguido de `/storage/1/`:
++
+[listing]
+----
+https://<ManagementNodeIP>/storage/1/
+----
+. Clique em *autorizar* ou em qualquer ícone de cadeado e complete o seguinte:
++
+.. Introduza o nome de utilizador e a palavra-passe do cluster.
+.. Introduza a ID do cliente como `mnode-client`.
+.. Clique em *autorizar* para iniciar uma sessão.
+.. Feche a janela.
+
+
+. Clique em *GET /clusters*.
+. Clique em *Experimente*.
+. Insira o ID de instalação que você salvou anteriormente `installationId` no parâmetro.
+. Clique em *Executar*.
++
+A API retorna uma lista de todos os clusters de armazenamento conhecidos nesta instalação.
+
+. No corpo de resposta do código 200, localize o cluster de armazenamento correto e salve o valor no campo do cluster `storageId`. Esta é a ID do cluster de armazenamento.
+
+
+
+
+== Adicionar um novo ativo de cluster de storage
+
+Você pode usar a API REST para adicionar um ou mais novos ativos de cluster de storage ao inventário do nó de gerenciamento. Quando você adiciona um novo ativo de cluster de storage, ele é registrado automaticamente no nó de gerenciamento.
+
+.O que você vai precisar
+* Você copiou o <<Recupere a ID de instalação e a ID de cluster de um ativo de cluster de armazenamento,ID do cluster de armazenamento e ID de instalação>> para todos os clusters de storage que deseja adicionar.
+* Se você estiver adicionando mais de um nó de storage, leu e compreendeu as limitações do link:concept_hci_clusters.html#authoritative-storage-clusters["cluster autoritativo"]suporte a vários clusters de storage.
++
+
+NOTE: Todos os usuários definidos no cluster autoritativo são definidos como usuários em todos os outros clusters vinculados à instância do Hybrid Cloud Control.
+
+
+
+.Passos
+. Acesse a IU da API REST do serviço de storage inserindo o endereço IP do nó de gerenciamento seguido de `/storage/1/`:
++
+[listing]
+----
+https://<ManagementNodeIP>/storage/1/
+----
+. Clique em *autorizar* ou em qualquer ícone de cadeado e complete o seguinte:
++
+.. Introduza o nome de utilizador e a palavra-passe do cluster.
+.. Introduza a ID do cliente como `mnode-client`.
+.. Clique em *autorizar* para iniciar uma sessão.
+.. Feche a janela.
+
+
+. Clique em *POST /clusters*.
+. Clique em *Experimente*.
+. Insira as informações do novo cluster de armazenamento nos seguintes parâmetros no campo *corpo da solicitação*:
++
+[listing]
+----
+{
+  "installationId": "a1b2c34d-e56f-1a2b-c123-1ab2cd345d6e",
+  "mvip": "10.0.0.1",
+  "password": "admin",
+  "userId": "admin"
+}
+----
++
+|===
+| Parâmetro | Tipo | Descrição 
+
+
+| `installationId` | cadeia de carateres | A instalação na qual adicionar o novo cluster de armazenamento. Insira a ID de instalação que você salvou anteriormente neste parâmetro. 
+
+
+| `mvip` | cadeia de carateres | O endereço IP virtual de gerenciamento IPv4 (MVIP) do cluster de armazenamento. 
+
+
+| `password` | cadeia de carateres | A palavra-passe utilizada para comunicar com o cluster de armazenamento. 
+
+
+| `userId` | cadeia de carateres | A ID de usuário usada para se comunicar com o cluster de armazenamento (o usuário deve ter Privileges de administrador). 
+|===
+. Clique em *Executar*.
++
+A API retorna um objeto que contém informações sobre o ativo de cluster de armazenamento recém-adicionado, como nome, versão e informações de endereço IP.
+
+
+
+
+
+== Edite as credenciais armazenadas para um ativo de cluster de storage
+
+Você pode editar as credenciais armazenadas que o nó de gerenciamento usa para fazer login em um cluster de storage. O usuário que você escolher deve ter acesso ao administrador do cluster.
+
+
+NOTE: Certifique-se de que seguiu os passos em <<Recupere a ID de instalação e a ID de cluster de um ativo de cluster de armazenamento>> antes de continuar.
+
+.Passos
+. Acesse a IU da API REST do serviço de storage inserindo o endereço IP do nó de gerenciamento seguido de `/storage/1/`:
++
+[listing]
+----
+https://<ManagementNodeIP>/storage/1/
+----
+. Clique em *autorizar* ou em qualquer ícone de cadeado e complete o seguinte:
++
+.. Introduza o nome de utilizador e a palavra-passe do cluster.
+.. Introduza a ID do cliente como `mnode-client`.
+.. Clique em *autorizar* para iniciar uma sessão.
+.. Feche a janela.
+
+
+. Clique em *PUT /clusters/(storageId)*.
+. Clique em *Experimente*.
+. Cole o ID do cluster de armazenamento que você copiou anteriormente `storageId` no parâmetro.
+. Altere um ou ambos os parâmetros a seguir no campo *corpo do pedido*:
++
+[listing]
+----
+{
+  "password": "adminadmin",
+  "userId": "admin"
+}
+----
++
+|===
+| Parâmetro | Tipo | Descrição 
+
+
+| `password` | cadeia de carateres | A palavra-passe utilizada para comunicar com o cluster de armazenamento. 
+
+
+| `userId` | cadeia de carateres | A ID de usuário usada para se comunicar com o cluster de armazenamento (o usuário deve ter Privileges de administrador). 
+|===
+. Clique em *Executar*.
+
+
+
+
+== Excluir um ativo de cluster de armazenamento
+
+Você pode excluir um ativo de cluster de armazenamento se o cluster de armazenamento não estiver mais em serviço. Quando você remove um ativo de cluster de storage, ele é automaticamente desregistrado do nó de gerenciamento.
+
+
+NOTE: Certifique-se de que seguiu os passos em <<Recupere a ID de instalação e a ID de cluster de um ativo de cluster de armazenamento>> antes de continuar.
+
+.Passos
+. Acesse a IU da API REST do serviço de storage inserindo o endereço IP do nó de gerenciamento seguido de `/storage/1/`:
++
+[listing]
+----
+https://<ManagementNodeIP>/storage/1/
+----
+. Clique em *autorizar* ou em qualquer ícone de cadeado e complete o seguinte:
++
+.. Introduza o nome de utilizador e a palavra-passe do cluster.
+.. Introduza a ID do cliente como `mnode-client`.
+.. Clique em *autorizar* para iniciar uma sessão.
+.. Feche a janela.
+
+
+. Clique em *DELETE /clusters/(storageId)*.
+. Clique em *Experimente*.
+. Introduza a ID do cluster de armazenamento que copiou anteriormente no `storageId` parâmetro.
+. Clique em *Executar*.
++
+Após o sucesso, a API retorna uma resposta vazia.
+
+
+
+[discrete]
+== Encontre mais informações
+
+* link:concept_hci_clusters.html#authoritative-storage-clusters["Cluster autoritativo"]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

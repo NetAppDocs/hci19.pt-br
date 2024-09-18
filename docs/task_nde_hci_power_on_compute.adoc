@@ -1,0 +1,45 @@
+---
+sidebar: sidebar 
+permalink: docs/task_nde_hci_power_on_compute.html 
+summary: Saiba como ativar os nós de computação do NetApp HCI. 
+keywords: netapp, hci, netapp deployment engine, deployment, vsphere 
+---
+= Ative os recursos de computação para um sistema NetApp HCI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você pode ativar os recursos de computação para um sistema NetApp HCI após a interrupção programada ser concluída.
+
+.Passos
+. Impulsione os nós de computação usando as mesmas etapas que você executou para ligar os nós de storage.
+. Quando todos os nós de computação estiverem operacionais, faça login no host ESXi que estava executando o vCSA.
+. Faça login no host de computação e verifique se ele vê todos os armazenamentos de dados do NetApp HCI. Para um sistema NetApp HCI típico, você deve ver todos os datastores locais ESXi e pelo menos os seguintes datastores compartilhados:
+
+
+[listing]
+----
+NetApp-HCI-Datastore-[01,02]
+----
+. Assumindo que todo o armazenamento está acessível, ligue o vCSA e quaisquer outras máquinas virtuais necessárias da seguinte forma:
++
+.. Selecione as máquinas virtuais no navegador, selecione todas as máquinas virtuais que deseja ligar e clique no botão *ligar*.
+
+
+. Depois de ligar as máquinas virtuais, aguarde aproximadamente 5 minutos e, em seguida, use um navegador da Web para navegar até o endereço IP ou FQDN do aplicativo vCSA.
++
+Se você não esperar o suficiente, uma mensagem será exibida informando que o servidor da Web vSphere Client está sendo inicializado.
+
+. Depois que o vSphere Client for inicializado, faça login e verifique se todos os hosts ESXi e máquinas virtuais estão online.
+
+
+[discrete]
+== Encontre mais informações
+
+* link:firmware_driver_versions.html["Versões de firmware e driver ESXi compatíveis para versões de NetApp HCI e firmware para nós de storage NetApp HCI"]
+

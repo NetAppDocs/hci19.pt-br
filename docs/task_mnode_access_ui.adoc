@@ -1,0 +1,69 @@
+---
+sidebar: sidebar 
+permalink: docs/task_mnode_access_ui.html 
+summary: Você pode acessar a IU de gerenciamento ou a IU da API REST. 
+keywords: netapp, mnode, management node, api, hci 
+---
+= Acesse o nó de gerenciamento
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+A partir da versão 11,3 do software NetApp Element, o nó de gerenciamento contém duas UIs: Uma IU para gerenciar serviços baseados EM REST e uma IU por nó para gerenciar configurações de rede e cluster e testes e utilitários do sistema operacional.
+
+Para clusters que executam o software Element versão 11,3 ou posterior, você pode usar uma das duas interfaces:
+
+* Usando a IU do nó de gerenciamento (`https:// [mNode IP}:442`), você pode fazer alterações nas configurações de rede e cluster, executar testes do sistema ou usar utilitários do sistema.
+* Usando a IU da API REST incorporada (`https://[mNode IP}/mnode`), você pode executar ou entender APIs relacionadas aos serviços do nó de gerenciamento, incluindo configuração do servidor proxy, atualizações de nível de serviço ou gerenciamento de ativos.
+
+
+
+
+== Acesse a IU do nó de gerenciamento por nó
+
+Na IU por nó, você pode acessar as configurações de rede e cluster e utilizar testes e utilitários do sistema.
+
+.Passos
+. Acesse a IU por nó para o nó de gerenciamento inserindo o endereço IP do nó de gerenciamento seguido de :442
++
+[listing]
+----
+https://[IP address]:442
+----
++
+image::mnode_per_node_442_ui.png[IU do nó de gerenciamento por nó]
+
+. Insira o nome de usuário e a senha do nó de gerenciamento quando solicitado.
+
+
+
+
+== Acesse a IU da API REST do nó de gerenciamento
+
+Na IU da API REST, você pode acessar um menu de APIs relacionadas a serviços que controlam os serviços de gerenciamento no nó de gerenciamento.
+
+.Passos
+. Para acessar a IU da API REST para serviços de gerenciamento, insira o endereço IP do nó de gerenciamento seguido de `/mnode`:
++
+[listing]
+----
+https://[IP address]/mnode
+----
++
+image::mnode_swagger_ui.png[IU da API REST do nó de gerenciamento]
+
+. Clique em *autorizar* ou em qualquer ícone de bloqueio e insira credenciais de administrador de cluster para obter permissões para usar APIs.
+
+
+[discrete]
+== Encontre mais informações
+
+* link:task_mnode_enable_activeIQ.html["Ative o monitoramento Active IQ e NetApp HCI"]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

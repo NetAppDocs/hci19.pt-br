@@ -1,0 +1,27 @@
+---
+sidebar: sidebar 
+permalink: docs/task_mnode_work_overview_UI.html 
+summary: 'Com a IU do nó de gerenciamento (https://<mNodeIP>:442[]), você pode fazer alterações nas configurações de rede e cluster, executar testes do sistema ou usar utilitários do sistema.' 
+keywords: 'netapp, management node ui, mnode ui, :442, element' 
+---
+= Visão geral da IU do nó de gerenciamento
+:allow-uri-read: 
+
+
+[role="lead"]
+Com a IU do nó de gerenciamento (`https://<mNodeIP>:442`), você pode fazer alterações nas configurações de rede e cluster, executar testes do sistema ou usar utilitários do sistema.
+
+Tarefas que você pode executar com a IU do nó de gerenciamento:
+
+* link:task_mnode_enable_alerts.html["Configure o monitoramento de alertas no NetApp HCI"]
+* link:task_mnode_settings.html["Modifique e teste as configurações de rede, cluster e sistema do nó de gerenciamento"]
+* link:task_mnode_run_system_utilities.html["Execute utilitários do sistema a partir do nó de gerenciamento"]
+
+
+[discrete]
+== Encontre mais informações
+
+* link:task_mnode_access_ui.html["Acesse o nó de gerenciamento"]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

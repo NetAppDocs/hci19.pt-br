@@ -1,0 +1,71 @@
+---
+sidebar: sidebar 
+permalink: docs/task_mnode_multi_vcenter_config.html 
+summary: Você pode configurar o controle de nuvem híbrida da NetApp para usar vários vCenters usando a IU da API REST. 
+keywords: netapp, mnode, management node, multi-vcenter, hci 
+---
+= Configurar o controle de nuvem híbrida do NetApp para vários vCenters
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você pode configurar o Controle de nuvem híbrida do NetApp para gerenciar ativos de dois ou mais vCenters que não estão usando o modo vinculado.
+
+Você deve usar esse processo após a instalação inicial quando precisar adicionar ativos para uma instalação recentemente dimensionada ou quando novos ativos não foram adicionados automaticamente à configuração. Use essas APIs para adicionar ativos que são adições recentes à sua instalação.
+
+.O que você vai precisar
+* A versão do cluster está executando o software NetApp Element 11,3 ou posterior.
+* Você implantou um nó de gerenciamento executando a versão 11,3 ou posterior.
+
+
+.Passos
+. link:task_mnode_add_assets.html["Adicione novos vCenters como ativos do controlador"] para a configuração do nó de gerenciamento.
+. link:task_mnode_add_assets.html["Adicione novos nós de computação como ativos de computação"] para a configuração do nó de gerenciamento.
++
+
+NOTE: Talvez você precise link:task_hcc_edit_bmc_info.html["Altere as credenciais do BMC para nós de computação"]resolver um `Hardware ID not available` erro ou `Unable to Detect` indicado no controle de nuvem híbrida da NetApp.
+
+. Atualize a API de serviço de inventário no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/inventory/1/
+----
++
+
+NOTE: Como alternativa, você pode esperar 2 minutos para que o inventário seja atualizado na IU do Controle de nuvem híbrida da NetApp.
+
++
+.. Clique em *autorizar* e complete o seguinte:
++
+... Introduza o nome de utilizador e a palavra-passe do cluster.
+... Introduza a ID do cliente como `mnode-client`.
+... Clique em *autorizar* para iniciar uma sessão.
+... Feche a janela.
+
+
+.. Na IU da API REST, clique em *GET ​/installations*.
+.. Clique em *Experimente*.
+.. Clique em *Executar*.
+.. Na resposta, copie o ID do ativo de instalação (`"id"`).
+.. Na IU da API REST, clique em *GET /installations/
+.. Clique em *Experimente*.
+.. Defina Refresh (Atualizar) para `True`.
+.. Cole o ID do ativo de instalação no campo *id*.
+.. Clique em *Executar*.
+
+
+. Atualize o navegador de controle de nuvem híbrida da NetApp para ver as alterações.
+
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

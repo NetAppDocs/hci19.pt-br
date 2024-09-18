@@ -1,0 +1,74 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hcc_nodes.html 
+summary: Você pode visualizar os ativos de storage e computação em seu sistema usando a página nós de controle de nuvem híbrida. 
+keywords: netapp, hci, on premise, cluster, inventory, nodes, storage, compute 
+---
+= Veja seu inventário na página de nós
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você pode visualizar os ativos de storage e computação em seu sistema e determinar os endereços IP, nomes e versões de software.
+
+Você pode visualizar as informações de storage de seus sistemas de vários nós e de todos os nós de testemunha da NetApp HCI associados a clusters de dois ou três nós. Se link:concept_hcc_custom_protection_domains.html["domínios de proteção personalizados"] forem atribuídos, você poderá ver quais domínios de proteção estão atribuídos a nós específicos.
+
+Os nós de testemunhas gerenciam o quorum no cluster; eles não são usados para storage. Os nós de testemunhas são aplicáveis apenas ao NetApp HCI e não aos ambientes de storage all-flash.
+
+Para obter mais informações sobre nós de testemunhas, link:concept_hci_nodes.html["Definições de nós"]consulte .
+
+Para nós SDS empresariais do SolidFire, você pode monitorar o inventário na guia Storage (armazenamento).
+
+.Passos
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web. Por exemplo:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage da NetApp HCI.
+. Na navegação à esquerda, clique em *nodes*.
++
+image::hcc_nodes_storage_2nodes.png[Imagem de página de nós de controle de nuvem híbrida]
+
++
+
+NOTE: Quando você inicia uma nova sessão de controle de nuvem híbrida da NetApp pela primeira vez, pode haver um atraso ao carregar a página nós de controle de nuvem híbrida da NetApp quando o nó de gerenciamento estiver gerenciando muitos clusters. O tempo de carregamento varia dependendo do número de clusters sendo gerenciados ativamente pelo nó de gerenciamento. Para lançamentos subsequentes, você experimentará tempos de carregamento mais rápidos.
+
+. Na guia *Storage* da página nós, revise as seguintes informações:
++
+.. Clusters de dois nós: Um rótulo de "dois nós" aparece na guia Storage e os nós de testemunha associados são listados.
+.. Clusters de três nós: Os nós de storage e os nós de testemunha associados são listados. Os clusters de três nós têm um nó de testemunha implantado em standby para manter a alta disponibilidade em caso de falha de nó.
+.. Clusters com quatro nós ou mais: São exibidas informações para clusters com quatro ou mais nós. Nós de testemunhas não se aplicam. Se você começou com dois ou três nós de storage e adicionou mais nós, os nós de testemunha ainda serão exibidos. Caso contrário, a tabela Witness Nodes não aparece.
+.. A versão do pacote de firmware: Começando com os serviços de gerenciamento versão 2,14, se você tiver clusters executando o Element 12,0 ou posterior, poderá ver a versão do pacote de firmware para esses clusters. Se os nós de um cluster tiverem versões de firmware diferentes, você poderá ver *Multiple* na coluna *firmware Bundle Version*.
+.. Domínios de proteção personalizados: Se domínios de proteção personalizados estiverem em uso no cluster, você poderá ver atribuições de domínio de proteção personalizadas para cada nó no cluster. Se os domínios de proteção personalizados não estiverem ativados, essa coluna não será exibida.
+
+
+. Para exibir informações de inventário de computação, clique em *Compute*.
+. Você pode manipular as informações dessas páginas de várias maneiras:
++
+.. Para filtrar a lista de itens nos resultados, clique no ícone *filtro* e selecione os filtros. Também pode introduzir texto para o filtro.
+.. Para mostrar ou ocultar colunas, clique no ícone *Mostrar/Ocultar colunas*.
+.. Para baixar a tabela, clique no ícone *Download*.
+.. Para adicionar ou editar as credenciais BMC armazenadas para um nó de computação com erros de conexão BMC, clique em *Editar configurações de conexão* no texto da mensagem de erro na coluna *Status da conexão BMC*. Somente se a tentativa de conexão falhar para um nó de computação, uma mensagem de erro será exibida nessa coluna para esse nó.
+
+
+
+
+
+TIP: Para ver o número de recursos de computação e storage, consulte o painel de controle de nuvem híbrida (HCC) da NetApp. link:task_hcc_dashboard.html["Monitore recursos de computação e storage com o HCC Dashboard"]Consulte .
+
+
+NOTE: Para gerenciar um nó de computação no controle de nuvem híbrida da NetApp, é https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/Management_services_for_Element_Software_and_NetApp_HCI/How_to_set_up_compute_node_management_in_NetApp_Hybrid_Cloud_Control["Adicione o nó de computação a um cluster de host do vCenter"^]necessário .
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

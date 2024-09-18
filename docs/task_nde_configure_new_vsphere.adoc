@@ -1,0 +1,52 @@
+---
+sidebar: sidebar 
+permalink: docs/task_nde_configure_new_vsphere.html 
+summary: Saiba como configurar o VMware vSphere durante a implantação do NetApp HCI. 
+keywords: netapp, hci, netapp deployment engine, deployment, vsphere 
+---
+= Configure um novo ambiente VMware vSphere
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você pode implantar um novo ambiente vSphere como parte do processo de instalação do NetApp HCI fornecendo algumas das informações de rede que o vSphere deve usar. Observe que se você configurar o vSphere usando um endereço IP, o endereço não poderá ser alterado após a instalação.
+
+.O que você vai precisar
+Você obteve as informações de rede para o ambiente vSphere planejado.
+
+.Passos
+. Clique em *Configurar uma nova implantação do vSphere*.
+. Selecione qual versão do vSphere o sistema deve instalar durante a implantação.
+. Configure o novo ambiente vSphere usando uma das seguintes opções:
++
+|===
+| Opção | Passos 
+
+
+| Use um nome de domínio (recomendado).  a| 
+.. Clique em *Configurar usando um Nome de domínio totalmente qualificado*.
+.. Insira o nome de domínio do vCenter Server no campo *Nome de domínio totalmente qualificado do vCenter Server*.
+.. Introduza o endereço IP do servidor DNS no campo *Endereço IP do servidor DNS*.
+.. Clique em *continuar*.
+
+
+
+
+| Use um endereço IP.  a| 
+.. Clique em *Configurar usando um endereço IP*.
+.. Clique em *continuar*.
+
+
+|===
+
+
+[discrete]
+== Encontre mais informações
+
+* link:firmware_driver_versions.html["Versões de firmware e driver ESXi compatíveis para versões de NetApp HCI e firmware para nós de storage NetApp HCI"]
+

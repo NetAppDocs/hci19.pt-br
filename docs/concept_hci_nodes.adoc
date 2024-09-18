@@ -1,0 +1,67 @@
+---
+sidebar: sidebar 
+permalink: docs/concept_hci_nodes.html 
+summary: Nós são o hardware que é agrupado em um cluster a ser acessado como recursos de computação ou storage de bloco. 
+keywords: netapp, hci, storage nodes, volumes, compute nodes, witness nodes, management node 
+---
+= Nós
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Os nós são recursos de hardware ou virtuais agrupados em um cluster para fornecer recursos de computação e storage em bloco.
+
+O software NetApp HCI e Element definem várias funções de nó para um cluster. Os quatro tipos de funções de nós são *nó de gerenciamento*, *nó de storage*, *nó de computação* e *nós de testemunha NetApp HCI*.
+
+
+
+== Nó de gerenciamento
+
+O nó de gerenciamento (às vezes abreviado como mNode) interage com um cluster de armazenamento para executar ações de gerenciamento, mas não é membro do cluster de armazenamento. Os nós de gerenciamento coletam periodicamente informações sobre o cluster por meio de chamadas de API e relatam essas informações ao Active IQ para monitoramento remoto (se ativado). Os nós de gerenciamento também são responsáveis pela coordenação das atualizações de software dos nós do cluster.
+
+O nó de gerenciamento é uma máquina virtual (VM) que é executada em paralelo com um ou mais clusters de storage baseados em software Element. Além das atualizações, ele é usado para fornecer serviços de sistema, incluindo monitoramento e telemetria, gerenciar ativos e configurações de cluster, executar testes e utilitários do sistema e habilitar o acesso ao suporte NetApp para solução de problemas. A partir da versão do Element 11,3, o nó de gerenciamento funciona como um host microservice, permitindo atualizações mais rápidas de serviços de software selecionados fora das principais versões. Esses microsserviços ou serviços de gerenciamento, como o coletor Active IQ, o QoSSIOC para o plug-in do vCenter e o serviço de nós de gerenciamento, são atualizados com frequência como pacotes de serviços.
+
+
+
+== Nós de storage
+
+Os nós de storage do NetApp HCI são um hardware que fornece os recursos de storage para um sistema NetApp HCI. As unidades no nó contêm espaço de bloco e metadados para storage e gerenciamento de dados. Cada nó contém uma imagem de fábrica do software NetApp Element. Os nós de storage do NetApp HCI podem ser gerenciados usando o ponto de extensão NetApp Element Management.
+
+
+
+== Nós de computação
+
+Os nós de computação do NetApp HCI são um hardware que fornece recursos de computação, como CPU, memória e rede, necessários para virtualização na instalação do NetApp HCI. Como cada servidor executa o VMware ESXi, o gerenciamento de nós de computação do NetApp HCI (adicionando ou removendo hosts) deve ser feito fora do plug-in no menu hosts e clusters no vSphere. Independentemente de se tratar de um cluster de storage de quatro nós ou de um cluster de storage de dois nós, o número mínimo de nós de computação permanece dois para uma implantação do NetApp HCI.
+
+
+
+== Nós de testemunhas
+
+Os nós de testemunhas do NetApp HCI são VMs que são executadas em nós de computação em paralelo com um cluster de storage baseado em software Element. Os nós de testemunha não hospedam serviços de fatia ou bloco. Um nó de testemunha permite a disponibilidade do cluster de storage em caso de falha do nó de storage. Você pode gerenciar e atualizar nós de testemunhas da mesma maneira que outros nós de storage. Um cluster de storage pode ter até quatro nós de testemunha. Seu principal objetivo é garantir que existam nós de cluster suficientes para formar um quórum de ensemble válido.
+
+|===
+
+
+ a| 
+*Prática recomendada:* Configure as VMs do nó testemunha para usar o armazenamento de dados local do nó de computação (padrão definido pelo NDE), não as configure em armazenamento compartilhado, como volumes de armazenamento SolidFire. Para impedir que as VMs migrem automaticamente, defina o nível de automação DRS (Distributed Resource Scheduler) da VM do nó testemunha como *Disabled*. Isso impede que ambos os nós de testemunhas sejam executados no mesmo nó de computação e criem uma configuração de par de HA (non-high availability).
+
+|===
+
+TIP: Saiba mais sobre link:hci_prereqs_witness_nodes.html["Requisitos de recursos do Witness Node"] e link:hci_prereqs_ip_address.html["Requisitos de endereço IP do nó testemunha"].
+
+
+NOTE: Em um cluster de storage de dois nós, um mínimo de dois nós de testemunha são implantados para redundância no caso de uma falha do nó de testemunha. Quando o processo de instalação do NetApp HCI instala nós de testemunha, um modelo de VM é armazenado no VMware vCenter que você pode usar para reimplantar um nó de testemunha caso ele seja removido, perdido ou corrompido acidentalmente. Você também pode usar o modelo para reimplantar um nó de testemunha se precisar substituir um nó de computação com falha que estava hospedando o nó de testemunha. Para obter instruções, consulte a seção *Redeploy Witness Nodes para clusters de storage de dois e três nós* link:task_hci_h410crepl.html["aqui"].
+
+
+
+== Encontre mais informações
+
+* https://www.netapp.com/pdf.html?item=/media/9489-tr-4823.pdf["Cluster de storage de dois nós NetApp HCI | TR-4823"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* http://docs.netapp.com/sfe-122/index.jsp["Centro de Documentação de Software SolidFire e Element"^]
+

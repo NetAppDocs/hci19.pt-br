@@ -1,0 +1,290 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hci_snswitches.html 
+summary: Você pode substituir um interrutor da série SN2000 com defeito sem interrupções seguindo as práticas recomendadas e etapas fornecidas pela NetApp. 
+keywords: netapp, hci, SSDs, drives, replace drives, H410S, H610S 
+---
+= Substitua os interrutores SN2010, SN2100 e SN2700
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você pode substituir um interrutor da série SN2000 com defeito sem interrupções seguindo as práticas recomendadas e etapas fornecidas pela NetApp.
+
+.O que você vai precisar
+* Certifique-se de que o Putty está instalado no computador portátil e de que capta a saída. Veja este vídeo para saber como configurar o Putty para capturar a sessão de saída.
+
+
+video::2LZfWH8HffA[youtube]
+* Certifique-se de que executa o NetApp Config Advisor antes e depois da substituição. Isto pode ajudar a identificar outros problemas antes do início da manutenção. Baixe e instale o Config Advisor e acesse o Guia de Início rápido em link:https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor/download["aqui (login necessário)"^].
+* Obtenha um cabo de alimentação, as ferramentas manuais básicas e as etiquetas.
+* Certifique-se de que planeou uma janela de manutenção de duas a quatro horas.
+* Familiarize-se com as portas do switch abaixo:
+
+
+[#img-sn2010]
+.SN2010 placa frontal e portas do interrutor
+image::sn2010.png[SN2010,600,400]
+
+[#img-sn2100]
+.SN2100 placa frontal e portas do interrutor
+image::sn2100.png[SN2100,600,400]
+
+[#img-sn2010/2100]
+.Interrutor traseiro SN2010 e SN2100
+image::sn2010_rear.png[SN2010 e SN2100 traseiros,600,400]
+
+[#img-sn2700]
+.SN2700 interrutor dianteiro e traseiro
+image::SN2700.png[SN2700 dianteira e traseira,600,400]
+
+.Sobre esta tarefa
+Você deve executar as etapas deste procedimento na ordem abaixo. Isto serve para garantir que o tempo de inatividade é mínimo e que o interrutor de substituição é pré-configurado antes da substituição do interrutor.
+
+
+NOTE: Entre em Contato com o suporte da NetApp se precisar de orientação.
+
+Aqui está uma visão geral dos passos do procedimento: <<Prepare a substituição do interrutor avariado>> <<Crie o arquivo de configuração>> <<Retire o interrutor avariado e instale a substituição>> <<Verifique a versão do sistema operacional no switch>> <<Configurar o interrutor de substituição>> <<Complete a substituição>>
+
+
+
+== Prepare a substituição do interrutor avariado
+
+Execute as seguintes etapas antes de substituir o interrutor com defeito.
+
+.Passos
+. Verifique se o interrutor de substituição é o mesmo modelo que o interrutor defeituoso.
+. Identifique todos os cabos ligados ao interrutor avariado.
+. Identifique o servidor de arquivos externo onde os arquivos de configuração do switch são salvos.
+. Certifique-se de que obteve as seguintes informações:
++
+.. A interface usada para a configuração inicial: Porta RJ-45 ou Interface Terminal Serial.
+.. As credenciais necessárias para o acesso ao switch: Endereço IP da porta de gerenciamento do switch não defeituoso e do switch defeituoso.
+.. As senhas para acesso de administração.
+
+
+
+
+
+
+== Crie o arquivo de configuração
+
+Você pode configurar um switch usando os arquivos de configuração criados. Escolha uma das opções a seguir para criar o arquivo de configuração para o switch.
+
+[cols="2*"]
+|===
+| Opção | Passos 
+
+
+| Crie o ficheiro de configuração de cópia de segurança a partir do interrutor avariado  a| 
+. Conete-se remotamente ao seu switch usando SSH, como mostrado no exemplo a seguir:
++
+[listing]
+----
+ssh admin@<switch_IP_address
+----
+. Entre no modo de configuração conforme mostrado no exemplo a seguir:
++
+[listing]
+----
+switch > enable
+switch # configure terminal
+----
+. Encontre os arquivos de configuração disponíveis como mostrado no exemplo a seguir:
++
+[listing]
+----
+switch (config) #
+switch (config) # show configuration files
+----
+. Salve o arquivo de configuração DE BIN ativo em um servidor externo:
++
+[listing]
+----
+switch (config) # configuration upload my-filename scp://myusername@my-server/path/to/my/<file>
+----
+
+
+
+
+| Crie o arquivo de configuração de backup modificando o arquivo de outro switch  a| 
+. Conete-se remotamente ao seu switch usando SSH, como mostrado no exemplo a seguir:
++
+[listing]
+----
+ssh admin@<switch_IP_address
+----
+. Entre no modo de configuração conforme mostrado no exemplo a seguir:
++
+[listing]
+----
+switch > enable
+switch # configure terminal
+----
+. Carregue um arquivo de configuração baseado em texto do switch para um servidor externo, como mostrado no exemplo a seguir:
++
+[listing]
+----
+switch (config) #
+switch (config) # configuration text file my-filename upload scp://root@my-server/root/tmp/my-filename
+----
+. Modifique os seguintes campos no arquivo de texto para corresponder ao switch defeituoso:
++
+[listing]
+----
+## Network interface configuration
+##
+no interface mgmt0 dhcp
+   interface mgmt0 ip address XX.XXX.XX.XXX /22
+
+##
+## Other IP configuration
+##
+   hostname oldhostname
+----
+
+
+|===
+
+
+== Retire o interrutor avariado e instale a substituição
+
+Execute os passos para remover o interrutor avariado e instale a substituição.
+
+.Passos
+. Localize os cabos de alimentação no interrutor com defeito.
+. Identifique e desligue os cabos de alimentação depois de o interrutor reiniciar.
+. Identifique e desligue todos os cabos do interrutor avariado e fixe-os para evitar danos durante a substituição do interrutor.
+. Retire o interrutor do rack.
+. Instale o interrutor de substituição no rack.
+. Conete os cabos de alimentação e os cabos da porta de gerenciamento.
++
+
+NOTE: O interrutor liga-se automaticamente quando a alimentação CA é aplicada. Não existe um botão de alimentação. Pode demorar até cinco minutos para que o LED de estado do sistema fique verde.
+
+. Conete-se ao switch usando a porta de gerenciamento RJ-45 ou a interface de terminal serial.
+
+
+
+
+== Verifique a versão do sistema operacional no switch
+
+Verifique a versão do software do sistema operacional no switch. A versão no interrutor defeituoso e o interrutor saudável devem corresponder.
+
+.Passos
+. Conete-se ao seu switch remotamente usando SSH.
+. Entre no modo de configuração.
+. Executar o `show version` comando. Veja o exemplo a seguir:
++
+[listing]
+----
+SFPS-HCI-SW02-A (config) #show version
+Product name:      Onyx
+Product release:   3.7.1134
+Build ID:          #1-dev
+Build date:        2019-01-24 13:38:57
+Target arch:       x86_64
+Target hw:         x86_64
+Built by:          jenkins@e4f385ab3f49
+Version summary:   X86_64 3.7.1134 2019-01-24 13:38:57 x86_64
+
+Product model:     x86onie
+Host ID:           506B4B3238F8
+System serial num: MT1812X24570
+System UUID:       27fe4e7a-3277-11e8-8000-506b4b891c00
+
+Uptime:            307d 3h 6m 33.344s
+CPU load averages: 2.40 / 2.27 / 2.21
+Number of CPUs:    4
+System memory:     3525 MB used / 3840 MB free / 7365 MB total
+Swap:              0 MB used / 0 MB free / 0 MB total
+
+----
+. Se as versões não corresponderem, você deve atualizar o sistema operacional. Consulte link:https://community.mellanox.com/s/article/howto-upgrade-switch-os-software-on-mellanox-switch-systems["Guia de atualização do software Mellanox"^]para obter detalhes.
+
+
+
+
+== Configurar o interrutor de substituição
+
+Execute as etapas para configurar o interrutor de substituição. link:https://docs.mellanox.com/display/MLNXOSv381000/Configuration+Management["Gerenciamento de configuração do Mellanox"^]Consulte para obter detalhes.
+
+.Passos
+. Escolha a partir da opção que se aplica a você:
+
+
+[cols="2*"]
+|===
+| Opção | Passos 
+
+
+| A partir do ficheiro de configuração DO COMPARTIMENTO  a| 
+. Obtenha o arquivo de configuração DO BIN conforme mostrado no exemplo a seguir:
++
+[listing]
+----
+switch (config) # configuration fetch scp://myusername@my-server/path/to/my/<file>
+----
+. Carregue o arquivo de configuração DE BIN que você obteve na etapa anterior, como mostrado no exemplo a seguir:
++
+[listing]
+----
+switch (config) # configuration switch-to my-filename
+----
+. Digite `yes` para confirmar a reinicialização.
+
+
+
+
+| A partir do ficheiro de texto  a| 
+. Reponha o interrutor para a predefinição de fábrica:
++
+[listing]
+----
+switch (config) # reset factory keep-basic
+----
+. Aplique o arquivo de configuração baseado em texto:
++
+[listing]
+----
+switch (config) # configuration text file my-filename apply
+----
+. Carregue um arquivo de configuração baseado em texto do switch para um servidor externo, como mostrado no exemplo a seguir:
++
+[listing]
+----
+switch (config) #
+switch (config) # configuration text file my-filename upload scp://root@my-server/root/tmp/my-filename
+----
++
+
+NOTE: Uma reinicialização não é necessária quando você aplica o arquivo de texto.
+
+
+
+|===
+
+
+== Complete a substituição
+
+Execute as etapas para concluir o procedimento de substituição.
+
+.Passos
+. Insira os cabos usando as etiquetas para guiá-lo.
+. Execute o NetApp Config Advisor. Acesse o Guia de Início rápido de link:https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor/download["aqui (login necessário)"^].
+. Verifique seu ambiente de storage.
+. Volte a colocar o interrutor avariado no NetApp.
+
+
+
+
+== Encontre mais informações
+
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+* http://docs.netapp.com/sfe-122/index.jsp["Centro de Documentação de Software SolidFire e Element"^]
+

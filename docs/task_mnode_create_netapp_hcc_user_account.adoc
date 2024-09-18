@@ -1,0 +1,284 @@
+---
+sidebar: sidebar 
+permalink: docs/task_mnode_create_netapp_hcc_role_vcenter.html 
+summary: Você deve criar uma função HCC do NetApp no vCenter antes de adicionar ativos do vCenter ou nós de computação ao nó de gerenciamento. 
+keywords: netapp, mnode, management node, vcenter, hci, role 
+---
+= Crie uma função NetApp HCC no vCenter
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você deve criar uma função HCC do NetApp no vCenter para adicionar manualmente ativos do vCenter (controladores) ou nós de computação (nós) ao nó de gerenciamento após a instalação, ou para modificar controladores ou nós existentes.
+
+Essa função HCC do NetApp limita a visualização de serviços de nós de gerenciamento a ativos somente do NetApp.
+
+.Sobre esta tarefa
+* Este procedimento descreve as etapas disponíveis na versão 6,7 do vSphere. Sua interface de usuário do vSphere pode diferir ligeiramente do que é descrito, dependendo da versão do vSphere instalada. Para obter ajuda adicional, consulte a documentação do VMware vCenter.
+* Para link:task_mnode_create_netapp_hcc_role_vcenter.html#create-a-new-netapp-hcc-role["Crie uma nova função HCC do NetApp"], primeiro você configura uma nova conta de usuário no vCenter, cria uma função HCC do NetApp e atribui as permissões de usuário.
+* Para configurações de host do NetApp ESXi, você deve atualizar a conta de usuário criada pelo NDE para a nova função HCC do NetApp:
++
+** link:task_mnode_create_netapp_hcc_role_vcenter.html#netapp-esxi-host-does-not-exist-in-a-vcenter-host-cluster["esta opção"]Use se o host do NetApp ESXi não existir dentro de um cluster de host do vCenter
+** link:task_mnode_create_netapp_hcc_role_vcenter.html#netapp-esxi-host-exists-in-a-vcenter-host-cluster["esta opção"]Use se o host do NetApp ESXi existir dentro de um cluster de host do vCenter
+
+
+* link:task_mnode_create_netapp_hcc_role_vcenter.html#controller-asset-already-exists-on-the-management-node["configurar um ativo de controlador"]Isso já existe no nó de gerenciamento.
+* Use a nova função HCC do NetApp para link:task_mnode_create_netapp_hcc_role_vcenter.html#add-an-asset-or-a-compute-node-to-the-management-node["adicione um ativo ou um nó de computação"]o nó de gerenciamento.
+
+
+
+
+== Crie uma nova função HCC do NetApp
+
+Configure uma nova conta de usuário no vCenter, crie uma função HCC do NetApp e atribua as permissões de usuário.
+
+
+
+=== Configure uma nova conta de usuário no vCenter
+
+Execute as etapas a seguir para configurar uma nova conta de usuário no vCenter.
+
+.Passos
+. Faça login no vSphere Web Client como `\administrator@vsphere.local` ou equivalente.
+. No menu, selecione *Administration* (Administração).
+. Na seção *Início de sessão único*, selecione *usuários* e *grupos*.
+. Na lista *domínio*, `vsphere.local` selecione ou o seu domínio LDAP.
+. Selecione *Adicionar usuário*.
+. Preencha o formulário *Adicionar usuário*.
+
+
+
+
+=== Crie uma nova função HCC do NetApp no vCenter
+
+Execute as etapas a seguir para criar uma nova função HCC do NetApp no vCenter.
+
+.Passos
+. Selecione *Editar função* e atribua as permissões necessárias.
+. No painel de navegação esquerdo, selecione *Global*.
+. Selecione *Diagnóstico* e *licenças*.
+. No painel de navegação esquerdo, selecione *hosts*.
+. Selecione *Manutenção*, *Energia*, *Configuração da partição de armazenamento* e *firmware*.
+. Guardar como `NetApp Role`.
+
+
+
+
+=== Atribua permissões de usuário ao vCenter
+
+Execute as etapas a seguir para atribuir as permissões de usuário à nova função HCC do NetApp no vCenter.
+
+.Passos
+. No menu, selecione *hosts* e *clusters*.
+. No painel de navegação esquerdo, selecione uma das seguintes opções:
++
+** O vCenter de nível superior.
+** O vCenter desejado se você estiver no modo vinculado.
++
+[NOTE]
+====
+*** A partir do plug-in do NetApp Element para vCenter Server 5,0, para usar https://docs.netapp.com/us-en/vcp/vcp_concept_linkedmode.html["Modo vinculado do vCenter"^]o , você Registra o plug-in Element a partir de um nó de gerenciamento separado para cada vCenter Server que gerencia clusters de storage do NetApp SolidFire (recomendado).
+*** O uso do plug-in do NetApp Element para vCenter Server 4,10 e anterior para gerenciar recursos de cluster de outros vCenter Servers que usam https://docs.netapp.com/us-en/vcp/vcp_concept_linkedmode.html["Modo vinculado do vCenter"^] é limitado apenas a clusters de storage locais.
+
+
+====
+
+
+. No painel de navegação direito, selecione *permissões*.
+. Selecione o ícone * para adicionar o novo usuário.
++
+Adicione os seguintes detalhes na janela *Adicionar permissão*:
+
++
+..  `vsphere.local`Selecione ou o seu domínio LDAP
+.. Use a pesquisa para encontrar o novo usuário que você criou no <<Configure uma nova conta de usuário no vCenter>>.
+..  `NetApp Role`Selecione .
++
+
+IMPORTANT: *NÃO* selecione *propagar para crianças*.
+
++
+image::mnode_new_HCC_role_vcenter.PNG[Mostra a janela Adicionar permissão]
+
+
+
+
+
+
+
+=== Atribua permissões de usuário ao datacenter
+
+Execute as etapas a seguir para atribuir permissões de usuário ao datacenter no vCenter.
+
+.Passos
+. No painel esquerdo, selecione *Datacenter*.
+. No painel de navegação direito, selecione *permissões*.
+. Selecione o ícone * para adicionar o novo usuário.
++
+Adicione os seguintes detalhes na janela *Adicionar permissão*:
+
++
+..  `vsphere.local`Selecione ou o seu domínio LDAP.
+.. Use a pesquisa para encontrar o novo usuário HCC que você criou no <<Configure uma nova conta de usuário no vCenter>>.
+..  `ReadOnly role`Selecione .
++
+
+IMPORTANT: *NÃO* selecione *propagar para crianças*.
+
+
+
+
+
+
+
+=== Atribua permissões de usuário aos datastores NetApp HCI
+
+Execute as etapas a seguir para atribuir permissões de usuário aos datastores do NetApp HCI no vCenter.
+
+.Passos
+. No painel esquerdo, selecione *Datacenter*.
+. Crie uma nova pasta de armazenamento. Clique com o botão direito do rato em *Datacenter* e selecione *criar pasta de armazenamento*.
+. Transfira todos os armazenamentos de dados NetApp HCI do cluster de armazenamento e local para o nó de computação para a nova pasta de armazenamento.
+. Selecione a nova pasta de armazenamento.
+. No painel de navegação direito, selecione *permissões*.
+. Selecione o ícone * para adicionar o novo usuário.
++
+Adicione os seguintes detalhes na janela *Adicionar permissão*:
+
++
+..  `vsphere.local`Selecione ou o seu domínio LDAP.
+.. Use a pesquisa para encontrar o novo usuário HCC que você criou no <<Configure uma nova conta de usuário no vCenter>>.
+..  `Administrator role`Selecione .
+.. Selecione *propagar para crianças*.
+
+
+
+
+
+
+=== Atribua permissões de usuário a um cluster de host do NetApp
+
+Execute as etapas a seguir para atribuir permissões de usuário a um cluster de host do NetApp no vCenter.
+
+.Passos
+. No painel de navegação esquerdo, selecione o cluster de host do NetApp.
+. No painel de navegação direito, selecione *permissões*.
+. Selecione o ícone * para adicionar o novo usuário.
++
+Adicione os seguintes detalhes na janela *Adicionar permissão*:
+
++
+..  `vsphere.local`Selecione ou o seu domínio LDAP.
+.. Use a pesquisa para encontrar o novo usuário HCC que você criou no <<Configure uma nova conta de usuário no vCenter>>.
+..  `NetApp Role`Selecione ou `Administrator`.
+.. Selecione *propagar para crianças*.
+
+
+
+
+
+
+== Configurações de host do NetApp ESXi
+
+Para configurações de host do NetApp ESXi, você deve atualizar a conta de usuário criada pelo NDE para a nova função HCC do NetApp.
+
+
+
+=== O host do NetApp ESXi não existe em um cluster de host do vCenter
+
+Se o host do NetApp ESXi não existir dentro de um cluster de host do vCenter, você poderá usar o procedimento a seguir para atribuir a função HCC do NetApp e permissões de usuário no vCenter.
+
+.Passos
+. No menu, selecione *hosts* e *clusters*.
+. No painel de navegação esquerdo, selecione o host do NetApp ESXi.
+. No painel de navegação direito, selecione *permissões*.
+. Selecione o ícone * para adicionar o novo usuário.
++
+Adicione os seguintes detalhes na janela *Adicionar permissão*:
+
++
+..  `vsphere.local`Selecione ou o seu domínio LDAP.
+.. Use a pesquisa para encontrar o novo usuário que você criou no <<Configure uma nova conta de usuário no vCenter>>.
+..  `NetApp Role`Selecione ou `Administrator`.
+
+
+. Selecione *propagar para crianças*.
+
+
+
+
+=== O host do NetApp ESXi existe em um cluster de host do vCenter
+
+Se um host do NetApp ESXi existir dentro de um cluster de host do vCenter com outros hosts ESXi fornecedores, você poderá usar o procedimento a seguir para atribuir a função do NetApp HCC e permissões de usuário no vCenter.
+
+. No menu, selecione *hosts* e *clusters*.
+. No painel de navegação esquerdo, expanda o cluster de host desejado.
+. No painel de navegação direito, selecione *permissões*.
+. Selecione o ícone * para adicionar o novo usuário.
++
+Adicione os seguintes detalhes na janela *Adicionar permissão*:
+
++
+..  `vsphere.local`Selecione ou o seu domínio LDAP.
+.. Use a pesquisa para encontrar o novo usuário que você criou no <<Configure uma nova conta de usuário no vCenter>>.
+..  `NetApp Role`Selecione .
++
+
+IMPORTANT: *NÃO* selecione *propagar para crianças*.
+
+
+
+. No painel de navegação esquerdo, selecione um host NetApp ESXi.
+. No painel de navegação direito, selecione *permissões*.
+. Selecione o ícone * para adicionar o novo usuário.
++
+Adicione os seguintes detalhes na janela *Adicionar permissão*:
+
++
+..  `vsphere.local`Selecione ou o seu domínio LDAP.
+.. Use a pesquisa para encontrar o novo usuário que você criou no <<Configure uma nova conta de usuário no vCenter>>.
+..  `NetApp Role`Selecione ou `Administrator`.
+.. Selecione *propagar para crianças*.
+
+
+. Repita para os hosts NetApp ESXi restantes no cluster de host.
+
+
+
+
+== O ativo do controlador já existe no nó de gerenciamento
+
+Se um ativo de controlador já existir no nó de gerenciamento, execute as etapas a seguir para configurar o controlador `PUT /assets /{asset_id} /controllers /{controller_id}` usando o .
+
+.Passos
+. Acesse a IU da API de serviço mnode no nó de gerenciamento:
++
+`https://<ManagementNodeIP>/mnode`
+
+. Selecione *autorizar* e insira as credenciais para acessar as chamadas da API.
+.  `GET /assets`Selecione para obter a ID principal.
+.  `PUT /assets /{asset_id} /controllers /{controller_id}`Selecione .
++
+.. Insira as credenciais criadas na configuração da conta no corpo da solicitação.
+
+
+
+
+
+
+== Adicione um ativo ou um nó de computação ao nó de gerenciamento
+
+Se você precisar adicionar manualmente um novo ativo ou um nó de computação (e ativos do BMC) após a instalação, use a nova conta de usuário do HCC criada no <<Configure uma nova conta de usuário no vCenter>>. Para obter mais informações, link:task_mnode_add_assets.html["Adicione ativos de computação e controlador ao nó de gerenciamento"]consulte .
+
+
+
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

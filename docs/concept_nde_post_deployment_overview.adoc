@@ -1,0 +1,35 @@
+---
+sidebar: sidebar 
+permalink: docs/concept_nde_post_deployment_overview.html 
+summary: Saiba mais sobre as tarefas pós-implantação que você deve executar após a implantação do NetApp HCI. 
+keywords: netapp, hci, deployment, review, deploy 
+---
+= Tarefas pós-implantação
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Dependendo de suas escolhas durante o processo de implantação, você precisa concluir algumas tarefas finais antes que seu sistema NetApp HCI esteja pronto para uso em produção, como atualizar firmware e drivers e fazer as alterações finais de configuração necessárias.
+
+* link:task_nde_supported_net_changes.html["Alterações de rede suportadas"]
+* link:task_nde_disable_smartd.html["Desative o serviço smartd em nós de computação do NetApp HCI"]
+* link:task_nde_disable_lacp_individual.html["Desative o comando "lacp-Individual" em switches configurados"]
+* link:task_mnode_create_netapp_hcc_role_vcenter.html["Crie uma função NetApp HCC no vCenter"]
+* link:task_nde_update_vsphere.html["Mantenha o VMware vSphere atualizado"]
+* link:task_nde_install_GPU_drivers.html["Instalar drivers de GPU para nós de computação habilitados para GPU"]
+* link:task_nde_access_hcc.html["Acesse o controle de nuvem híbrida da NetApp"]
+* link:task_reduce_boot_media_wear.html["Reduzir o desgaste da Mídia de inicialização em um nó de computação do NetApp HCI"]
+
+
+
+
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+

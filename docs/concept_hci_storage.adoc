@@ -1,0 +1,35 @@
+---
+sidebar: sidebar 
+permalink: docs/concept_hci_storage.html 
+summary: O NetApp HCI está disponível em várias opções de configuração para computação e storage. Do NetApp HCI 1,8 em diante, você pode ter uma configuração inicial mínima de dois nós de storage e dois de computação. Nas versões anteriores, a configuração mínima exigida era quatro nós de storage e dois nós de computação. 
+keywords: netapp, hci, storage nodes, volumes 
+---
+= Armazenamento
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+O NetApp HCI está disponível em várias opções de configuração para computação e storage. A partir do NetApp HCI 1,8, você pode ter uma configuração inicial mínima de dois nós de storage e dois de computação. Antes do NetApp HCI 1,8, a configuração mínima exigida era de quatro nós de storage e dois nós de computação.
+
+* O NetApp HCI dá suporte a vários modelos de nós de storage da série H, como H300S, H500S, H700S, H410S e H610S.
++
+Consulte https://www.netapp.com/us/products/converged-systems/hyper-converged-infrastructure.aspx#modelsAndSpecs["Modelos e especificações da NetApp HCI"^]
+
+* A camada de storage no NetApp HCI é fornecida pelo software NetApp Element e a camada de gerenciamento é fornecida pelo plug-in NetApp Element para vCenter Server.
+* Um nó de armazenamento é um servidor que contém uma coleção de unidades que se comunicam entre si através da interface de rede Bond10G.
+* Cada nó de storage é conetado a duas redes, armazenamento e gerenciamento, cada um com dois links independentes para redundância e desempenho. Cada nó requer um endereço IP em cada rede.
+* Você pode criar um cluster com novos nós de storage ou adicionar nós de storage a um cluster existente para aumentar a capacidade de storage e a performance.
+* No ecossistema do NetApp HCI e do SolidFire, o storage é provisionado com volumes.
+
+
+
+
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+

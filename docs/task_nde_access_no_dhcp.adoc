@@ -1,0 +1,54 @@
+---
+sidebar: sidebar 
+permalink: docs/task_nde_access_no_dhcp.html 
+summary: Saiba como acessar o mecanismo de implantação do NetApp em ambientes sem DHCP. 
+keywords: netapp, hci, netapp deployment engine, deployment, engine, deploy, access 
+---
+= Acesse o mecanismo de implantação do NetApp em ambientes sem DHCP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Quando o DHCP não está em uso na rede, você precisa definir um endereço IPv4 estático na interface Bond1G de um dos nós de armazenamento (também conhecido como nó de armazenamento de controle) que você usará para acessar o mecanismo de implantação do NetApp. O mecanismo de implantação do NetApp no nó de storage de controle descobrirá e se comunicará com outros nós de computação e storage usando endereços IPv4 configurados automaticamente nas interfaces Bond10G de todos os nós. Você deve usar esse método a menos que sua rede tenha requisitos especiais.
+
+.O que você vai precisar
+* Você ou o administrador da rede concluíram as tarefas no documento instruções de instalação e configuração.
+* Você tem acesso físico aos nós do NetApp HCI.
+* Todos os nós do NetApp HCI são ativados.
+* O DHCP não está ativado para as redes NetApp HCI e os nós NetApp HCI não obtiveram endereços IP de servidores DHCP.
+* A rede de gerenciamento NetApp HCI é configurada como VLAN nativa nas interfaces Bond1G e Bond10G de todos os nós.
+
+
+.Passos
+. Conectar um KVM à parte de trás de um dos nós de storage da NetApp HCI (esse nó se tornará o nó de storage de controle).
+. Configure o endereço IP, a máscara de sub-rede e o endereço de gateway para Bond1G na interface do usuário. Você também pode configurar um ID de VLAN para a rede Bond1G, se necessário.
++
+
+NOTE: Não é possível reutilizar este endereço IPv4 mais tarde durante a implantação com o mecanismo de implantação do NetApp.
+
+. Abra um navegador da Web em um computador que possa acessar a rede de gerenciamento do NetApp HCI.
+. Navegue até o endereço IP atribuído ao nó de armazenamento de controlo. Por exemplo:
++
+[listing]
+----
+http://<Bond1G IP address>
+----
++
+
+NOTE: Certifique-se de usar HTTP aqui.
+
++
+Isso leva você à interface de usuário do mecanismo de implantação do NetApp.
+
+
+
+[discrete]
+== Encontre mais informações
+
+* link:firmware_driver_versions.html["Versões de firmware e driver ESXi compatíveis para versões de NetApp HCI e firmware para nós de storage NetApp HCI"]
+

@@ -1,0 +1,34 @@
+---
+sidebar: sidebar 
+permalink: docs/task_rancher_config_anti_affinity.html 
+summary: Saiba mais sobre como configurar regras antiafinidade para VMs Rancher para ajudar na resiliência do host. 
+keywords: netapp, hci, rancher, deploy, cluster, kubernetes, anti, affinity, resiliency 
+---
+= Aprimorar a resiliência da VM Rancher
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Depois de implantar o Rancher no NetApp HCI, seu ambiente vSphere conterá três novos nós como máquinas virtuais para hospedar o ambiente de Rancher. A IU da Web do Rancher está disponível em cada um desses nós. Para resiliência total, cada uma das três máquinas virtuais, juntamente com os discos virtuais correspondentes, deve residir em um host físico diferente após eventos como ciclos de energia e failovers.
+
+Para garantir que cada VM e seus recursos permaneçam em um host físico diferente, você pode criar regras de antiafinidade do VMware vSphere Distributed Resource Scheduler (DRS). Isso não é automatizado como parte do Rancher na implantação do NetApp HCI.
+
+Para obter instruções sobre como configurar regras antiafinidade DRS, consulte os seguintes recursos de documentação da VMware:
+
+https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.resmgmt.doc/GUID-FBE46165-065C-48C2-B775-7ADA87FF9A20.html["Criar regras de antiafinidade de VM"^]
+
+https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.avail.doc/GUID-E137A9F8-17E4-4DE7-B986-94A0999CF327.html["Regras de afinidade do vSphere HA e DRS"^]
+
+[discrete]
+== Encontre mais informações
+
+* https://rancher.com/docs/rancher/v2.x/en/overview/architecture/["Documentação do rancher sobre arquitetura"^]
+* https://rancher.com/docs/rancher/v2.x/en/overview/concepts/["Terminologia do Kubernetes para Rancher"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+

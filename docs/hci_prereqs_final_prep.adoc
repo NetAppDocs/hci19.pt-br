@@ -1,0 +1,109 @@
+---
+sidebar: sidebar 
+permalink: docs/hci_prereqs_final_prep.html 
+summary: Saiba mais sobre as preparações finais e a configuração que você precisa concluir antes de implantar o NetApp HCI. 
+keywords: netapp, hci, final preparations, requirements, IPMI 
+---
+= Configure o IPMI para cada nó
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Depois de ter colocado em rack, cabeado e ligado o hardware NetApp HCI, você pode configurar o acesso à interface de gerenciamento de plataforma inteligente (IPMI) para cada nó. Atribua um endereço IP a cada porta IPMI e altere a senha padrão do administrador IPMI assim que você tiver acesso IPMI remoto ao nó.
+
+
+
+== Pré-requisitos
+
+Depois de validar que seu ambiente está pronto para dar suporte ao NetApp HCI e resolver quaisquer problemas em potencial, você precisa concluir algumas tarefas finais antes da implantação.
+
+* Certifique-se de ter um relatório bem-sucedido da Active IQ Config Advisor.
+* Reúna todas as informações relevantes sobre sua rede, infraestrutura atual ou planejada da VMware e credenciais de usuário planejadas.
+* Rack, cabo e alimentação na instalação do NetApp HCI.
+
+
+
+
+== Atribua manualmente o endereço IP da porta IPMI
+
+O DHCP (Dynamic Host Configuration Protocol) é ativado por padrão para a porta IPMI de cada nó NetApp HCI. Se a rede IPMI não utilizar DHCP, pode atribuir manualmente um endereço IPv4 estático à porta IPMI.
+
+.Antes de começar
+Certifique-se de que você tem um teclado, vídeo e Mouse (KVM) switch ou monitor e teclado que você pode usar para acessar o BIOS de cada nó.
+
+.Sobre esta tarefa
+Use as teclas de seta para navegar no BIOS. Selecione uma guia ou opção pressionando `Enter`. Volte para as telas anteriores pressionando `ESC`.
+
+.Passos
+. Ligue o nó.
+. Ao inicializar, entre no BIOS pressionando a `Del` tecla .
+. Selecione a guia IPMI.
+. Selecione *Configuração de rede BMC* e `Enter` pressione .
+. Escolha *Sim* e pressione `Enter`.
+. Selecione *origem do endereço de configuração* e pressione `Enter`.
+. Selecione *estático* e prima `Enter`.
+. Selecione *Endereço IP da estação* e introduza um novo endereço IP para a porta IPMI. Prima `Enter` quando terminar.
+. Selecione *Máscara de sub-rede* e insira uma nova máscara de sub-rede para a porta IPMI. Prima `Enter` quando terminar.
+. Selecione *Endereço IP do gateway* e insira um novo endereço IP do gateway para a porta IPMI. Prima `Enter` quando terminar.
+. Conete uma extremidade de um cabo Ethernet à porta IPMI e a outra extremidade a um switch.
++
+A porta IPMI para esse nó está pronta para ser usada.
+
+. Repita este procedimento para quaisquer outros nós NetApp HCI com portas IPMI que não estejam configuradas.
+
+
+
+
+== Altere a senha padrão do IPMI para nós H410C e H410S
+
+Você deve alterar a senha padrão para a conta de administrador IPMI em cada nó de computação e armazenamento assim que configurar a porta de rede IPMI.
+
+.Antes de começar
+Você configurou o endereço IP IPMI para cada nó de computação e armazenamento.
+
+.Passos
+. Abra um navegador da Web em um computador que possa acessar a rede IPMI e navegue até o endereço IP IPMI do nó.
+. Introduza o nome de utilizador `ADMIN` e a palavra-passe `ADMIN` no aviso de início de sessão.
+. Ao iniciar sessão, clique no separador *Configuration* (Configuração).
+. Clique em *usuários*.
+. Selecione o `ADMIN` usuário e clique em *Modificar usuário*.
+. Marque a caixa de seleção *alterar senha*.
+. Introduza uma nova palavra-passe nos campos *Password* (Palavra-passe) e *Confirm Password* (confirmar palavra-passe).
+. Clique em *Modificar* e, em seguida, clique em *OK*.
+. Repita este procedimento para quaisquer outros nós do NetApp HCI H410C e H410S com senhas IPMI padrão.
+
+
+
+
+== Altere a senha padrão do IPMI para nós H610C, H615C e H610S
+
+Você deve alterar a senha padrão para a conta de administrador IPMI em cada nó de computação e armazenamento assim que configurar a porta de rede IPMI.
+
+.Antes de começar
+Você configurou o endereço IP IPMI para cada nó de computação e armazenamento.
+
+.Passos
+. Abra um navegador da Web em um computador que possa acessar a rede IPMI e navegue até o endereço IP IPMI do nó.
+. Introduza o nome de utilizador `root` e a palavra-passe `calvin` no aviso de início de sessão.
+. Ao iniciar sessão, clique no ícone de navegação do menu no canto superior esquerdo da página para abrir a gaveta da barra lateral.
+. Clique em *Configurações*.
+. Clique em *User Management*.
+. Selecione o usuário *Administrator* na lista.
+. Ative a caixa de verificação *alterar palavra-passe*.
+. Insira uma nova senha forte nos campos *Senha* e *confirmar senha*.
+. Clique em *Salvar* na parte inferior da página.
+. Repita este procedimento para quaisquer outros nós do NetApp HCI H610C, H615C ou H610S com senhas IPMI padrão.
+
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/solidfire-active-iq/index.html["Documentação do NetApp SolidFire Active IQ"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

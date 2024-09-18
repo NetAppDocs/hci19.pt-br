@@ -1,0 +1,27 @@
+---
+sidebar: sidebar 
+permalink: docs/task_reduce_boot_media_wear.html 
+summary: Saiba como reduzir o desgaste da Mídia de inicialização em um nó de computação do NetApp HCI. 
+keywords: netapp, hci, deployment, review, deploy, boot, drive, wear 
+---
+= Reduzir o desgaste da Mídia de inicialização em um nó de computação do NetApp HCI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Quando você usa memória flash ou Mídia de inicialização NVDIMM com um nó de computação NetApp HCI, manter os logs do sistema nessa Mídia resulta em gravações frequentes nessa Mídia. Isso pode eventualmente degradar a memória flash. Use as instruções do artigo da KB a seguir para mover o log do host e o arquivo de despejo do núcleo para um local de armazenamento compartilhado, o que pode ajudar a evitar a degradação da Mídia de inicialização ao longo do tempo e ajudar a evitar erros de disco de inicialização total.
+
+https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/NetApp_HCI/How_to_reduce_wear_on_the_boot_drive_of_a_Netapp_HCI_compute_node["Como reduzir o desgaste na unidade de inicialização de um nó de computação NetApp HCI"^]
+
+
+
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+

@@ -1,0 +1,105 @@
+---
+sidebar: sidebar 
+permalink: docs/task_mnode_edit_vcenter_assets.html 
+summary: Você pode editar controladores de nós de gerenciamento do vCenter usando a IU da API REST. 
+keywords: netapp, mnode, management node, rest api, hci 
+---
+= Visualizar ou editar ativos de controlador existentes
+:allow-uri-read: 
+
+
+[role="lead"]
+Você pode exibir informações e editar controladores VMware vCenter existentes na configuração do nó de gerenciamento usando a API REST. Os controladores são instâncias do VMware vCenter registradas no nó de gerenciamento para sua instalação do NetApp HCI.
+
+.Antes de começar
+* Verifique se a versão do cluster está executando o software NetApp Element 11,3 ou posterior.
+* Certifique-se de que implantou um nó de gerenciamento executando a versão 11,3 ou posterior.
+
+
+
+
+== Acesse a API REST dos serviços de gerenciamento
+
+.Passos
+. Acesse a IU da API REST para serviços de gerenciamento inserindo o endereço IP do nó de gerenciamento seguido de `/vcenter/1/`:
++
+[listing]
+----
+https://<ManagementNodeIP>/vcenter/1/
+----
+. Clique em *autorizar* ou em qualquer ícone de cadeado e complete o seguinte:
++
+.. Introduza o nome de utilizador e a palavra-passe do cluster.
+.. Introduza a ID do cliente como `mnode-client`.
+.. Clique em *autorizar* para iniciar uma sessão.
+.. Feche a janela.
+
+
+
+
+
+
+== Exibir informações armazenadas sobre controladores existentes
+
+Você pode listar os controladores do vCenter existentes registrados no nó de gerenciamento e exibir informações armazenadas sobre eles usando a API REST.
+
+.Passos
+. Clique em *GET /Compute/controllers*.
+. Clique em *Experimente*.
+. Clique em *Executar*.
++
+A API retorna uma lista de todos os controladores conhecidos do vCenter, juntamente com o endereço IP, ID do controlador, nome do host e ID do usuário usados para se comunicar com cada controlador.
+
+. Se desejar o status de conexão de um controlador específico, copie o ID do controlador do `id` campo desse controlador para a área de transferência e <<Exibir o status de um controlador existente>>consulte .
+
+
+
+
+== Exibir o status de um controlador existente
+
+Você pode visualizar o status de qualquer um dos controladores do vCenter existentes registrados no nó de gerenciamento. A API retorna um status indicando se o Controle de nuvem híbrida do NetApp pode se conetar ao controlador do vCenter, bem como o motivo desse status.
+
+.Passos
+. Clique em *GET /Compute/controllers/(controller_id)/status*.
+. Clique em *Experimente*.
+. Introduza a ID do controlador que copiou anteriormente `controller_id` no parâmetro.
+. Clique em *Executar*.
++
+A API retorna um status desse controlador vCenter específico, juntamente com um motivo para esse status.
+
+
+
+
+
+== Edite as propriedades armazenadas de um controlador
+
+Você pode editar o nome de usuário ou a senha armazenados para qualquer um dos controladores do vCenter existentes registrados no nó de gerenciamento. Não é possível editar o endereço IP armazenado de um controlador vCenter existente.
+
+.Passos
+. Clique em *PUT /Compute/controllers/(controller_id)*.
+. Insira o ID do controlador de um controlador vCenter no `controller_id` parâmetro.
+. Clique em *Experimente*.
+. Altere um dos seguintes parâmetros no campo *corpo da solicitação*:
++
+|===
+| Parâmetro | Tipo | Descrição 
+
+
+| `userId` | cadeia de carateres | Altere a ID de usuário usada para se comunicar com o controlador vCenter (o usuário deve ter Privileges de administrador). 
+
+
+| `password` | cadeia de carateres | Altere a senha usada para se comunicar com o controlador vCenter. 
+|===
+. Clique em *Executar*.
++
+A API retorna informações atualizadas do controlador.
+
+
+
+[discrete]
+== Encontre mais informações
+
+* link:task_mnode_add_assets.html["Adicione ativos de computação e controlador ao nó de gerenciamento"]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

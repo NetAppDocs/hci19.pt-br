@@ -1,0 +1,57 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hci_2noderepl.html 
+summary: 'Antes de substituir um nó que faz parte de um cluster de dois nós, você deve primeiro adicionar um terceiro nó de armazenamento (que requer um novo conjunto de endereços IP), permitir a conclusão da sincronização e, em seguida, remover o nó com defeito. Você precisa de um MIP e SIP adicionais.' 
+keywords: netapp, hci, H610C, H615C, chassis replacement, node replacement 
+---
+= Substitua o nó de storage em um cluster de dois nós
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Antes de substituir um nó de armazenamento que faz parte de um cluster de dois nós, você deve primeiro adicionar um terceiro nó de armazenamento (que requer um novo conjunto de endereços IP), permitir a conclusão da sincronização e, em seguida, remover o nó com defeito. O cluster permanece no estado degradado até que um nó de substituição se una ao cluster.
+
+.O que você vai precisar
+* Você tem novos endereços IP de gerenciamento e IP de armazenamento.
+* Você verificou que o cluster mostra o `ClusterCannotSync` alerta após o nó ficar offline. Isso garante que o cluster faça uma ressincronização completa quando o novo nó for adicionado de volta ao cluster. Este alerta é exibido aproximadamente seis minutos após o nó de armazenamento ficar offline.
+* Você entrou em Contato com o suporte da NetApp. Se você estiver solicitando um substituto, você deve ter um caso aberto com o suporte da NetApp.
+* Obteve o nó de substituição.
+* Você tem uma pulseira de descarga eletrostática (ESD), ou você tomou outra proteção antiestática.
+
+
+.Sobre esta tarefa
+Os alarmes no VMware vSphere Web Client alertam você quando um host falha. Você deve corresponder o número de série do host com falha do VMware vSphere Web Client com o número de série no adesivo na parte de trás do nó.
+
+.Passos
+. Remova fisicamente o nó defeituoso do rack. As etapas dependem do tipo de nó de storage que você tem. link:task_hci_h410srepl.html["Substitua H410S nós"]Consulte e link:task_hci_h610srepl.html["Substitua H610S nós"].
++
+
+NOTE: Não remova o nó do cluster neste ponto.
+
+. Instale o nó de substituição no mesmo slot.
+. Faça o cabo do nó.
+. Ligue o nó.
+. Conete um teclado e um monitor ao nó.
+. Execute as etapas de configuração:
++
+.. Configure o endereço IP IPMI/BMC.
+.. Configure o novo nó com os novos endereços IP de gerenciamento e IP de armazenamento e o Nome do cluster.
+
+
+. Depois que o nó for adicionado ao cluster, adicione as unidades.
+. Após a conclusão da sincronização, remova as unidades com falha e o nó com falha do cluster.
+. Use o controle de nuvem híbrida da NetApp para configurar o novo nó de storage que você adicionou. link:task_hcc_expand_storage.html["Expanda os recursos de storage do NetApp HCI"]Consulte .
+
+
+
+
+== Encontre mais informações
+
+* http://docs.netapp.com/hci/index.jsp["Centro de Documentação do NetApp HCI"^]
+* http://docs.netapp.com/sfe-122/index.jsp["Centro de Documentação de Software SolidFire e Element"^]
+

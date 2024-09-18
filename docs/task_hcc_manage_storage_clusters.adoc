@@ -1,0 +1,200 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hcc_manage_storage_clusters.html 
+summary: Você pode adicionar, remover, alterar, ativar e desativar o modo de manutenção para clusters de armazenamento usando a IU de Controle híbrido do NetApp. 
+keywords: netapp, hci, element, storage cluster, hybrid cloud control, hcc, maintenance mode, enable, disable 
+---
+= Adicione e gerencie clusters de storage usando o controle de nuvem híbrida da NetApp
+:allow-uri-read: 
+
+
+[role="lead"]
+Você pode adicionar clusters de storage ao inventário de ativos de nós de gerenciamento para que eles possam ser gerenciados usando o Controle de nuvem híbrida (HCC) da NetApp. O primeiro cluster de armazenamento adicionado durante a configuração do sistema é o padrão link:concept_hci_clusters.html#authoritative-storage-clusters["cluster de storage autoritativo"], mas clusters adicionais podem ser adicionados usando HCC UI.
+
+Depois que um cluster de storage é adicionado, você pode monitorar o desempenho do cluster, alterar as credenciais do cluster de storage para o ativo gerenciado ou remover um cluster de storage do inventário de ativos do nó de gerenciamento se ele não precisar mais ser gerenciado usando HCC.
+
+A partir do elemento 12,2, você pode usar as link:concept_hci_storage_maintenance_mode.html["modo de manutenção"]opções de recursos para ativar e desativar o modo de manutenção dos nós do cluster de storage.
+
+.O que você vai precisar
+* *Permissões de administrador de cluster*: Você tem permissões como administrador no link:concept_hci_clusters.html#authoritative-storage-clusters["cluster de storage autoritativo"]. O cluster autoritativo é o primeiro cluster adicionado ao inventário do nó de gerenciamento durante a configuração do sistema.
+* *Software Element*: A versão do cluster de armazenamento está executando o software NetApp Element 11,3 ou posterior.
+* *Nó de gerenciamento*: Você implantou um nó de gerenciamento executando a versão 11,3 ou posterior.
+* *Serviços de gerenciamento*: Você atualizou seu pacote de serviços de gerenciamento para a versão 2,17 ou posterior.
+
+
+.Opções
+* <<Adicionar um cluster de armazenamento>>
+* <<Confirme o status do cluster de armazenamento>>
+* <<Editar credenciais do cluster de storage>>
+* <<Remova um cluster de armazenamento>>
+* <<Ativar e desativar o modo de manutenção>>
+
+
+
+
+== Adicionar um cluster de armazenamento
+
+Você pode adicionar um cluster de storage ao inventário de ativos de nós de gerenciamento usando o Controle de nuvem híbrida da NetApp. Isso permite gerenciar e monitorar o cluster usando a IU do HCC.
+
+.Passos
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador de cluster de storage autoritativas.
+. No Painel, selecione o menu de opções no canto superior direito e selecione *Configurar*.
+. No painel *Storage clusters*, selecione *Storage Cluster Details*.
+. Selecione *Adicionar cluster de armazenamento*.
+. Introduza as seguintes informações:
++
+** Endereço IP virtual de gerenciamento de cluster de storage
++
+
+NOTE: Somente clusters de storage remotos que não são gerenciados atualmente por um nó de gerenciamento podem ser adicionados.
+
+** Nome de usuário e senha do cluster de armazenamento
+
+
+. Selecione *Adicionar*.
++
+
+NOTE: Depois de adicionar o cluster de armazenamento, o inventário do cluster pode levar até 2 minutos para atualizar e exibir a nova adição. Talvez seja necessário atualizar a página no navegador para ver as alterações.
+
+. Se você estiver adicionando clusters ESDS Element, insira ou carregue sua chave privada SSH e sua conta de usuário SSH.
+
+
+
+
+== Confirme o status do cluster de armazenamento
+
+Você pode monitorar o status da conexão dos ativos dos clusters de storage usando a IU do Controle de nuvem híbrida da NetApp.
+
+.Passos
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador de cluster de storage autoritativas.
+. No Painel, selecione o menu de opções no canto superior direito e selecione *Configurar*.
+. Revise o status dos clusters de storage no inventário.
+. No painel *Storage clusters*, selecione *Storage Cluster Details* para obter detalhes adicionais.
+
+
+
+
+== Editar credenciais do cluster de storage
+
+Você pode editar o nome de usuário e a senha do administrador do cluster de armazenamento usando a IU do Controle de nuvem híbrida da NetApp.
+
+.Passos
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador de cluster de storage autoritativas.
+. No Painel, selecione o menu de opções no canto superior direito e selecione *Configurar*.
+. No painel *Storage clusters*, selecione *Storage Cluster Details*.
+. Selecione o menu *ações* para o cluster e selecione *Editar credenciais do cluster*.
+. Atualize o nome de utilizador e a palavra-passe do cluster de armazenamento.
+. Selecione *Guardar*.
+
+
+
+
+== Remova um cluster de armazenamento
+
+A remoção de um cluster de storage do controle de nuvem híbrida da NetApp remove o cluster do inventário de nós de gerenciamento. Depois de remover um cluster de armazenamento, o cluster não pode mais ser gerenciado pelo HCC e você pode acessá-lo apenas navegando diretamente para o endereço IP de gerenciamento.
+
+
+IMPORTANT: Não é possível remover o cluster autoritário do inventário. Para determinar o cluster autorizado, vá para *User Management > Users*. O cluster autoritativo é listado ao lado do título *usuários*.
+
+.Passos
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador de cluster de storage autoritativas.
+. No Painel, selecione o menu de opções no canto superior direito e selecione *Configurar*.
+. No painel *Storage clusters*, selecione *Storage Cluster Details*.
+. Selecione o menu *ações* para o cluster e selecione *Remover cluster de armazenamento*.
++
+
+CAUTION: Clicar em *Yes* Next remove o cluster da instalação.
+
+. Selecione *Sim*.
+
+
+[discrete]
+== Ativar e desativar o modo de manutenção
+
+Essas link:concept_hci_storage_maintenance_mode.html["modo de manutenção"]opções de recursos oferecem a capacidade <<enable_main_mode,ativar>>e <<disable_main_mode,desativar>>o modo de manutenção de um nó de cluster de storage.
+
+.O que você vai precisar
+* *Software Element*: A versão do cluster de armazenamento está executando o software NetApp Element 12,2 ou posterior.
+* *Nó de gerenciamento*: Você implantou um nó de gerenciamento executando a versão 12,2 ou posterior.
+* *Serviços de gerenciamento*: Você atualizou seu pacote de serviços de gerenciamento para a versão 2,19 ou posterior.
+* Tem acesso para iniciar sessão no nível de administrador.
+
+
+
+
+=== [[enable_main_mode]]Ativar o modo de manutenção
+
+Pode utilizar o seguinte procedimento para ativar o modo de manutenção de um nó de cluster de armazenamento.
+
+
+NOTE: Apenas um nó pode estar no modo de manutenção de cada vez.
+
+.Passos
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web. Por exemplo:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage da NetApp HCI.
++
+
+NOTE: As opções da função do modo de manutenção estão desativadas no nível só de leitura.
+
+. Na caixa azul de navegação à esquerda, selecione a instalação do NetApp HCI.
+. No painel de navegação esquerdo, selecione *nós*.
+. Para visualizar informações de inventário de armazenamento, selecione *armazenamento*.
+. Ativar o modo de manutenção num nó de armazenamento:
++
+[NOTE]
+====
+A tabela nós de storage é atualizada automaticamente a cada dois minutos para ações iniciadas por não usuários. Antes de uma ação, para garantir que você tenha o status mais atualizado, é possível atualizar a tabela de nós usando o ícone de atualização localizado no lado superior direito da tabela de nós.
+
+image:hcc_enable_maintenance_mode.PNG["Ativar o modo de manutenção"]
+
+====
++
+.. Em *ações*, selecione *Ativar modo de manutenção*.
++
+Enquanto o *Maintenance Mode* está sendo ativado, as ações do modo de manutenção não estão disponíveis para o nó selecionado e todos os outros nós no mesmo cluster.
+
++
+Após a conclusão do *Enable Maintenance Mode*, a coluna *Node Status* exibe um ícone de chave inglesa e o texto "*Maintenance Mode*" para o nó que está no modo de manutenção.
+
+
+
+
+
+
+
+=== [[disable_MAIN_MODE]]Desativar o modo de manutenção
+
+Depois que um nó é colocado com sucesso no modo de manutenção, a ação *Disable Maintenance Mode* está disponível para este nó. As ações nos outros nós ficam indisponíveis até que o modo de manutenção seja desativado com êxito no nó que está sendo submetido a manutenção.
+
+.Passos
+. Para o nó em modo de manutenção, em *ações*, selecione *Desativar modo de manutenção*.
++
+Enquanto o *Maintenance Mode* está sendo desativado, as ações do modo de manutenção não estão disponíveis para o nó selecionado e todos os outros nós no mesmo cluster.
+
++
+Após a conclusão do *Desativar o modo de manutenção*, a coluna *Status do nó* exibe *Ativo*.
+
++
+
+NOTE: Quando um nó está no modo de manutenção, ele não aceita novos dados. Como resultado, pode demorar mais tempo para desativar o modo de manutenção porque o nó deve sincronizar seus dados de volta antes que ele possa sair do modo de manutenção. Quanto mais tempo você gastar no modo de manutenção, mais tempo ele pode levar para desativar o modo de manutenção.
+
+
+
+
+
+=== Solucionar problemas
+
+Se você encontrar erros ao ativar ou desativar o modo de manutenção, um erro de banner será exibido na parte superior da tabela de nós. Para obter mais informações sobre o erro, você pode selecionar o link *Mostrar detalhes* fornecido no banner para mostrar o que a API retorna.
+
+
+
+== Encontre mais informações
+
+* link:task_mnode_manage_storage_cluster_assets.html["Criar e gerenciar ativos de cluster de storage"]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

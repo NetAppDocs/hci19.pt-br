@@ -1,0 +1,86 @@
+---
+sidebar: sidebar 
+permalink: docs/concept_hci_upgrade_overview.html 
+summary: Você pode atualizar o NetApp HCI e todos os seus componentes. 
+keywords: netapp, hci, on premise, cluster, upgrade, element 
+---
+= Descrição geral da sequência de atualização
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você pode manter seu sistema NetApp HCI atualizado após a implantação, atualizando sequencialmente todos os componentes de software NetApp HCI.
+
+Esses componentes incluem serviços de gerenciamento, HealthTools, Controle de nuvem híbrida NetApp, software Element, nó de gerenciamento, firmware de computação, drivers de computação e o plug-in Element para vCenter Server.​
+
+
+NOTE: A partir de novembro de 2023, você não pode iniciar uma atualização de componente usando o Controle de nuvem híbrida ou a API REST do NetApp porque os certificados de chave de assinatura (privados e públicos) expiraram em 5 de novembro de 2023. Você pode resolver esse problema seguindo a solução alternativa documentada no artigo da base de dados de Conhecimento https://kb.netapp.com/onprem/solidfire/Element_OS/SolidFire_and_HCI_upgrades_unable_to_start_due_to_upgrade_package_upload_error["As atualizações do SolidFire e HCI não podem ser iniciadas devido a um erro de carregamento do pacote de atualização"^] .
+
+O <<sys_upgrade_seq,sequência de atualização do sistema>> conteúdo descreve as tarefas necessárias para concluir uma atualização do sistema NetApp HCI. Idealmente, você executa esses procedimentos como parte da sequência de atualização maior e não isoladamente. Se for necessária uma atualização ou atualização baseada em componentes, consulte os pré-requisitos do procedimento para garantir que as complexidades adicionais sejam abordadas.
+
+O xref:task_hci_upgrade_all_vsphere.adoc[Sequência de atualização do vSphere]conteúdo do plug-in do Element para vCenter Server inclui etapas adicionais de pré e pós-atualização necessárias para reinstalar o plug-in do Element para o vCenter Server.
+
+.O que você vai precisar
+* Você está executando o nó de gerenciamento 11,3 ou posterior. As versões mais recentes do nó de gerenciamento têm uma arquitetura modular que fornece serviços individuais.
++
+
+TIP: Para verificar a versão, faça login no nó de gerenciamento e veja o número da versão do elemento no banner de login. Se não tiver 11,3, link:task_hcc_upgrade_management_node.html["Atualize seu nó de gerenciamento"]consulte .
+
+* Você atualizou seus serviços de gerenciamento para pelo menos a versão 2.1.326.
++
+Os upgrades com o controle de nuvem híbrida da NetApp não estão disponíveis em versões anteriores do pacote de serviços.
+
+* Você garantiu que a hora do sistema em todos os nós é sincronizada e que o NTP está configurado corretamente para o cluster de armazenamento e nós. Cada nó deve ser configurado com um servidor de nomes DNS na IU da Web por nó (`https://[IP address]:442`) sem falhas de cluster não resolvidas relacionadas ao desvio de tempo.
+
+
+
+
+== [[sys_upgrade_seq]]sequência de atualização do sistema
+
+Pode utilizar a seguinte sequência para atualizar o seu sistema NetApp HCI.
+
+.Passos
+. link:task_hcc_update_management_services.html["Atualize os serviços de gerenciamento do Hybrid Cloud Control"].
++
+
+IMPORTANT: Se você estiver atualizando os serviços de gerenciamento para a versão 2,16 ou posterior e estiver executando um nó de gerenciamento 11,3 a 11,8, precisará aumentar a RAM da VM do nó de gerenciamento antes de atualizar os serviços de gerenciamento.
+
++
+
+IMPORTANT: Você deve atualizar para o pacote de serviços de gerenciamento mais recente antes de atualizar o software Element.
+
+. link:task_upgrade_element_latest_healthtools.html["(Opcional) Atualize para as mais recentes HealthTools"].
++
+
+NOTE: A atualização do HealthTools só é necessária se o nó de gerenciamento e o software Element que você está executando for 11,1 ou anterior. As HealthTools não são necessárias para realizar atualizações de elementos usando o Controle de nuvem híbrida da NetApp.
+
+. link:task_hcc_upgrade_element_prechecks.html["Execute verificações de integridade do storage Element antes de atualizar o storage"].
+. link:task_hcc_upgrade_element_software.html["Atualize o software Element e o firmware de storage"].
+. link:task_hcc_upgrade_storage_firmware.html["(Opcional) Atualize apenas o firmware de armazenamento Element"].
++
+
+NOTE: Você pode executar esta tarefa quando uma nova atualização de firmware de armazenamento ficar disponível fora de uma versão principal.
+
+. link:task_hcc_upgrade_management_node.html["(Opcional) Atualize seu nó de gerenciamento"].
++
+
+NOTE: A atualização do sistema operacional de nós de gerenciamento não é mais necessária para atualizar o software Element no cluster de storage. Se o nó de gerenciamento for a versão 11,3 ou posterior, você pode simplesmente atualizar os serviços de gerenciamento para a versão mais recente para executar atualizações de elementos usando o Controle de nuvem híbrida da NetApp. Siga o procedimento de atualização do nó de gerenciamento para o cenário se desejar atualizar o sistema operacional do nó de gerenciamento por outros motivos, como correção de segurança.
+
+. link:task_vcp_upgrade_plugin.html["Atualize o plug-in Element para o vCenter Server"].
+. link:task_upgrade_compute_prechecks.html["Execute verificações de integridade do nó de computação antes de atualizar o firmware da computação"].
+. link:task_hcc_upgrade_compute_node_drivers.html["Atualize seus drivers de nós de computação"].
+. link:task_hcc_upgrade_compute_node_firmware.html["Atualize o firmware do nó de computação usando o controle de nuvem híbrida da NetApp"] ou link:task_hcc_upgrade_compute_firmware_ansible.html["Automatize as atualizações de firmware de computação com o Ansible"].
+
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/element-software/upgrade/concept_element_upgrade_overview.html["Atualizar um sistema de storage all-flash NetApp SolidFire"^]
+

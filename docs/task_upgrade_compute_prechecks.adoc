@@ -1,0 +1,289 @@
+---
+sidebar: sidebar 
+permalink: docs/task_upgrade_compute_prechecks.html 
+summary: Como parte de uma atualização do sistema NetApp HCI, você precisa executar verificações de integridade do nó de computação antes de realizar atualizações iniciais. 
+keywords: netapp, compute prechecks, compute node upgrade, netapp hci 
+---
+= Execute verificações de integridade do nó de computação antes de atualizar o firmware da computação
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+É necessário executar verificações de integridade antes de atualizar o firmware da computação para garantir que todos os nós de computação no cluster estejam prontos para ser atualizados. As verificações de integridade do nó de computação só podem ser executadas em clusters de computação de um ou mais nós de computação NetApp HCI gerenciados.
+
+.O que você vai precisar
+* *Serviços de gerenciamento*: Você atualizou para o pacote de serviços de gerenciamento mais recente (2,11 ou posterior).
+* *Nó de gerenciamento*: Você está executando o nó de gerenciamento 11,3 ou posterior.
+* *Software Element*: Seu cluster de armazenamento está executando o software NetApp Element 11,3 ou posterior.
+* *Contrato de Licença de Usuário final (EULA)*: Começando com os serviços de gerenciamento 2.20.69, você deve aceitar e salvar o EULA antes de usar a IU ou API do Controle de nuvem híbrida da NetApp para executar verificações de integridade do nó de computação:
++
+.. Abra o endereço IP do nó de gerenciamento em um navegador da Web:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+.. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage.
+.. Selecione *Upgrade* perto do canto superior direito da interface.
+.. O EULA aparece. Role para baixo, selecione *Aceito para atualizações atuais e futuras* e selecione *Salvar*.
+
+
+
+
+.Opções de verificação de integridade
+Você pode executar verificações de integridade usando a IU do Controle de nuvem híbrida da NetApp ou a API de controle de nuvem híbrida da NetApp:
+
+* <<Use o Controle de nuvem híbrida da NetApp para executar verificações de integridade dos nós de computação antes de atualizar o firmware>> (Método preferido)
+* <<Use a API para executar verificações de integridade do nó de computação antes de atualizar o firmware>>
+
+
+Saiba mais sobre as verificações de integridade dos nós de computação executadas pelo serviço:
+
+* <<Verificações de integridade do nó de computação feitas pelo serviço>>
+
+
+
+
+== Use o Controle de nuvem híbrida da NetApp para executar verificações de integridade dos nós de computação antes de atualizar o firmware
+
+Com o Controle de nuvem híbrida da NetApp, você pode verificar se um nó de computação está pronto para uma atualização de firmware.
+
+
+NOTE: Se você tiver várias configurações de cluster de storage de dois nós, cada uma no seu próprio vCenter, as verificações de integridade dos nós de testemunha podem não ser relatadas com precisão. Portanto, quando você estiver pronto para atualizar os hosts ESXi, você só deve encerrar o nó de testemunho no host ESXi que está sendo atualizado. Você deve garantir que você sempre tenha um nó de testemunha em execução em sua instalação do NetApp HCI desligando os nós de testemunha de forma alternativa.
+
+.Passos
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web:
++
+[listing]
+----
+https://<ManagementNodeIP>/hcc
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage.
+. Selecione *Upgrade* perto do canto superior direito da interface.
+. Na página *Upgrades*, selecione a guia *Compute firmware*.
+. Selecione a verificação de integridade image:hcc_healthcheck_icon.png["ícone"]do cluster que deseja verificar se há disponibilidade de atualização.
+. Na página *Compute Health Check*, selecione *Run Health Check*.
+. Se houver problemas, a página fornece um relatório. Faça o seguinte:
++
+.. Vá para o artigo específico da KB listado para cada problema ou execute o recurso especificado.
+.. Se um KB for especificado, conclua o processo descrito no artigo da KB relevante.
+.. Depois de resolver problemas de cluster, selecione *Re-Run Health Check*.
+
+
+
+
+Depois que a verificação de integridade for concluída sem erros, os nós de computação no cluster estarão prontos para atualização. link:task_hcc_upgrade_compute_node_firmware.html["Atualize o firmware do nó de computação"]Consulte para continuar.
+
+
+
+== Use a API para executar verificações de integridade do nó de computação antes de atualizar o firmware
+
+Você pode usar a API REST para verificar se os nós de computação em um cluster estão prontos para ser atualizados. A verificação de integridade verifica se não há obstáculos para atualizar, como problemas de host ESXi ou outros problemas do vSphere. Você precisará executar verificações de integridade dos nós de computação para cada cluster de computação no seu ambiente.
+
+.Passos
+. Localize a ID do controlador e a ID do cluster:
++
+.. Abra a IU da API REST do serviço de inventário no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/inventory/1/
+----
+.. Selecione *autorizar* e preencha o seguinte:
++
+... Introduza o nome de utilizador e a palavra-passe do cluster.
+... Introduza a ID do cliente como `mnode-client` se o valor ainda não estivesse preenchido.
+... Selecione *autorizar* para iniciar uma sessão.
+
+
+.. Na IU da API REST, selecione *GET ​/installations*.
+.. Selecione *Experimente*.
+.. Selecione *Executar*.
+.. A partir do corpo de resposta do código 200, copie o `"id"` para a instalação que pretende utilizar para verificações de integridade.
+.. Na IU da API REST, selecione *GET ​/installations​/
+.. Selecione *Experimente*.
+.. Introduza a ID de instalação.
+.. Selecione *Executar*.
+.. A partir do corpo de resposta do código 200, copie os IDs para cada um dos seguintes itens:
++
+... O ID do cluster (`"clusterID"`)
+... Um ID do controlador (`"controllerId"`)
++
+[listing]
+----
+{
+  "_links": {
+    "collection": "https://10.117.187.199/inventory/1/installations",
+    "self": "https://10.117.187.199/inventory/1/installations/xx94f6f0-12a6-412f-8b5e-4cf2z58329x0"
+  },
+  "compute": {
+    "errors": [],
+    "inventory": {
+      "clusters": [
+        {
+          "clusterId": "domain-1",
+          "controllerId": "abc12c3a-aa87-4e33-9f94-xx588c2cdcf6",
+          "datacenterName": "NetApp-HCI-Datacenter-01",
+          "installationId": "xx94f6f0-12a6-412f-8b5e-4cf2z58329x0",
+          "installationName": "test-nde-mnode",
+          "inventoryType": "managed",
+          "name": "NetApp-HCI-Cluster-01",
+          "summary": {
+            "nodeCount": 2,
+            "virtualMachineCount": 2
+          }
+        }
+      ],
+----
+
+
+
+
+. Execute verificações de integridade nos nós de computação no cluster:
++
+.. Abra a IU da API REST do serviço de computação no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/vcenter/1/
+----
+.. Selecione *autorizar* e preencha o seguinte:
++
+... Introduza o nome de utilizador e a palavra-passe do cluster.
+... Introduza a ID do cliente como `mnode-client` se o valor ainda não estivesse preenchido.
+... Selecione *autorizar* para iniciar uma sessão.
+
+
+.. Selecione *POST /compute​/ CONTROLLER_ID​/health-checks*.
+.. Selecione *Experimente*.
+.. Digite o `"controllerId"` que você copiou da etapa anterior no campo de parâmetro *Controller_ID*.
+.. Na carga útil, insira o `"clusterId"` que você copiou da etapa anterior como o `"cluster"` valor e remova o `"nodes"` parâmetro.
++
+[listing]
+----
+{
+  "cluster": "domain-1"
+}
+----
+.. Selecione *execute* para executar uma verificação de integridade no cluster.
++
+A resposta do código 200 fornece `"resourceLink"` um URL com o ID da tarefa anexado que é necessário para confirmar os resultados da verificação de integridade.
+
++
+[listing]
+----
+{
+  "resourceLink": "https://10.117.150.84/vcenter/1/compute/tasks/[This is the task ID for health check task results]",
+  "serviceName": "vcenter-v2-svc",
+  "taskId": "ab12c345-06f7-42d7-b87c-7x64x56x321x",
+  "taskName": "VCenter service health checks"
+}
+----
+.. Copie a parte da ID da tarefa `"resourceLink"` do URL para verificar o resultado da tarefa.
+
+
+. Verifique o resultado das verificações de integridade:
++
+.. Retorno à IU da API REST do serviço de computação no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/vcenter/1/
+----
+.. Selecione *GET /compute​/Tasks/(tarefa_id)*.
+.. Selecione *Experimente*.
+.. Digite a parte da ID da tarefa `"resourceLink"` do URL da resposta do código *POST /compute​/ CONTROLLER_ID​/health-checks* 200 no `task_id` campo parâmetro.
+.. Selecione *Executar*.
+.. Se o `status` retornado indicar que houve problemas em relação à integridade do nó de computação, faça o seguinte:
++
+... Vá para o artigo específico da KB (`KbLink`) listado para cada problema ou execute a solução especificada.
+... Se um KB for especificado, conclua o processo descrito no artigo da KB relevante.
+... Depois de resolver problemas de cluster, execute *POST /compute​/ CONTROLLER_ID​/Health-checks* novamente (consulte a etapa 2).
+
+
+
+
+
+
+Se as verificações de integridade forem concluídas sem problemas, o código de resposta 200 indica um resultado bem-sucedido.
+
+
+
+== Verificações de integridade do nó de computação feitas pelo serviço
+
+As verificações de integridade da computação, sejam elas realizadas pelo Controle de nuvem híbrida ou pelos métodos de API da NetApp, fazem as seguintes verificações por nó. Dependendo do seu ambiente, algumas dessas verificações podem ser ignoradas. Você deve executar novamente as verificações de integridade depois de resolver quaisquer problemas detetados.
+
+|===
+| Verifique a descrição | Nó/cluster | Ação necessária para resolver | artigo da base de conhecimento com procedimento 
+
+
+| O DRS está ativado e totalmente automatizado? | Cluster | Ative o DRS e certifique-se de que ele esteja totalmente automatizado. | link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/Virtual_Storage_Console_for_VMware_vSphere/How_to_enable_DRS_in_vSphere["Veja este KB"^]. OBSERVAÇÃO: Se você tiver o licenciamento padrão, coloque o host ESXi no modo de manutenção e ignore este aviso de falha de verificação de integridade. 
+
+
+| O DPM está desativado no vSphere? | Cluster | Desligue o Gerenciamento de Energia distribuída. | link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/Element_Plug-in_for_vCenter_server/How_to_disable_DPM_in_VMware_vCenter["Veja este KB"^]. 
+
+
+| O controle de admissão de HA está desativado no vSphere? | Cluster | Desligue o controle de admissão HA. | link:https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/NetApp_HCI/How_to_control_enable_HA_admission_in_vSphere["Veja este KB"^]. 
+
+
+| O FT está habilitado para uma VM em um host no cluster? | Nó | Suspenda a tolerância a falhas em qualquer máquina virtual afetada. | link:https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/NetApp_HCI/How_to_suspend_fault_tolerance_on_virtual_machines_in_a_vSphere_cluster["Veja este KB"^]. 
+
+
+| Há alarmes críticos no vCenter para o cluster? | Cluster | Inicie o vSphere e resolva e/ou confirme quaisquer alertas antes de continuar. | Não é necessário nenhum KB para resolver o problema. 
+
+
+| Existem alertas informativos genéricos/globais no vCenter? | Cluster | Inicie o vSphere e resolva e/ou confirme quaisquer alertas antes de continuar. | Não é necessário nenhum KB para resolver o problema. 
+
+
+| Os serviços de gestão estão atualizados? | Sistema HCI | É necessário atualizar os serviços de gerenciamento antes de executar uma atualização ou verificações de integridade de pré-atualização. | Não é necessário nenhum KB para resolver o problema. Consulte link:task_hcc_update_management_services.html["este artigo"] para obter mais informações. 
+
+
+| Há erros no nó ESXi atual no vSphere? | Nó | Inicie o vSphere e resolva e/ou confirme quaisquer alertas antes de continuar. | Não é necessário nenhum KB para resolver o problema. 
+
+
+| A Mídia virtual é montada em uma VM em um host no cluster? | Nó | Desmonte todos os discos de Mídia virtual (CD/DVD/floppy) das VMs. | Não é necessário nenhum KB para resolver o problema. 
+
+
+| A versão do BMC é a versão mínima necessária que tem suporte para o Redfish? | Nó | Atualize manualmente o firmware do BMC. | Não é necessário nenhum KB para resolver o problema. 
+
+
+| O host ESXi está ativo e em execução? | Nó | Inicie seu host ESXi. | Não é necessário nenhum KB para resolver o problema. 
+
+
+| As máquinas virtuais residem no armazenamento ESXi local? | Nó/VM | Remova ou migre o armazenamento local anexado a máquinas virtuais. | Não é necessário nenhum KB para resolver o problema. 
+
+
+| O BMC está funcionando? | Nó | Ligue o seu BMC e certifique-se de que está ligado a uma rede que este nó de gestão pode alcançar. | Não é necessário nenhum KB para resolver o problema. 
+
+
+| Há host(s) ESXi parceiro(s) disponível(s)? | Nó | Disponibilize um ou mais host(s) ESXi no cluster (não no modo de manutenção) para migrar máquinas virtuais. | Não é necessário nenhum KB para resolver o problema. 
+
+
+| Você consegue se conetar com o BMC através do protocolo IPMI? | Nó | Ative o protocolo IPMI no controlador de gerenciamento de placa base (BMC). | Não é necessário nenhum KB para resolver o problema. 
+
+
+| O host ESXi está mapeado corretamente para o host de hardware (BMC)? | Nó | O host ESXi não é mapeado corretamente para o controlador de gerenciamento da placa base (BMC). Corrija o mapeamento entre o host ESXi e o host de hardware. | Não é necessário nenhum KB para resolver o problema. Consulte link:task_hcc_edit_bmc_info.html["este artigo"] para obter mais informações. 
+
+
+| Qual é o status dos nós de testemunha no cluster? Nenhum dos nós de testemunhas identificados está funcionando. | Nó | Um nó de testemunha não está sendo executado em um host ESXi alternativo. Ligue o nó testemunha em um host ESXi alternativo e execute novamente a verificação de integridade. *Um nó de testemunha deve estar em execução na instalação do HCI em todos os momentos*. | https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/NetApp_HCI/How_to_resolve_witness_node_issues_prior_to_upgrading_compute_nodes["Veja este KB"^] 
+
+
+| Qual é o status dos nós de testemunha no cluster? O nó testemunha está ativo e em execução neste host ESXi e o nó testemunha alternativo não está ativo e funcionando. | Nó | Um nó de testemunha não está sendo executado em um host ESXi alternativo. Ligue o nó testemunha em um host ESXi alternativo. Quando estiver pronto para atualizar este host ESXi, encerre o nó testemunha em execução neste host ESXi e execute novamente a verificação de integridade. *Um nó de testemunha deve estar em execução na instalação do HCI em todos os momentos*. | https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/NetApp_HCI/How_to_resolve_witness_node_issues_prior_to_upgrading_compute_nodes["Veja este KB"^] 
+
+
+| Qual é o status dos nós de testemunha no cluster? O nó testemunha está ativo e em execução neste host ESXi e o nó alternativo está ativo, mas está em execução no mesmo host ESXi. | Nó | Ambos os nós de testemunha estão sendo executados neste host ESXi. Realocar um nó de testemunha para um host ESXi alternativo. Quando estiver pronto para atualizar este host ESXi, encerre o nó de testemunha que permanece neste host ESXi e execute novamente a verificação de integridade. *Um nó de testemunha deve estar em execução na instalação do HCI em todos os momentos*. | https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/NetApp_HCI/How_to_resolve_witness_node_issues_prior_to_upgrading_compute_nodes["Veja este KB"^] 
+
+
+| Qual é o status dos nós de testemunha no cluster? O nó testemunha está ativo e em execução neste host ESXi e o nó testemunha alternativo está ativo e em execução em outro host ESXi. | Nó | Um nó de testemunha está sendo executado localmente neste host ESXi. Quando estiver pronto para atualizar este host ESXi, encerre o nó testemunha somente neste host ESXi e execute novamente a verificação de integridade. *Um nó de testemunha deve estar em execução na instalação do HCI em todos os momentos*. | https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/NetApp_HCI/How_to_resolve_witness_node_issues_prior_to_upgrading_compute_nodes["Veja este KB"^] 
+|===
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

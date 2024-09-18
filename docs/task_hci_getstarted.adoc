@@ -1,0 +1,283 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hci_getstarted.html 
+summary: Use estas instruções para instalar e implantar o NetApp HCI. 
+keywords: netapp, hci, install, deploy, get started 
+---
+= Visão geral da instalação e implantação do NetApp HCI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Use estas instruções para instalar e implantar o NetApp HCI. Estas instruções incluem links para mais detalhes.
+
+Aqui está uma visão geral do processo:
+
+* <<Prepare-se para a instalação>>
+* <<Valide a prontidão da rede com o NetApp Active IQ Config Advisor>>
+* <<Trabalhe com sua equipe do NetApp>>
+* <<Instale o hardware do NetApp HCI>>
+* <<Conclua as tarefas opcionais após a instalação do hardware>>
+* <<Implantar o NetApp HCI usando o mecanismo de implantação do NetApp (EQM)>>
+* <<Gerenciar o NetApp HCI usando o plug-in do vCenter>>
+* <<Monitore ou atualize o NetApp HCI com o controle de nuvem híbrida>>
+
+
+
+
+== Prepare-se para a instalação
+
+Antes de iniciar a instalação, complete a lista de verificação de pré-voo _NetApp HCI Installation Discovery Workbook_ antes de receber o hardware.
+
+
+
+=== Prepare a rede e os locais de instalação
+
+Aqui está uma instalação simplificada de topologia de rede NetApp HCI:
+
+image::hci_topology_simple_network.png[Diagrama de topologia de rede NetApp HCI simplificado]
+
+Essa é a topologia de rede simplificada para um único nó de storage e um único nó de computação. O cluster mínimo para NetApp HCI é de dois nós de storage e dois de computação.
+
+
+NOTE: Sua topologia de rede pode ser diferente do que é mostrado aqui. Este é apenas um exemplo.
+
+Esta configuração usa dois cabos de rede nos nós de computação para conetividade a todas as redes NetApp HCI. 
+
+Leia estes recursos:
+
+* Use o _NetApp HCI Instalação descoberta Workbook_ para configurar sua rede antes da instalação.
+* Para obter detalhes e outras configurações suportadas, consulte https://www.netapp.com/pdf.html?item=/media/9413-tr4820pdf.pdf["_TR-4820: Guia de Planejamento rápido de redes NetApp HCI_"^] e o https://library.netapp.com/ecm/ecm_download_file/ECMLP2856176["_Instruções de instalação e configuração do NetApp HCI_"^].
+* Para obter informações sobre configurações do NetApp HCI menores que quatro nós de storage, https://www.netapp.com/pdf.html?item=/media/9489-tr-4823.pdf["_TR-4823: Cluster de storage de 2 nós do NetApp HCI_"^] consulte .
+* Para obter detalhes sobre a configuração do LACP (Link Aggregation Control Protocol) nas portas do switch usadas para cada um dos nós de storage, link:hci_prereqs_LACP_configuration.html["Configure O LCAP para um desempenho de armazenamento ideal"]consulte .
+
+
+Esta configuração consolida todo o tráfego em duas portas físicas e redundantes, reduzindo o cabeamento e simplificando a configuração da rede. Essa configuração requer que o armazenamento, o vMotion e qualquer segmento de rede de máquinas virtuais usem a marcação de VLAN.  O segmento de rede de gerenciamento pode usar VLAN nativa ou marcada; no entanto, VLAN nativa é o modo preferido para que o mecanismo de implantação NetApp (EQM) possa atribuir recursos de rede de maneira automatizada (Zero Conf).
+
+Esse modo requer o vDS (vSphere Distributed switches), que exigem o licenciamento do VMware vSphere Enterprise Plus.  
+
+
+
+=== Requisitos de rede antes de começar
+
+Aqui estão os destaques dos pré-requisitos.
+
+Para obter detalhes sobre os pré-requisitos, link:hci_prereqs_overview.html["Visão geral dos requisitos para a implantação do NetApp HCI"]consulte .
+
+* O Bond1G é uma interface lógica que combina 1GbE portas de rede em nós de storage e uma interface de gerenciamento em nós de computação. Esta rede é utilizada para o tráfego da API de EQM. Todos os nós devem ser capazes de se comunicar através da interface de gerenciamento na mesma rede L2.
+* O Bond10G é uma interface lógica que combina portas 10/25GbE e é usado pelo NDE para fazer a ligação e o inventário. Todos os nós devem ser capazes de se comunicar através da interface Bond10G com quadros jumbo não fragmentados.
+* O NDE requer, no mínimo, um endereço IP atribuído manualmente na interface Bond1G em um nó de storage. A EQM será executada a partir deste nó.
+* Todos os nós terão endereços IP temporários atribuídos pela descoberta de EQM, que é realizada pelo endereçamento IP privado automático (APIPA).
+
+
+
+NOTE: Durante o processo de EQM, todos os nós serão atribuídos endereços IP permanentes e quaisquer IPs temporários atribuídos à APIPA serão liberados.
+
+* O NDE requer redes separadas para gerenciamento, iSCSI e vMotion que são pré-configuradas na rede do switch.
+
+
+
+
+== Valide a prontidão da rede com o NetApp Active IQ Config Advisor
+
+Para garantir a disponibilidade da rede para o NetApp HCI, instale o NetApp Active IQ Config Advisor 5.8.1 ou posterior. Esta ferramenta de validação de rede está localizada com outro link:https://mysupport.netapp.com/site/tools/tool-eula/5ddb829ebd393e00015179b2["Ferramentas de suporte do NetApp"^]. Use esta ferramenta para validar conetividade, IDs de VLAN, requisitos de endereço IP, conetividade de switch e muito mais.
+
+Para obter detalhes, link:hci_prereqs_task_validate_config_advisor.html["Valide seu ambiente com o Active IQ Config Advisor"]consulte .
+
+
+
+== Trabalhe com sua equipe do NetApp
+
+Sua equipe do NetApp usa o relatório NetApp Active IQ Config Advisor e o _caderno de trabalho de descoberta_ para validar se o ambiente de rede está pronto.
+
+
+
+== Instale o hardware do NetApp HCI
+
+O NetApp HCI pode ser instalado em diferentes configurações:
+
+* H410C nós de computação: Configuração de dois cabos ou configuração de seis cabos
+* Nó de computação de H610C U: Configuração de dois cabos
+* Nó de computação de H615C U: Configuração de dois cabos
+* Nó de storage de H410S GB
+* Nó de storage de H610S GB
+
+
+
+CAUTION: Para obter precauções e detalhes, link:task_hci_installhw.html["Instale as ferragens da série H."]consulte .
+
+.Passos
+. Instale os trilhos e o chassi.
+. Instalar nós no chassi e instalar unidades para nós de storage. (Aplica-se apenas se estiver a instalar o H410C e o H410S num chassis da série H da NetApp.)
+. Instale os interrutores.
+. Cable o nó de computação.
+. Faça o cabo do nó de storage.
+. Conete os cabos de energia.
+. Ligue os nós da NetApp HCI.
+
+
+
+
+== Conclua as tarefas opcionais após a instalação do hardware
+
+Depois de instalar o hardware NetApp HCI, você deve executar algumas tarefas opcionais, mas recomendadas.
+
+
+
+=== Gerencie a capacidade de storage em todos os chassis
+
+Certifique-se de que a capacidade de storage seja dividida uniformemente em todos os chassis que contêm nós de storage.
+
+
+
+=== Configure o IPMI para cada nó
+
+Depois de ter colocado em rack, cabeado e ligado o hardware NetApp HCI, você pode configurar o acesso à interface de gerenciamento de plataforma inteligente (IPMI) para cada nó. Atribua um endereço IP a cada porta IPMI e altere a senha IPMI do administrador padrão assim que você tiver acesso IPMI remoto ao nó.
+
+link:hci_prereqs_final_prep.html["Configure o IPMI"]Consulte .
+
+
+
+== Implantar o NetApp HCI usando o mecanismo de implantação do NetApp (EQM)
+
+A IU do NDE é a interface do assistente de software usada para instalar o NetApp HCI.
+
+
+
+=== Inicie a IU da EQM
+
+O NetApp HCI usa um endereço IPv4 da rede de gerenciamento de nós de storage para acesso inicial ao EQM. Como prática recomendada, conete-se a partir do primeiro nó de storage.
+
+.Pré-requisitos
+* Você já atribuiu o endereço IP de rede de gerenciamento de nó de armazenamento inicial manualmente ou usando DHCP.
+* Você deve ter acesso físico à instalação do NetApp HCI.
+
+
+.Passos
+. Se você não souber o IP de rede de gerenciamento de nó de armazenamento inicial, use a interface de usuário de terminal (TUI), que é acessada por meio do teclado e do monitor no nó de armazenamento ou link:task_nde_access_dhcp.html["Utilize um dispositivo USB"].
++
+Para obter detalhes, link:concept_nde_access_overview.html["_Acessando o mecanismo de implantação do NetApp_"]consulte .
+
+. Se você souber o endereço IP de um navegador da Web, conete-se ao endereço Bond1G do nó principal via HTTP, não HTTPS.
++
+*Exemplo*: `http://<IP_address>:442/nde/`
+
+
+
+
+
+=== Implante o NetApp HCI com a IU do NDE
+
+. Na EQM, aceite os pré-requisitos, verifique para utilizar o Active IQ e aceite os contratos de licença.
+. Como opção, habilite os serviços de arquivos de Data Fabric da ONTAP Select e aceite a licença ONTAP Select.
+. Configurar uma nova implantação do vCenter. Clique em *Configurar usando um Nome de domínio totalmente qualificado* e insira o nome de domínio do vCenter Server e o endereço IP do servidor DNS.
++
+
+NOTE: É altamente recomendável usar a abordagem FQDN para instalação do vCenter.
+
+. Verifique se a avaliação de inventário de todos os nós foi concluída com sucesso.
++
+O nó de storage que está executando o NDE já está verificado.
+
+. Selecione todos os nós e clique em *continuar*.
+. Configure as definições de rede. Consulte o _Manual de Instalação de descoberta de Instalação do NetApp HCI_ para obter os valores a serem usados.
+. Clique na caixa azul para iniciar o formulário fácil.
++
+image::hci_nde_network_settings_ui.png[Página Configurações de rede de EQM]
+
+. No formulário Configurações de rede fácil:
++
+.. Digite o prefixo de nomes. (Consulte os detalhes do sistema do _Manual de Instalação da descoberta de Instalação do NetApp HCI_.)
+.. Clique em *no* para atribuir IDs de VLAN? (Você os atribui mais tarde na página principal Configurações de rede.)
+.. Digite o CIDR de sub-rede, o gateway padrão e o endereço IP inicial para as redes de gerenciamento, vMotion e iSCI de acordo com a pasta de trabalho. (Consulte a seção método de atribuição de IP do _NetApp HCI Instalação descoberta Workbook_ para esses valores.)
+.. Clique em *Apply to Network Settings* (aplicar às definições de rede).
+
+
+. Junte-se a um link:task_nde_join_existing_vsphere.html["VCenter existente"] (opcional).
+. Registre números de série de nós no _NetApp HCI Installation Discovery Workbook_.
+. Especifique um ID de VLAN para a rede vMotion e qualquer rede que exija marcação de VLAN. Consulte o _Manual de Instalação da descoberta de Instalação do NetApp HCI_.
+. Faça o download de sua configuração como um arquivo .CSV.
+. Clique em *Start Deployment*.
+. Copie e salve o URL que aparece.
++
+
+NOTE: Pode levar cerca de 45 minutos para concluir a implantação.
+
+
+
+
+
+=== Verifique a instalação usando o vSphere Web Client
+
+. Inicie o vSphere Web Client e faça login usando as credenciais especificadas durante o uso do NDE.
++
+Você deve anexar `@vsphere.local` ao nome de usuário.
+
+. Verifique se não há alarmes presentes.
+. Verifique se os dispositivos vCenter, mNode e ONTAP Select (opcional) estão sendo executados sem ícones de aviso.
+. Observe que os dois datastores padrão (NetApp-HCI-datastore_01 e 02) são criados.
+. Selecione cada datastore e verifique se todos os nós de computação estão listados na guia hosts.
+. Valide o vMotion e o datastore-02.
++
+.. Migre o vCenter Server para o NetApp-HCI-datastore-02 (storage somente vMotion).
+.. Migre o vCenter Server para cada um dos nós de computação (somente computação vMotion).
+
+
+. Acesse o plug-in do NetApp Element para vCenter Server e verifique se o cluster está visível.
+. Certifique-se de que não aparecem alertas no Painel de instrumentos.
+
+
+
+
+== Gerenciar o NetApp HCI usando o plug-in do vCenter
+
+Depois de instalar o NetApp HCI, é possível configurar clusters, volumes, armazenamentos de dados, logs, grupos de acesso, iniciadores e políticas de qualidade do serviço (QoS) usando o plug-in do NetApp Element para vCenter Server.
+
+Para obter detalhes, https://docs.netapp.com/us-en/vcp/index.html["_Plug-in do NetApp Element para documentação do vCenter Server_"^] consulte .
+
+image::vcp_shortcuts_page.png[Página Atalhos do vSphere Client]
+
+
+
+== Monitore ou atualize o NetApp HCI com o controle de nuvem híbrida
+
+Você pode usar o Controle de nuvem híbrida da NetApp HCI opcionalmente para monitorar, atualizar ou expandir seu sistema.
+
+Você faz login no Controle de nuvem híbrida da NetApp navegando até o endereço IP do nó de gerenciamento.
+
+Com o controle de nuvem híbrida, você pode fazer o seguinte:
+
+* link:task_hcc_dashboard.html["Monitore a instalação do NetApp HCI"]
+* link:concept_hci_upgrade_overview.html["Atualize seu sistema NetApp HCI"]
+* link:concept_hcc_expandoverview.html["Expanda seus recursos de storage ou computação do NetApp HCI"]
+
+
+*Passos*
+
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web. Por exemplo:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage da NetApp HCI.
++
+A interface de controle de nuvem híbrida da NetApp é exibida.
+
+
+
+[discrete]
+== Encontre mais informações
+
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* link:../media/hseries-isi.pdf["Instruções de instalação e configuração do NetApp HCI"^]
+* https://www.netapp.com/pdf.html?item=/media/9413-tr4820pdf.pdf["TR-4820: Guia de Planejamento rápido de redes NetApp HCI"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para documentação do vCenter Server"^]
+* https://mysupport.netapp.com/site/tools/tool-eula/5ddb829ebd393e00015179b2["Consultor de configuração do NetApp"^] ferramenta de validação de rede 5.8.1 ou posterior
+* https://docs.netapp.com/us-en/solidfire-active-iq/index.html["Documentação do NetApp SolidFire Active IQ"^]
+

@@ -1,0 +1,96 @@
+---
+sidebar: sidebar 
+permalink: docs/task_rancher_remove_deployment.html 
+summary: Saiba como remover uma instalação do Rancher na implantação do NetApp HCI para que você possa reimplantar. 
+keywords: netapp, hci, api, REST, remove, Rancher, redeploy 
+---
+= Remova uma instalação do Rancher no NetApp HCI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Se você acidentalmente implantar o Rancher no NetApp HCI com informações incorretas (como um FQDN de servidor de Rancher incorreto), você precisará remover a instalação e depois reimplantar. Siga estas etapas para remover a instalação do Rancher na instância do NetApp HCI.
+
+Esta ação não exclui os clusters de usuários.
+
+
+TIP: Talvez você queira manter os clusters de usuários. Se você os mantiver, poderá migrá-los posteriormente para outra implementação do Rancher. Se você quiser excluir os clusters de usuário, primeiro faça isso antes de excluir o servidor Rancher; caso contrário, excluir os clusters de usuário depois que o servidor Rancher for excluído é mais difícil.
+
+.Opções
+* <<Remova o Rancher no NetApp HCI usando o controle de nuvem híbrida da NetApp>> (Recomendado)
+* <<Remova o Rancher no NetApp HCI usando a API REST>>
+
+
+
+
+== Remova o Rancher no NetApp HCI usando o controle de nuvem híbrida da NetApp
+
+Você pode usar a IU da Web do Controle de nuvem híbrida do NetApp para remover as três máquinas virtuais configuradas durante a implantação para hospedar o servidor Rancher.
+
+.Passos
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage.
+. No Dashboard, clique no menu no canto superior direito.
+. Selecione *Configurar*.
++
+image::hcc_configure.png[Página Configuração do rancher]
+
+. No painel *Rancher Server clusters*, clique em *Configurar clusters de servidor Rancher*.
+. Selecione o menu *ações* para a instalação do Rancher que você precisa remover.
++
+
+CAUTION: Clicar em *Excluir* remove imediatamente o Rancher no cluster de gerenciamento do NetApp HCI.
+
+. Selecione *Eliminar*.
+
+
+
+
+== Remova o Rancher no NetApp HCI usando a API REST
+
+Você pode usar a API REST de controle de nuvem híbrida da NetApp para remover as três máquinas virtuais configuradas durante a implantação para hospedar o servidor Rancher.
+
+.Passos
+. Introduza o endereço IP do nó de gestão seguido de `/k8sdeployer/api/`:
++
+[listing]
+----
+https://[IP address]/k8sdeployer/api/
+----
+. Clique em *autorizar* ou em qualquer ícone de bloqueio e insira credenciais de administrador de cluster para obter permissões para usar APIs.
++
+.. Introduza o nome de utilizador e a palavra-passe do cluster.
+.. Selecione *corpo do pedido* na lista suspensa tipo se o valor ainda não estiver selecionado.
+.. Introduza a ID do cliente como `mnode-client` se o valor ainda não estivesse preenchido.
+.. Não insira um valor para o segredo do cliente.
+.. Clique em *autorizar* para iniciar uma sessão.
+.. Feche a janela.
+
+
+. Feche a caixa de diálogo *autorizações disponíveis*.
+. Clique em *POST/Destroy*.
+. Clique em *Experimente*.
+. Na caixa de texto corpo da solicitação, insira o FQDN do servidor Rancher como o `serverURL` valor.
+. Clique em *Executar*.
++
+Após vários minutos, as máquinas virtuais do servidor Rancher não devem mais estar visíveis na lista hosts e clusters no vSphere Client. Após a remoção, você pode usar o Controle de nuvem híbrida da NetApp para reimplantar o Rancher no NetApp HCI.
+
+
+
+[discrete]
+== Encontre mais informações
+
+* https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/Management_services_for_Element_Software_and_NetApp_HCI/NetApp_HCI_and_Rancher_troubleshooting["Solução de problemas de implantação do rancher"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

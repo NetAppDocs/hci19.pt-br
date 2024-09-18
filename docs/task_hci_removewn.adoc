@@ -1,0 +1,48 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hci_removewn.html 
+summary: Depois de expandir um cluster de storage de dois nós para quatro ou mais nós, é possível excluir o par de nós de testemunhas para liberar recursos de computação na instalação do NetApp HCI. 
+keywords: netapp, hci, witness nodes, two-node cluster, four-node cluster, compute nodes, virtual machine, vm 
+---
+= Remova os nós de testemunhas após expandir o cluster
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Depois de expandir um cluster de storage de dois nós para quatro ou mais nós, é possível excluir o par de nós de testemunhas para liberar recursos de computação na instalação do NetApp HCI. Os nós de testemunha usados anteriormente pelo cluster de armazenamento ainda são visíveis como máquinas virtuais de reserva (VM) no vSphere Web Client.
+
+.Sobre esta tarefa
+Nós de testemunhas não são necessários em clusters com mais de quatro nós de storage. Este é um procedimento opcional se você quiser liberar CPU e memória depois de expandir seu cluster de dois nós para quatro ou mais nós.
+
+
+TIP: Verifique se não são comunicados erros ou falhas do cluster. Você pode encontrar informações sobre alertas do sistema clicando em *relatórios > Alertas* no ponto de extensão Gerenciamento do NetApp Element no vSphere.
+
+.Passos
+. No vSphere, acesse o ponto de extensão Gerenciamento do NetApp Element na guia *Atalhos* ou no painel lateral.
+. Selecione *Gerenciamento de NetApp Element > cluster > nós*.
++
+image::vcp-witnessnode.gif[Mostra a página Gerenciamento de NetApp Element > clusters com os nós listados.]
+
+. Marque a caixa de seleção do nó testemunha que deseja excluir e clique em *ações > Remover*.
+. Confirme a ação no prompt.
+. Clique em *hosts and clusters*.
+. Navegue até a VM Witness Node que você removeu anteriormente.
+. Clique com o botão direito do rato na VM e desligue-a.
+. Clique com o botão direito do rato na VM que desligou e clique em *Eliminar do disco*.
+. Confirme a ação no prompt.
+
+
+
+
+== Encontre mais informações
+
+* https://www.netapp.com/pdf.html?item=/media/9489-tr-4823.pdf["Cluster de storage de dois nós NetApp HCI | TR-4823"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+* http://docs.netapp.com/sfe-122/index.jsp["Centro de Documentação de Software SolidFire e Element"^]
+

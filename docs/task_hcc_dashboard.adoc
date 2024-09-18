@@ -1,0 +1,190 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hcc_dashboard.html 
+summary: Você pode visualizar recursos de storage e computação no Dashboard de controle de nuvem híbrida da NetApp. Além disso, você pode monitorar a capacidade de storage, a performance de storage e a utilização da computação. 
+keywords: netapp, hci, on premise, hcc, hybrid cloud control, storage, compute, storage performance, utilization, capacity 
+---
+= Monitore os recursos de computação e storage no dashboard de controle de nuvem híbrida
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Com o dashboard de controle de nuvem híbrida da NetApp, você pode visualizar rapidamente todos os seus recursos de storage e computação. Além disso, você pode monitorar a capacidade de storage, a performance de storage e a utilização da computação.
+
+
+NOTE: Quando você inicia uma nova sessão de controle de nuvem híbrida da NetApp pela primeira vez, pode haver um atraso ao carregar a visualização do painel de controle de nuvem híbrida da NetApp quando o nó de gerenciamento está gerenciando muitos clusters. O tempo de carregamento varia dependendo do número de clusters sendo gerenciados ativamente pelo nó de gerenciamento. Para lançamentos subsequentes, você experimentará tempos de carregamento mais rápidos.
+
+Somente os nós de computação gerenciados e clusters com pelo menos um nó gerenciado no hardware da série H aparecem no painel de controle da nuvem híbrida.
+
+* <<Acesse o Painel HCC do NetApp>>
+* <<Monitorar recursos de storage>>
+* <<Monitorar recursos de computação>>
+* <<Monitorar a capacidade de armazenamento>>
+* <<Monitorar a performance de storage>>
+* <<Monitorar a utilização da computação>>
+
+
+
+
+== Acesse o Painel HCC do NetApp
+
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web. Por exemplo:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage da NetApp HCI.
+. Veja o dashboard de controle da nuvem híbrida.
++
+image::hcc_dashboard_all.png[Painel do HCC]
+
+
+
+
+TIP: Você pode ver alguns ou todos esses painéis, dependendo da sua instalação. Por exemplo, para instalações somente storage, o painel de controle de nuvem híbrida mostra somente o painel Storage, o painel Storage Capacity e o painel Storage Performance.
+
+
+
+== Monitorar recursos de storage
+
+Use o painel *Storage* para ver seu ambiente de armazenamento total. É possível monitorar o número de clusters de storage, nós de storage e volume total.
+
+Para ver detalhes, no painel armazenamento, selecione *Mostrar detalhes*.
+
+image::hcc_dashboard_storage_node_number.PNG[Vista de armazenamento]
+
+
+NOTE: O número Total de nós de storage não inclui nós de testemunhas de clusters de storage de dois nós. Os nós de testemunha são incluídos no número de nós na seção de detalhes desse cluster.
+
+
+TIP: Para ver os dados mais recentes do cluster de armazenamento, use a página Storage clusters, onde a polling ocorre com mais frequência do que no Dashboard.
+
+
+
+== Monitorar recursos de computação
+
+Use o painel *Compute* para ver seu ambiente de computação total da série H do NetApp. Você pode monitorar o número de clusters de computação e o total de nós de computação.
+
+Para ver detalhes, nos painéis Compute (calcular), selecione *Show Details* (Mostrar detalhes).
+
+
+NOTE: Suas instâncias do vCenter são exibidas somente no painel Computação quando pelo menos um nó de computação do NetApp HCI estiver associado a essa instância. Para listar as instâncias do vCenter vinculadas ao Controle de nuvem híbrida do NetApp, você pode usar o link:task_mnode_edit_vcenter_assets.html["APIs"].
+
+
+NOTE: Para gerenciar um nó de computação no controle de nuvem híbrida da NetApp, é https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/Management_services_for_Element_Software_and_NetApp_HCI/How_to_set_up_compute_node_management_in_NetApp_Hybrid_Cloud_Control["Adicione o nó de computação a um cluster de host do vCenter"^]necessário .
+
+
+
+== Monitorar a capacidade de armazenamento
+
+É essencial monitorar a capacidade de storage do seu ambiente. Com o painel capacidade de storage, você pode determinar seus ganhos de eficiência de capacidade de storage com ou sem recursos de compactação, deduplicação e thin Provisioning habilitados.
+
+Você pode ver o espaço de armazenamento físico total disponível no cluster na guia *RAW* e informações sobre o armazenamento provisionado na guia *EFFECTIVE*.
+
+image::hcc_dashboard_storage_capacity_effective.png[Painel HCC > Painel de capacidade de armazenamento]
+
+
+TIP: Para exibir a integridade do cluster, consulte também o Painel do SolidFire Active IQ. link:task_hcc_activeiq.html["Monitore performance, capacidade e integridade do cluster no NetApp SolidFire Active IQ"]Consulte .
+
+.Passos
+. Selecione a guia *RAW* para ver o espaço de armazenamento físico total usado e disponível no cluster.
++
+Observe as linhas verticais para determinar se sua capacidade usada é menor que o total ou menor que os limites de Aviso, erro ou Crítica. Passe o Mouse sobre as linhas para ver detalhes.
+
++
+
+NOTE: Você pode definir o limite para Aviso, que é padrão para 3% abaixo do limiar de erro. Os limiares de erro e crítico são predefinidos e não podem ser configurados por design. O limiar de erro indica que menos de um nó de capacidade permanece no cluster. Para obter instruções sobre como definir o limite, https://docs.netapp.com/us-en/element-software/storage/task_system_manage_cluster_set_the_cluster_full_threshold.html["Definir o limite máximo do cluster"^] consulte .
+
++
+
+TIP: Para obter detalhes sobre a API de elemento de limites de cluster relacionada, consulte https://docs.netapp.com/us-en/element-software/api/reference_element_api_getclusterfullthreshold.html[""GetClusterFullThreshold""^] a documentação da API de software _Element_. Para exibir detalhes sobre a capacidade de bloco e metadados, consulte https://docs.netapp.com/us-en/element-software/storage/concept_monitor_understand_cluster_fullness_levels.html["Compreender os níveis de plenitude do cluster"^] a documentação do software _Element_.
+
+. Selecione a guia *EFFECTIVE*, para ver informações sobre o armazenamento total provisionado para hosts conetados e ver as classificações de eficiência.
++
+.. Opcionalmente, marque *include Thin Provisioning* para ver as taxas de eficiência de thin Provisioning no gráfico de barras de capacidade efetiva.
+.. *Gráfico de barras de capacidade efetiva*: Observe as linhas verticais para determinar se sua capacidade usada é menor do que o total ou menor do que os limiares de Aviso, erro ou Crítica. Semelhante à guia RAW, você pode passar o Mouse sobre as linhas verticais para ver detalhes.
+.. * Eficiências*: Veja essas classificações para determinar seus ganhos de eficiência de capacidade de storage com os recursos de compactação, deduplicação e thin Provisioning habilitados. Por exemplo, se a compactação for exibida como "1,3x", isso significa que a eficiência de storage com compactação habilitada é 1,3 vezes mais eficiente do que sem ela.
++
+
+NOTE: As eficiências totais são iguais (maxUsedSpace * fator de eficiência) / 2, onde efficiencyFactor (thinProvioningFactor * deDuplicationFactor * compressionFactor). Quando o Thin Provisioning está desmarcado, ele não está incluído na eficiência total.
+
+.. Se a capacidade de armazenamento efetiva se aproximar de um limite de erro ou crítico, considere limpar os dados do sistema. Alternativamente, considere expandir seu sistema.
++
+link:concept_hcc_expandoverview.html["Visão geral da expansão"]Consulte .
+
+
+
+. Para uma análise mais aprofundada e contexto histórico, veja https://activeiq.solidfire.com/["Detalhes do NetApp SolidFire Active IQ"^] .
+
+
+
+
+== Monitorar a performance de storage
+
+Você pode ver quanto IOPS ou taxa de transferência você pode obter de um cluster sem superar o desempenho útil desse recurso usando o painel desempenho de armazenamento. A performance de storage é o ponto em que você tem a utilização máxima antes que a latência se torne um problema.
+
+O painel desempenho do storage ajuda a identificar se o desempenho está atingindo o ponto em que o desempenho pode degradar se os workloads aumentarem.
+
+As informações neste painel são atualizadas a cada 10 segundos e mostram uma média de todos os pontos no gráfico.
+
+Para obter detalhes sobre o método da API do elemento associado, consulte o https://docs.netapp.com/us-en/element-software/api/reference_element_api_getclusterstats.html["GetClusterStats"^] método na documentação da API do software _Element_.
+
+.Passos
+. Exibir o painel desempenho do armazenamento. Para obter detalhes, passe o Mouse sobre os pontos no gráfico.
++
+.. Guia *IOPS*: Consulte as operações atuais por segundo. Procure tendências em dados ou picos. Por exemplo, se você perceber que o máximo de IOPS é de 160K e 100K delas é de IOPS gratuito ou disponível, talvez considere adicionar mais cargas de trabalho a esse cluster. Por outro lado, se você ver que apenas 140K está disponível, você pode considerar descarregar cargas de trabalho ou expandir seu sistema.
++
+image::hcc_dashboard_storage_perform_iops.png[Desempenho de armazenamento > separador IOPS]
+
+.. Guia *throughput*: Monitore padrões ou picos no throughput. Monitore também os valores de throughput continuamente altos, o que pode indicar que você está se aproximando do desempenho máximo útil do recurso.
++
+image::hcc_dashboard_storage_perform_throughput.png[Desempenho de armazenamento > separador taxa de transferência]
+
+.. Guia *utilização*: Monitore a utilização de IOPS em relação ao total de IOPS disponível somado no nível do cluster.
++
+image::hcc_dashboard_storage_perform_utlization.png[Performance de storage > guia utilização]
+
+
+
+. Para obter mais análises, consulte o desempenho de storage usando o plug-in NetApp Element para vCenter Server.
++
+https://docs.netapp.com/us-en/vcp/vcp_task_reports_volume_performance.html["Desempenho mostrado no plug-in do NetApp Element para vCenter Server"^].
+
+
+
+
+
+== Monitorar a utilização da computação
+
+Além de monitorar o IOPS e a taxa de transferência de seus recursos de storage, você também pode querer visualizar o uso da CPU e da memória de seus ativos de computação. O total de IOPS que um nó pode fornecer é baseado nas caraterísticas físicas do nó, por exemplo, o número de CPUs, a velocidade da CPU e a quantidade de RAM.
+
+.Passos
+. Veja o painel *Compute usage*. Usando as guias CPU e memória, procure padrões ou picos de utilização. Procure também um uso continuamente alto, indicando que você pode estar se aproximando da utilização máxima dos clusters de computação.
++
+
+NOTE: Esse painel mostra os dados somente para os clusters de computação gerenciados por essa instalação.
+
++
+image::hcc_dashboard_compute_util_cpu.png[Painéis de utilização de computação]
+
++
+.. * Guia CPU*: Veja a média atual da utilização da CPU no cluster de computação.
+.. * Guia memória*: Consulte o uso médio de memória atual no cluster de computação.
+
+
+. Para obter mais análises sobre informações de computação, https://activeiq.solidfire.com["NetApp SolidFire Active IQ para dados históricos"^] consulte .
+
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/solidfire-active-iq/index.html["Documentação do NetApp SolidFire Active IQ"^]
+

@@ -1,0 +1,111 @@
+---
+sidebar: sidebar 
+permalink: docs/concept_hci_performance.html 
+summary:  
+keywords: netapp, hci, on premise, concept_hci_performance 
+---
+= Desempenho e qualidade do Serviço
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:keywords: hci, onprem, documentation,
+
+
+[role="lead"]
+Um cluster de storage da SolidFire pode fornecer parâmetros de qualidade do serviço (QoS) por volume. Você pode garantir o desempenho do cluster medido em entradas e saídas por segundo (IOPS) usando três parâmetros configuráveis que definem QoS: Min IOPS, Max IOPS e Burst IOPS.
+
+
+NOTE: O SolidFire Active IQ tem uma página de recomendações de QoS que fornece conselhos sobre a configuração ideal e a configuração de configurações de QoS.
+
+
+
+== Parâmetros de qualidade do serviço
+
+Os parâmetros de IOPS são definidos das seguintes maneiras:
+
+* *IOPS mínimo* - o número mínimo de entradas e saídas sustentadas por segundo (IOPS) que o cluster de armazenamento fornece a um volume. O IOPS mínimo configurado para um volume é o nível garantido de desempenho para um volume. O desempenho não desce abaixo deste nível.
+* *IOPS máximo* - o número máximo de IOPS contínuo que o cluster de armazenamento fornece a um volume. Quando os níveis de IOPS do cluster são extremamente altos, esse nível de desempenho de IOPS não é excedido.
+* *IOPS de explosão* - o número máximo de IOPS permitido em um cenário de pico curto. Se um volume estiver em execução abaixo do IOPS máximo, os créditos de pico sazonal serão acumulados. Quando os níveis de desempenho se tornam muito altos e são empurrados para os níveis máximos, pequenas explosões de IOPS são permitidas no volume.
++
+O software Element usa IOPS Burst quando um cluster está sendo executado em um estado de baixa utilização de IOPS do cluster.
+
++
+Um único volume pode acumular IOPS Burst e usar os créditos para estourar acima de seu IOPS máximo até seu nível de IOPS Burst por um "período de explosão" definido. Um volume pode estourar por até 60 segundos se o cluster tiver a capacidade de acomodar a sobrecarga. Um volume acumula um segundo de crédito de explosão (até um máximo de 60 segundos) para cada segundo em que o volume é executado abaixo do limite máximo de IOPS.
+
++
+As IOPS de explosão são limitadas de duas maneiras:
+
++
+** Um volume pode estourar acima de seu IOPS máximo por um número de segundos igual ao número de créditos de explosão acumulados pelo volume.
+** Quando um volume ultrapassa sua configuração de IOPS máximo, ele é limitado por sua configuração IOPS Burst. Portanto, o IOPS de pico contínuo nunca excede a configuração IOPS de pico contínuo do volume.
+
+
+* *Largura de banda máxima efetiva* - a largura de banda máxima é calculada multiplicando o número de IOPS (com base na curva de QoS) pelo tamanho de e/S.
++
+Exemplo: As configurações de parâmetros de QoS de 100 IOPS mínimo, 1000 IOPS máximo e 1500 IOPs Burst têm os seguintes efeitos na qualidade do desempenho:
+
++
+** Os workloads podem alcançar e sustentar um máximo de 1000 IOPS até que a condição de contenção de workload para IOPS fique aparente no cluster. Em seguida, as IOPS são reduzidas de forma incremental até que as IOPS em todos os volumes estejam dentro dos intervalos de QoS designados e a contenção de desempenho seja aliviada.
+** A performance em todos os volumes é empurrada para o IOPS mínimo de 100K. Os níveis não ficam abaixo da configuração min IOPS, mas podem permanecer acima de 100 IOPS quando a contenção de workload é aliviada.
+** A performance nunca é superior a 1000 IOPS ou inferior a 100 IOPS por um período contínuo. O desempenho de 1500 IOPS (IOPS Burst) é permitido, mas somente para os volumes que acumularam créditos de explosão executando abaixo de IOPS máximo e permitido por curtos períodos de tempo. Os níveis de explosão nunca são sustentados.
+
+
+
+
+
+
+== Limites de valor de QoS
+
+Aqui estão os possíveis valores mínimos e máximos para QoS.
+
+[cols="7*"]
+|===
+| Parâmetros | Valor mín | Padrão | 4 4KB | 5 8KB | 6 16KB | 262 KB 
+
+
+| IOPS mín | 50 | 50 | 15.000 | 9.375* | 5556* | 385* 
+
+
+| IOPS máx | 100 | 15.000 | 200.000** | 125.000 | 74.074 | 5128 
+
+
+| IOPS de explosão | 100 | 15.000 | 200.000** | 125.000 | 74,074 | 5128 
+|===
+*Estas estimativas são aproximadas. **IOPS máximo e IOPS de explosão podem ser definidos até 200.000K; no entanto, essa configuração só pode ser descompactada efetivamente o desempenho de um volume. O desempenho máximo de um volume no mundo real é limitado pelo uso do cluster e pelo desempenho por nó.
+
+
+
+== Desempenho de QoS
+
+A curva de desempenho de QoS mostra a relação entre o tamanho do bloco e a porcentagem de IOPS.
+
+O tamanho do bloco e a largura de banda têm um impactos direto no número de IOPS que um aplicativo pode obter. O software Element leva em conta os tamanhos de bloco que recebe normalizando os tamanhos de bloco para 4K. Com base no workload, o sistema pode aumentar os tamanhos de blocos. À medida que os tamanhos de blocos aumentam, o sistema aumenta a largura de banda para um nível necessário para processar os tamanhos de blocos maiores. À medida que a largura de banda aumenta o número de IOPS, o sistema pode atingir diminuições.
+
+A curva de desempenho de QoS mostra a relação entre o aumento dos tamanhos de bloco e a porcentagem decrescente de IOPS:
+
+image::hci_performance_curve.png[Curva de desempenho de QoS]
+
+Por exemplo, se os tamanhos de bloco forem 4K e a largura de banda for 4000 kbps, as IOPS são 1000. Se os tamanhos de bloco aumentarem para 8k, a largura de banda aumenta para 5000 kbps e o IOPS diminui para 625. Levando em consideração o tamanho dos blocos, o sistema garante que workloads de prioridade mais baixa que usam tamanhos de bloco mais altos, como backups e atividades de hipervisor, não levem muito da performance necessária ao tráfego de prioridade mais alta usando tamanhos de bloco menores.
+
+
+
+== Políticas de QoS
+
+Uma política de QoS permite que você crie e salve uma configuração padronizada de qualidade de serviço que pode ser aplicada a muitos volumes.
+
+As políticas de QoS são melhores para ambientes de serviço, por exemplo, com servidores de banco de dados, aplicativos ou infraestrutura que raramente reiniciam e precisam de acesso igual e constante ao storage. A QoS de volume individual é a melhor para VMs de uso leve, como desktops virtuais ou VMs especializadas do tipo quiosque, que podem ser reinicializadas, ligadas ou desligadas diariamente ou várias vezes ao dia.
+
+As políticas de QoS e QoS não devem ser usadas juntas. Se você estiver usando políticas de QoS, não use QoS personalizado em um volume. A QoS personalizada substituirá e ajustará os valores da política de QoS para configurações de QoS de volume.
+
+
+NOTE: O cluster selecionado deve ser o elemento 10,0 ou posterior para usar políticas de QoS; caso contrário, as funções de política de QoS não estão disponíveis.
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+

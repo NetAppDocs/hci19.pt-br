@@ -1,0 +1,72 @@
+---
+sidebar: sidebar 
+permalink: docs/concept_cg_hci_security.html 
+summary: Quando você usa o NetApp HCI, seus dados são protegidos por protocolos de segurança padrão do setor. 
+keywords: netapp, hci, security 
+---
+= Segurança da NetApp HCI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Quando você usa o NetApp HCI, seus dados são protegidos por protocolos de segurança padrão do setor.
+
+
+
+== Criptografia em repouso para nós de storage
+
+O NetApp HCI permite criptografar todos os dados armazenados no cluster de storage.
+
+Todas as unidades nos nós de storage capazes de criptografia usam a criptografia AES de 256 bits no nível da unidade. Cada unidade tem sua própria chave de criptografia, que é criada quando a unidade é inicializada pela primeira vez. Quando você ativa o recurso de criptografia, uma senha em todo o cluster de armazenamento é criada e pedaços da senha são distribuídos para todos os nós no cluster. Nenhum nó único armazena a senha inteira. A senha é então usada para proteger com senha todo o acesso às unidades. Você precisa da senha para desbloquear a unidade e, como a unidade está criptografando todos os dados, seus dados estão seguros em todos os momentos.
+
+Quando você ativa a criptografia em repouso, o desempenho e a eficiência do cluster de storage não são afetados. Além disso, se você remover uma unidade ou nó habilitado para criptografia do cluster de armazenamento com a API Element ou a IU Element, a criptografia em repouso será desativada nas unidades e as unidades serão apagadas com segurança, protegendo os dados que foram armazenados anteriormente nessas unidades. Depois de remover a unidade, você pode apagar com segurança a unidade com o `SecureEraseDrives` método API. Se você remover forçosamente uma unidade ou nó do cluster de armazenamento, os dados permanecerão protegidos pela senha de todo o cluster e pelas chaves de criptografia individuais da unidade.
+
+Para obter informações sobre como ativar e desativar a criptografia em repouso, consulte http://docs.netapp.com/sfe-122/topic/com.netapp.doc.sfe-ug/GUID-EE404D52-B621-4DE5-B141-2559768FB1D0.html["Ativar e desativar a encriptação para um cluster"^] no Centro de Documentação do SolidFire e do Element.
+
+
+
+== Criptografia de software em repouso
+
+A criptografia de software em repouso permite que todos os dados gravados nos SSDs de um cluster de storage sejam criptografados. Isso fornece uma camada primária de criptografia nos nós SDS empresariais do SolidFire que não incluem unidades com criptografia automática (SEDs).
+
+
+
+== Gerenciamento de chaves externas
+
+Você pode configurar o software Element para usar um KMS (serviço de gerenciamento de chaves em conformidade com KMIP) de terceiros para gerenciar chaves de criptografia de cluster de storage. Quando você ativa esse recurso, a chave de criptografia de senha de acesso à unidade em todo o cluster de armazenamento é gerenciada por um KMS que você especificar. O Element pode usar os seguintes serviços de gerenciamento de chaves:
+
+* Gemalto SafeNet KeySecure
+* SAFENET NA KeySecure
+* HyTrust KeyControl
+* Vormetric Data Security Manager
+* IBM Security Key Lifecycle Manager
+
+
+Para obter mais informações sobre como configurar o Gerenciamento de chaves externas, consulte http://docs.netapp.com/sfe-122/topic/com.netapp.doc.sfe-ug/GUID-057D852C-9C1C-458A-9161-328EDA349B00.html["Introdução ao gerenciamento de chaves externas"^] no Centro de Documentação do SolidFire e do Element.
+
+
+
+== Autenticação de vários fatores
+
+A autenticação multifator (MFA) permite exigir que os usuários apresentem vários tipos de evidências para se autenticar com a IU da Web ou a IU do nó de storage do NetApp Element no login. Você pode configurar o Element para aceitar apenas autenticação multifator para logins integrados ao seu sistema de gerenciamento de usuário e provedor de identidade existente. Você pode configurar o Element para integrar com um provedor de identidade SAML 2,0 existente que pode impor vários esquemas de autenticação, como senha e mensagem de texto, senha e mensagem de e-mail ou outros métodos.
+
+Você pode emparelhar a autenticação multifator com provedores de identidade (IDPs) compatíveis com SAML 2,0 comuns, como o Microsoft ative Directory Federation Services (ADFS) e o Shibboleth.
+
+Para configurar o MFA, consulte http://docs.netapp.com/sfe-122/topic/com.netapp.doc.sfe-ug/GUID-B1C8D8E2-CE95-41FD-9A3E-A0C424EC84F3.html["Habilitando a autenticação multifator"^] no Centro de Documentação do SolidFire e do Element.
+
+
+
+== FIPS 140-2 para HTTPS e criptografia de dados em repouso
+
+Os clusters de storage e os sistemas NetApp HCI da NetApp SolidFire oferecem suporte a criptografia em conformidade com os requisitos FIPS (Federal Information Processing Standard) 140-2 para módulos criptográficos. Você pode ativar a conformidade com o FIPS 140-2 no cluster NetApp HCI ou SolidFire para comunicações HTTPS e criptografia de unidade.
+
+Quando você ativa o modo operacional FIPS 140-2 no cluster, o cluster ativa o módulo de segurança criptográfica (NCSM) do NetApp e aproveita a criptografia com certificação FIPS 140-2 nível 1 para todas as comunicações via HTTPS para a IU e API do NetApp Element. Use a `EnableFeature` API Element com o `fips` parâmetro para habilitar a criptografia HTTPS FIPS 140-2. Em clusters de storage com hardware compatível com FIPS, você também pode ativar a criptografia de unidade FIPS para dados em repouso usando a `EnableFeature` API Element com o `FipsDrives` parâmetro.
+
+Para obter mais informações sobre como preparar um novo cluster de armazenamento para criptografia FIPS 140-2-2, http://docs.netapp.com/sfe-122/topic/com.netapp.doc.sfe-ug/GUID-4645FF0D-3FCD-4440-91A9-A47F7BCC5C50.html["Criação de um cluster compatível com unidades FIPS"^] consulte .
+
+Para obter mais informações sobre como ativar o FIPS 140-2 em um cluster preparado existente, http://docs.netapp.com/sfe-122/topic/com.netapp.doc.sfe-api/GUID-F2726BCA-D59C-47EE-B86C-DC465C96563B.html["A API EnableFeature Element"^]consulte .

@@ -1,0 +1,29 @@
+---
+sidebar: sidebar 
+permalink: docs/task_nde_hci_power_on_storage.html 
+summary: Saiba como desativar os nós de computação do NetApp HCI. 
+keywords: netapp, hci, netapp deployment engine, deployment, vsphere 
+---
+= Ligue os recursos de storage para um sistema NetApp HCI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você pode ligar o NetApp HCI após a interrupção programada ser concluída.
+
+.Passos
+. Ligue todos os nós de storage usando o botão de energia física ou o BMC.
+. Se estiver usando o BMC, faça login em cada nó e navegue até *Controle remoto > Controle de Energia > servidor de ativação*.
+. Quando todos os nós de storage estiverem online, faça login no sistema de storage da NetApp HCI e verifique se todos os nós estão operacionais.
+
+
+[discrete]
+== Encontre mais informações
+
+* link:firmware_driver_versions.html["Versões de firmware e driver ESXi compatíveis para versões de NetApp HCI e firmware para nós de storage NetApp HCI"]
+

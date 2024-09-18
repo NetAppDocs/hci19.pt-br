@@ -1,0 +1,301 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hci_hserieschassisrepl.html 
+summary: Se o seu chassis tiver uma falha na ventoinha ou um problema de alimentação, deve substituí-lo o mais rapidamente possível. As etapas no procedimento de substituição do chassi dependem da configuração do NetApp HCI e da capacidade do cluster, o que requer uma consideração e Planejamento cuidadosos. Você deve entrar em Contato com o suporte da NetApp para obter orientação e solicitar um chassi de substituição. 
+keywords: netapp, hci, chassis replacement,2U chassis replacement, h-series 
+---
+= Substitua o chassi da série H 2U
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Se o seu chassis tiver uma falha na ventoinha ou um problema de alimentação, deve substituí-lo o mais rapidamente possível. As etapas no procedimento de substituição do chassi dependem da configuração do NetApp HCI e da capacidade do cluster, o que requer uma consideração e Planejamento cuidadosos. Você deve entrar em Contato com o suporte da NetApp para obter orientação e solicitar um chassi de substituição.
+
+.Sobre esta tarefa
+Deve considerar o seguinte antes de substituir o chassis:
+
+* Seu rack tem espaço adicional para um novo chassi?
+* Algum do chassi em sua implantação tem slots de nó não utilizados?
+* Se o rack tiver espaço adicional, você pode mover cada um dos nós do chassi com falha para o novo chassi, um de cada vez? Você deve ter em mente que esse processo pode levar tempo.
+* O cluster de storage pode permanecer on-line quando você remove os nós que fazem parte do chassi com falha?
+* As máquinas virtuais (VMs) e o cluster ESXi podem lidar com a carga de trabalho quando você remove os nós de computação que fazem parte do chassi com falha?
+
+
+.Opções de substituição
+Escolha uma das seguintes opções abaixo: <<Substitua o chassi quando houver espaço adicional não utilizado disponível no rack>> <<Substitua o chassi quando o espaço não utilizado adicional não estiver disponível no rack>>
+
+
+
+== Substitua o chassi quando houver espaço adicional não utilizado disponível no rack
+
+Se o rack tiver espaço adicional, você poderá instalar o novo chassi e mover nós um de cada vez para o novo chassi. Se qualquer um dos gabinetes instalados tiver slots de nós não utilizados, você poderá mover nós do chassi com falha para os slots não utilizados, um de cada vez, e remover o chassi com falha. Antes de ser o procedimento, certifique-se de que os comprimentos dos cabos são suficientes e que as portas do switch estão disponíveis.
+
+
+NOTE: As etapas para mover nós de computação são diferentes das etapas para mover nós de storage. Você deve garantir que os nós sejam desligados corretamente antes de movê-los. Depois de mover todos os nós do chassi com falha, remova o chassi do rack e devolva-o ao NetApp.
+
+
+
+=== Instale o novo chassis
+
+Você pode instalar o novo chassi no espaço de rack disponível e mover os nós para ele.
+
+.O que você vai precisar
+* Você tem uma pulseira de descarga eletrostática (ESD), ou você tomou outra proteção antiestática.
+* Tem o chassis de substituição.
+* Você tem um elevador ou duas ou mais pessoas para executar os passos.
+* Você tem uma chave de fenda Phillips nº 1.
+
+
+.Passos
+. Coloque proteção antiestática.
+. Desembale o chassis de substituição. Mantenha a embalagem durante quando devolver o chassis com falha ao NetApp.
+. Insira os trilhos que foram enviados para você junto com o chassi.
+. Deslize o chassi de substituição para dentro do rack.
++
+
+TIP: Utilize sempre mão-de-obra suficiente ou um elevador durante a instalação do chassis.
+
+. Fixe o chassis ao suporte com os parafusos de montagem dianteiros e aperte os parafusos com a chave de parafusos.
+
+
+
+
+=== Mova um nó de computação
+
+Antes de mover um nó de computação para o novo chassi ou para um chassi existente que tenha slots adicionais não utilizados, você deve migrar as máquinas virtuais (VMs), desligar o nó corretamente e rotular os cabos inseridos no nó.
+
+
+NOTE: Certifique-se de que tem proteção antiestática ao mover o nó.
+
+.Passos
+. Anote o número de série do nó a partir do adesivo na parte de trás do nó.
+. No VMware vSphere Web Client, selecione *hosts and clusters*, selecione um nó (host) e, em seguida, selecione *Monitor > Status do hardware > Sensores*.
+. Na seção *Sensores*, procure o número de série que você anotou no adesivo na parte de trás do nó.
+. Depois de encontrar o número de série correspondente, migre as VMs para outro host disponível.
++
+
+NOTE: Consulte a documentação da VMware para obter as etapas de migração.
+
+. Clique com o botão direito do rato no nó e selecione *Power > Shut Down*. Agora você está pronto para remover fisicamente o nó do chassi.
+. Identifique o nó e todos os cabos na parte de trás do nó.
+. Remova o nó do chassi puxando para baixo a alça do came no lado direito de cada nó e puxando o nó para fora usando ambas as alças do came.
+. Reinstale o nó no novo chassi empurrando o nó até ouvir um clique. As etiquetas que você tinha anexado ao nó antes de removê-lo ajudam a guiá-lo. O nó liga-se automaticamente quando o instala corretamente.
++
+
+CAUTION: Certifique-se de oferecer suporte ao nó a partir de baixo quando o instalar. Não utilize força excessiva enquanto empurra o nó para dentro do chassis.
+
++
+
+NOTE: Se estiver instalando no novo chassi, certifique-se de instalar o nó em seu slot original no chassi.
+
+. Reconecte os cabos às mesmas portas na parte de trás do nó. As etiquetas que você tinha nos cabos quando você os desconetou ajudam a guiá-lo.
++
+
+CAUTION: Certifique-se de que não força os cabos nas portas; pode danificar os cabos, as portas ou ambas.
+
+. Confirme se o nó de computação (host) está listado no cluster ESXi no VMware vSphere Web Client.
+. Execute estas etapas para todos os nós de computação no chassi com falha.
+
+
+
+
+=== Mova um nó de storage
+
+Antes de mover os nós de storage para o novo chassi, você deve remover as unidades, desligar os nós corretamente e rotular todos os componentes.
+
+.Passos
+. Identifique o nó que você vai remover da seguinte forma:
++
+.. Anote o número de série do nó na etiqueta na parte de trás do nó.
+.. No VMware vSphere Web Client, selecione *Gerenciamento de NetApp Element* e copie o endereço IP do MVIP.
+.. Use o endereço IP MVIP em um navegador da Web para fazer login na IU do software NetApp Element com o nome de usuário e a senha configurados no mecanismo de implantação do NetApp.
+.. Selecione *Cluster > Nodes*.
+.. Faça corresponder o número de série anotado com o número de série (etiqueta de serviço) listado.
+.. Anote o ID do nó do nó.
+
+
+. Depois de identificar o nó, afaste sessões iSCSI do nó usando a seguinte chamada de API:
+`wget --no-check-certificate -q --user=<USER> --password=<PASS> -O - --post-data '{ "method":"MovePrimariesAwayFromNode", "params":{"nodeID":<NODEID>} }' https://<MVIP>/json-rpc/8.0` MVIP é o endereço IP MVIP, NODEID é o ID do nó, USUÁRIO é o nome de usuário que você configurou no mecanismo de implantação do NetApp quando configurou o NetApp HCI e PASS é a senha que você configurou no mecanismo de implantação do NetApp quando configurou o NetApp HCI.
+. Selecione *Cluster > Drives* para remover as unidades associadas ao nó.
++
+
+NOTE: Você deve esperar que as unidades removidas apareçam como disponíveis antes de remover o nó.
+
+. Selecione *Cluster > nodes > actions > Remove* (cluster > nós > ações > Remover*) para remover o nó.
+. Use a seguinte chamada de API para encerrar o nó:
+`wget --no-check-certificate -q --user=<USER> --password=<PASS> -O - --post-data '{ "method":"Shutdown", "params":{"option":"halt", "nodes":[ <NODEID>]} }' https://<MVIP>/json-rpc/8.0` MVIP é o endereço IP MVIP, NODEID é o ID do nó, USUÁRIO é o nome de usuário que você configurou no mecanismo de implantação do NetApp quando você configurou o NetApp HCI e PASS é a senha que você configurou no mecanismo de implantação do NetApp quando configurou o NetApp HCI. Depois que o nó for desligado, você estará pronto para removê-lo fisicamente do chassi.
+. Remova as unidades do nó no chassi da seguinte forma:
++
+.. Retire a moldura.
+.. Identifique as unidades.
+.. Abra a pega do excêntrico e deslize cada unidade cuidadosamente para fora utilizando ambas as mãos.
+.. Coloque as unidades numa superfície plana e antiestática.
+
+
+. Remova o nó do chassi da seguinte forma:
++
+.. Identifique o nó e os cabos conetados a ele.
+.. Puxe a alça do came para baixo no lado direito de cada nó e puxe o nó para fora usando ambas as alças do came.
+
+
+. Reinstale o nó no chassi empurrando o nó até ouvir um clique. As etiquetas que você tinha anexado ao nó antes de removê-lo ajudam a guiá-lo.
++
+
+CAUTION: Certifique-se de oferecer suporte ao nó a partir de baixo quando o instalar. Não utilize força excessiva enquanto empurra o nó para dentro do chassis.
+
++
+
+NOTE: Se estiver instalando no novo chassi, certifique-se de instalar o nó em seu slot original no chassi.
+
+. Instale as unidades em seus respetivos slots no nó pressionando a alça do came em cada unidade até que ele clique.
+. Reconecte os cabos às mesmas portas na parte de trás do nó. As etiquetas que você tinha conetado aos cabos quando você os desconectou ajudarão a guiá-lo.
++
+
+CAUTION: Certifique-se de que não força os cabos nas portas; pode danificar os cabos, as portas ou ambas.
+
+. Depois que o nó ligar, adicione o nó ao cluster.
++
+
+NOTE: Pode levar até 2 minutos para que o nó seja adicionado e seja exibido em *nós > Ativo*.
+
+. Adicione as unidades.
+. Execute estas etapas para todos os nós de storage no chassi.
+
+
+
+
+== Substitua o chassi quando o espaço não utilizado adicional não estiver disponível no rack
+
+Se o rack não tiver espaço adicional e se nenhum chassi da implantação tiver slots de nó não utilizados, você deve determinar o que pode ficar on-line, se houver alguma coisa, antes de fazer o procedimento de substituição.
+
+.Sobre esta tarefa
+Deve ter em consideração os seguintes pontos antes de efetuar a substituição do chassis:
+
+* O cluster de storage pode permanecer on-line sem os nós de storage no chassi com falha? Se a resposta for não, você deve encerrar todos os nós (computação e storage) na implantação do NetApp HCI. Se a resposta for sim, você poderá encerrar apenas os nós de storage no chassi com falha.
+* As VMs e o cluster ESXi podem permanecer online sem os nós de computação no chassi com falha? Se a resposta for não, você precisará encerrar ou migrar as VMs apropriadas para poder encerrar os nós de computação no chassi com falha. Se a resposta for sim, você poderá encerrar apenas os nós de computação no chassi com falha.
+
+
+
+
+=== Encerre um nó de computação
+
+Antes de mover o nó de computação para o novo chassi, você deve migrar as VMs, desligá-las corretamente e rotular os cabos inseridos no nó.
+
+.Passos
+. Anote o número de série do nó a partir do adesivo na parte de trás do nó.
+. No VMware vSphere Web Client, selecione *hosts and clusters*, selecione um nó (host) e, em seguida, selecione *Monitor > Status do hardware > Sensores*.
+. Na seção *Sensores*, procure o número de série que você anotou no adesivo na parte de trás do nó.
+. Depois de encontrar o número de série correspondente, migre as VMs para outro host disponível.
++
+
+NOTE: Consulte a documentação da VMware para obter as etapas de migração.
+
+. Clique com o botão direito do rato no nó e selecione *Power > Shut Down*. Agora você está pronto para remover fisicamente o nó do chassi.
+
+
+
+
+=== Encerre um nó de storage
+
+Consulte os passos <<move a storage node,aqui>>.
+
+
+
+=== Remova o nó
+
+Você deve garantir que você remova o nó cuidadosamente do chassi e rotule todos os componentes. As etapas para remover fisicamente o nó são as mesmas para nós de storage e computação. Para um nó de armazenamento, remova a unidade antes de remover o nó.
+
+.Passos
+. Para um nó de storage, remova as unidades do nó no chassi da seguinte forma:
++
+.. Retire a moldura.
+.. Identifique as unidades.
+.. Abra a pega do excêntrico e deslize cada unidade cuidadosamente para fora utilizando ambas as mãos.
+.. Coloque as unidades numa superfície plana e antiestática.
+
+
+. Remova o nó do chassi da seguinte forma:
++
+.. Identifique o nó e os cabos conetados a ele.
+.. Puxe a alça do came para baixo no lado direito de cada nó e puxe o nó para fora usando ambas as alças do came.
+
+
+. Execute estas etapas para todos os nós que você deseja remover. Agora você está pronto para remover o chassi com falha.
+
+
+
+
+=== Substitua o chassis
+
+Se o rack não tiver espaço adicional, você deve desinstalar o chassi com falha e substituí-lo pelo novo chassi.
+
+.Passos
+. Coloque proteção antiestática.
+. Desembale o chassis de substituição e mantenha-o numa superfície nivelada. Mantenha a embalagem durante quando devolver a unidade avariada ao NetApp.
+. Remova o chassi com falha do rack e coloque-o em uma superfície nivelada.
++
+
+NOTE: Use mão de obra ou um elevador suficientes enquanto move um chassi.
+
+. Remova os trilhos.
+. Instale os novos trilhos que foram enviados para você com o chassi de substituição.
+. Deslize o chassi de substituição para dentro do rack.
+. Fixe o chassis ao suporte com os parafusos de montagem dianteiros e aperte os parafusos com a chave de parafusos.
+. Instale os nós no novo chassi da seguinte forma:
++
+.. Reinstale o nó em seu slot original no chassi empurrando o nó até ouvir um clique. As etiquetas que você anexou ao nó antes de removê-lo ajudam a guiá-lo.
++
+
+CAUTION: Certifique-se de oferecer suporte ao nó a partir de baixo quando o instalar. Não utilize força excessiva enquanto empurra o nó para dentro do chassis.
+
+.. Para nós de storage, instale as unidades em seus respetivos slots no nó pressionando a alça de came em cada unidade até que ele clique.
+.. Reconecte os cabos às mesmas portas na parte de trás do nó. As etiquetas que você conetou aos cabos quando os desconectou ajudam a guiá-lo.
++
+
+CAUTION: Certifique-se de que não força os cabos nas portas; pode danificar os cabos, as portas ou ambas.
+
+
+
+. Certifique-se de que os nós estão online da seguinte forma:
++
+[cols="2*"]
+|===
+| Opção | Passos 
+
+
+| Se você reinstalou todos os nós (storage e computação) na implantação do NetApp HCI  a| 
+.. No VMware vSphere Web Client, confirme se os nós de computação (hosts) estão listados no cluster ESXi.
+.. No plug-in Element para vCenter Server, confirme se os nós de storage estão listados como Ativo.
+
+
+
+
+| Se você reinstalou apenas os nós no chassi com falha  a| 
+.. No VMware vSphere Web Client, confirme se os nós de computação (hosts) estão listados no cluster ESXi.
+.. No plug-in Element para vCenter Server, selecione *Cluster > Nodes > Pending*.
+.. Selecione o nó e selecione *Adicionar*.
++
+
+NOTE: Pode levar até 2 minutos para que o nó seja adicionado e seja exibido em *nós > Ativo*.
+
+.. Selecione *Drives*.
+.. Na lista disponível, adicione as unidades.
+.. Execute estas etapas para todos os nós de storage reinstalados.
+
+
+|===
+. Verifique se os volumes e armazenamentos de dados estão ativos e acessíveis.
+
+
+
+
+== Encontre mais informações
+
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+* http://docs.netapp.com/sfe-122/index.jsp["Centro de Documentação de Software SolidFire e Element"^]
+

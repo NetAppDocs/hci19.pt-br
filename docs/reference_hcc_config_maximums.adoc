@@ -1,0 +1,19 @@
+---
+sidebar: sidebar 
+permalink: docs/reference_hcc_config_maximums.html 
+summary: O controle de nuvem híbrida da NetApp tem funcionalidades específicas, e a NetApp recomenda a operação deles. 
+keywords: netapp, hci, HCC, configuration, capabilities, limits, maximums 
+---
+= Valores máximos de configuração do Controle de nuvem híbrida da NetApp
+:allow-uri-read: 
+
+
+[role="lead"]
+O NetApp HCI inclui o controle de nuvem híbrida da NetApp para simplificar o ciclo de vida da computação e o gerenciamento do storage. Ele dá suporte às atualizações do software Element em nós de storage para clusters de storage do NetApp HCI e do NetApp SolidFire, bem como às atualizações de firmware para nós de computação do NetApp HCI no NetApp HCI. Ele está disponível por padrão nos nós de gerenciamento no NetApp HCI.
+
+Além de comunicar os componentes de hardware e software fornecidos pela NetApp em uma instalação do NetApp HCI, o Controle de nuvem híbrida da NetApp interage com componentes de terceiros no ambiente do cliente, como o VMware vCenter. A NetApp qualifica a funcionalidade do Controle de nuvem híbrida da NetApp e sua interação com esses componentes de terceiros no ambiente do cliente até uma certa escala. Para uma experiência ideal com o controle de nuvem híbrida da NetApp, a NetApp recomenda permanecer dentro da faixa de valores máximos de configuração.
+
+Se você exceder esses máximos testados, poderá ter problemas com o Controle de nuvem híbrida da NetApp, como uma interface de usuário mais lenta e respostas de API ou funcionalidade indisponíveis. Se você se envolver com o NetApp para suporte ao produto com o Controle de nuvem híbrida da NetApp em ambientes configurados além dos máximos de configuração, o suporte da NetApp solicitará que você altere a configuração para estar dentro dos máximos de configuração documentados.
+
+.Valores máximos de configuração
+O controle de nuvem híbrida da NetApp dá suporte a ambientes VMware vSphere com até 500 nós de computação NetApp. Ele dá suporte a até 20 clusters de storage baseados no software NetApp Element com 40 nós de storage por cluster.

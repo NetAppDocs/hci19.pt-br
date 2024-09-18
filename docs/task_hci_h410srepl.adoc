@@ -1,0 +1,288 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hci_h410srepl.html 
+summary: 'Você deve substituir um nó de armazenamento em caso de falha de módulo de memória dupla inline (DIMM), falha de CPU, problemas de placa Radian, outros problemas de placa-mãe ou se ele não ligar.' 
+keywords: netapp, hci, SSDs, drives, replace drives, H410S, H610S 
+---
+= Substitua H410S nós
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você deve substituir um nó de armazenamento em caso de falha de módulo de memória dupla inline (DIMM), falha de CPU, problemas de placa Radian, outros problemas de placa-mãe ou se ele não ligar. Os alarmes no VMware vSphere Web Client alertam você quando um nó de armazenamento está com defeito. Você deve usar a IU do software NetApp Element para obter o número de série (etiqueta de serviço) do nó com falha. Você precisa dessas informações para localizar o nó com falha no chassi.
+
+.O que você vai precisar
+* Você determinou que o nó de storage precisa ser substituído.
+* Você tem um nó de storage de substituição.
+* Você tem uma pulseira de descarga eletrostática (ESD) ou tomou outras precauções antiestáticas.
+* Você etiquetou cada cabo que está conetado ao nó de storage.
+
+
+.Sobre esta tarefa
+O procedimento de substituição aplica-se a H410S nós de storage em um chassi NetApp HCI de quatro nós e duas unidades de rack (2UU).
+
+Aqui está a visão traseira de um chassi de quatro nós com H410S nós:
+
+image::h410s_chassis_rear.png[Mostra a parte traseira de um chassi de quatro nós com H410S nós.]
+
+Aqui está a visão frontal de um chassi de quatro nós com H410S nós, mostrando os compartimentos que correspondem a cada nó:
+
+image::h410s_ssd_bays.png[A mostra os compartimentos associados a cada nó em um chassi de quatro nós com H410S nós.]
+
+.Visão geral dos passos
+Aqui está uma visão geral de alto nível das etapas deste procedimento: <<Prepare-se para substituir o nó de storage>> <<Substitua o nó de storage no chassi>> <<Adicione o nó de storage ao cluster>>
+
+
+
+== Prepare-se para substituir o nó de storage
+
+Você deve remover o nó de armazenamento defeituoso corretamente do cluster antes de instalar o nó de substituição. Você pode fazer isso sem causar qualquer interrupção de serviço. Você deve obter o número de série do nó de storage com falha na IU do elemento e combiná-lo com o número de série no adesivo na parte de trás do nó.
+
+
+NOTE: No caso de falhas de componentes em que o nó ainda está on-line e funcionando, por exemplo, uma falha de módulo de memória inline dupla (DIMM), você deve remover as unidades do cluster antes de remover o nó com falha.
+
+.Passos
+. Se você tiver uma falha no DIMM, remova as unidades associadas ao nó que você vai substituir do cluster. Você pode usar a IU do software NetApp Element ou o ponto de extensão do gerenciamento do NetApp Element no plug-in Element para vCenter Server antes de remover o nó.
+. Remova os nós usando a IU do software NetApp Element ou o ponto de extensão do NetApp Element Management no plug-in Element para vCenter Server:
++
+[cols="2*"]
+|===
+| Opção | Passos 
+
+
+| Usando a IU do Element  a| 
+.. Na IU do elemento, selecione *Cluster > Nodes*.
+.. Anote o número de série (etiqueta de serviço) do nó com defeito. Você precisa dessas informações para combiná-las com o número de série no adesivo na parte de trás do nó.
+.. Depois de anotar o número de série, remova o nó do cluster da seguinte forma:
+.. Selecione *ações* para o nó que deseja remover.
+.. Selecione *Remover*.
+
+
+Agora você pode remover fisicamente o nó do chassi.
+
+
+
+| Usando o plug-in Element para IU do vCenter Server  a| 
+.. No ponto de extensão Gerenciamento do NetApp Element do vSphere Web Client, selecione *Gerenciamento do NetApp Element > Cluster*.
+.. Selecione a subguia *nodes*.
+.. Na visualização ativa, marque a caixa de seleção para cada nó que deseja remover, selecione *ações > Remover*.
+.. Confirme a ação. Todos os nós removidos de um cluster aparecem na lista de nós pendentes.
+
+
+|===
+
+
+
+
+== Substitua o nó de storage no chassi
+
+Você deve instalar o nó de substituição no mesmo slot no chassi do qual você remove o nó com defeito. Você deve usar o número de série anotado na IU e combiná-lo com o número de série na parte de trás do nó.
+
+
+NOTE: Certifique-se de que tem proteção antiestática antes de executar os passos aqui.
+
+.Passos
+. Desembale o novo nó de armazenamento e coloque-o numa superfície nivelada perto do chassis. Mantenha o material de embalagem durante quando devolver o nó com falha ao NetApp.
+. Identifique cada cabo inserido na parte de trás do nó de armazenamento que você deseja remover. Depois de instalar o novo nó de storage, você deve inserir os cabos nas portas originais.
+. Desconete todos os cabos do nó de storage.
+. Puxe a alça do came para baixo no lado direito do nó e puxe o nó para fora usando ambas as alças do came. A alça da came que você deve puxar para baixo tem uma seta sobre ela para indicar a direção em que ela se move. A outra alça de came não se move e está lá para ajudá-lo a puxar o nó para fora.
++
+
+NOTE: Apoie o nó com as duas mãos quando o retirar do chassis.
+
++
+image::HCI_stor_node_camhandles.png[Mostra o nó de armazenamento com as alças de came chamadas para fora.]
+
+. Coloque o nó numa superfície nivelada.
+. Instale o nó de substituição.
+. Empurre o nó até ouvir um clique.
++
+
+CAUTION: Certifique-se de que não utiliza força excessiva ao deslizar o nó para o chassis.
+
+. Volte a ligar os cabos às portas das quais os desligou originalmente. As etiquetas que você tinha conetado aos cabos quando você os desconectou ajudam a guiá-lo.
++
+
+CAUTION: Se as saídas de ar na parte traseira do chassis estiverem bloqueadas por cabos ou etiquetas, pode provocar avarias prematuras dos componentes devido ao sobreaquecimento. Não force os cabos para as portas; poderá danificar os cabos, as portas ou ambas.
+
++
+
+TIP: Certifique-se de que o nó de substituição seja cabeado da mesma forma que os outros nós no chassi.
+
+. Pressione o botão na parte frontal do nó para ligá-lo.
+
+
+
+
+== Adicione o nó de storage ao cluster
+
+Você deve adicionar o nó de storage de volta ao cluster. As etapas variam de acordo com a versão do NetApp HCI que você está executando.
+
+.O que você vai precisar
+* Você tem endereços IPv4 livres e não utilizados no mesmo segmento de rede que os nós existentes (cada novo nó deve ser instalado na mesma rede que os nós existentes de seu tipo).
+* Você tem um dos seguintes tipos de contas de cluster de storage do SolidFire:
++
+** A conta de administrador nativa que foi criada durante a implantação inicial
+** Uma conta de usuário personalizada com permissões de administrador de cluster, unidades, volumes e nós
+
+
+* Você cabeou e ativou o novo nó.
+* Você tem o endereço IPv4 de gerenciamento de um nó de storage já instalado. Você pode encontrar o endereço IP na guia *Gerenciamento de NetApp Element > cluster > nós* do plug-in do NetApp Element para vCenter Server.
+* Você garante que o novo nó use a mesma topologia de rede e cabeamento que os clusters de storage existentes.
++
+
+TIP: Certifique-se de que a capacidade de armazenamento é dividida uniformemente em todos os chassis para obter a melhor fiabilidade.
+
+
+
+
+
+=== NetApp HCI 1.6P1 e posterior
+
+Você pode usar o Controle de nuvem híbrida do NetApp somente se a instalação do NetApp HCI for executada na versão 1.6P1 ou posterior.
+
+.Passos
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web. Por exemplo:
++
+[listing]
+----
+https://<ManagementNodeIP>/manager/login
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage da NetApp HCI.
+. No painel expandir instalação, selecione *expandir*.
+. Faça login no mecanismo de implantação do NetApp fornecendo as credenciais de administrador do cluster de storage do NetApp HCI local.
++
+
+NOTE: Não é possível iniciar sessão utilizando credenciais Lightweight Directory Access Protocol.
+
+. Na página de boas-vindas, selecione *não*.
+. Selecione *continuar*.
+. Na página Inventário disponível, selecione o nó de armazenamento que deseja adicionar à instalação existente do NetApp HCI.
+. Selecione *continuar*.
+. Na página Configurações de rede, algumas das informações de rede foram detetadas desde a implantação inicial. Cada novo nó de armazenamento é listado por número de série e você deve atribuir novas informações de rede a ele. Execute as seguintes etapas:
++
+.. Se o NetApp HCI detetar um prefixo de nomenclatura, copie-o do campo prefixo de nomenclatura detetado e insira-o como prefixo para o novo nome de host exclusivo que você adicionar no campo Nome de host.
+.. No campo Endereço IP de gerenciamento , insira um endereço IP de gerenciamento para o novo nó de armazenamento que está dentro da sub-rede da rede de gerenciamento.
+.. No campo Endereço IP de armazenamento (iSCSI), introduza um endereço IP iSCSI para o novo nó de armazenamento que se encontra na sub-rede da rede iSCSI.
+.. Selecione *continuar*.
++
+
+NOTE: O NetApp HCI pode levar algum tempo para validar os endereços IP inseridos. O botão continuar fica disponível quando a validação do endereço IP estiver concluída.
+
+
+
+. Na página Review (Revisão), na secção Network Settings (Definições de rede), os novos nós são apresentados em negrito. Se você precisar fazer alterações nas informações em qualquer seção, execute as seguintes etapas:
++
+.. Selecione *Editar* para essa seção.
+.. Quando terminar de fazer alterações, selecione *continuar* em qualquer página subsequente para retornar à página Revisão.
+
+
+. Opcional: Se você não quiser enviar estatísticas de cluster e informações de suporte para servidores Active IQ hospedados em NetApp, desmarque a caixa de seleção final. Isto desativa a monitorização de diagnóstico e saúde em tempo real para o NetApp HCI. A desativação desse recurso remove a capacidade do NetApp de oferecer suporte e monitorar proativamente o NetApp HCI para detetar e resolver problemas antes que a produção seja afetada.
+. Selecione *Adicionar nós*. Você pode monitorar o progresso enquanto o NetApp HCI adiciona e configura os recursos.
+. Opcional: Verifique se todos os novos nós de storage estão visíveis no VMware vSphere Web Client.
+
+
+
+
+=== NetApp HCI 1,4 P2, 1,4 e 1,3
+
+Se a instalação do NetApp HCI executar a versão 1.4P2, 1,4 ou 1,3, você poderá usar o mecanismo de implantação do NetApp para adicionar o nó ao cluster.
+
+.Passos
+. Navegue até o endereço IP de gerenciamento de um dos nós de storage existentes:
+`http://<storage_node_management_IP_address>/`
+. Faça login no mecanismo de implantação do NetApp fornecendo as credenciais de administrador do cluster de storage do NetApp HCI local.
++
+
+NOTE: Não é possível iniciar sessão utilizando credenciais Lightweight Directory Access Protocol.
+
+. Selecione *expanda sua instalação*.
+. Na página de boas-vindas, selecione *não*.
+. Clique em *continuar*.
+. Na página Inventário disponível, selecione o nó de storage a ser adicionado à instalação do NetApp HCI.
+. Selecione *continuar*.
+. Na página Configurações de rede, execute as seguintes etapas:
++
+.. Verifique as informações detetadas a partir da implantação inicial. Cada novo nó de armazenamento é listado por número de série e você deve atribuir novas informações de rede a ele. Para cada novo nó de storage, execute as seguintes etapas:
++
+... Se o NetApp HCI detetar um prefixo de nomenclatura, copie-o do campo prefixo de nomenclatura detetado e insira-o como prefixo para o novo nome de host exclusivo que você adicionar no campo Nome de host.
+... No campo Endereço IP de gerenciamento , insira um endereço IP de gerenciamento para o novo nó de armazenamento que está dentro da sub-rede da rede de gerenciamento.
+... No campo Endereço IP de armazenamento (iSCSI), introduza um endereço IP iSCSI para o novo nó de armazenamento que se encontra na sub-rede da rede iSCSI.
+
+
+.. Selecione *continuar*.
+.. Na página Review (Revisão), na secção Network Settings (Definições de rede), o novo nó é apresentado em negrito. Se você quiser fazer alterações nas informações em qualquer seção, execute as seguintes etapas:
++
+... Selecione *Editar* para essa seção.
+... Quando terminar de fazer alterações, selecione *continuar* em qualquer página subsequente para retornar à página Revisão.
+
+
+
+
+. Opcional: Se você não quiser enviar estatísticas de cluster e informações de suporte para servidores Active IQ hospedados em NetApp, desmarque a caixa de seleção final. Isto desativa a monitorização de diagnóstico e saúde em tempo real para o NetApp HCI. A desativação desse recurso remove a capacidade do NetApp de oferecer suporte e monitorar proativamente o NetApp HCI para detetar e resolver problemas antes que a produção seja afetada.
+. Selecione *Adicionar nós*. Você pode monitorar o progresso enquanto o NetApp HCI adiciona e configura os recursos.
+. Opcional: Verifique se todos os novos nós de storage estão visíveis no VMware vSphere Web Client.
+
+
+
+
+=== NetApp HCI 1,2, 1,1 e 1,0
+
+Quando você instala o nó, a interface do usuário de terminal (TUI) exibe os campos necessários para configurar o nó. Você deve inserir as informações de configuração necessárias para o nó antes de continuar adicionando o nó ao cluster.
+
+
+NOTE: Você deve usar a TUI para configurar informações de rede estática, bem como informações de cluster. Se você estava usando o gerenciamento fora da banda, você deve configurá-lo no novo nó.
+
+Você deve ter um console ou teclado, vídeo, Mouse (KVM) para executar essas etapas e ter as informações de rede e cluster necessárias para configurar o nó.
+
+.Passos
+. Conete um teclado e um monitor ao nó. A TUI aparece no terminal tty1 com a guia Configurações de rede.
+. Utilize a navegação no ecrã para configurar as definições de rede Bond1G e Bond10G para o nó. Você deve inserir as seguintes informações para Bond1G:
++
+** Endereço IP. Você pode reutilizar o endereço IP de gerenciamento do nó com falha.
+** Máscara de sub-rede. Se não souber, o administrador da rede pode fornecer estas informações.
+** Endereço do gateway. Se não souber, o administrador da rede pode fornecer estas informações. Você deve inserir as seguintes informações para Bond10G:
+** Endereço IP. Pode reutilizar o endereço IP do armazenamento a partir do nó com falha.
+** Máscara de sub-rede. Se não souber, o administrador da rede pode fornecer estas informações.
+
+
+. Introduza `s` para guardar as definições e, em seguida, introduza `y` para aceitar as alterações.
+. Enter `c` para navegar para o separador Cluster (Cluster).
+. Use a navegação na tela para definir o nome do host e o cluster para o nó.
++
+
+NOTE: Se você quiser alterar o nome do host padrão para o nome do nó que você removeu, você deve fazê-lo agora.
+
++
+
+TIP: É melhor usar o mesmo nome para o novo nó que o nó substituído para evitar confusão no futuro.
+
+. Introduza `s` para guardar as definições. A associação ao cluster muda de disponível para pendente.
+. No plug-in do NetApp Element para vCenter Server, selecione *Gerenciamento de NetApp Element > cluster > nós*.
+. Selecione *pendente* na lista suspensa para exibir a lista de nós disponíveis.
+. Selecione o nó que deseja adicionar e selecione *Adicionar*.
++
+
+NOTE: Pode levar até 2 minutos para que o nó seja adicionado ao cluster e exibido em nós > Ativo.
+
++
+
+IMPORTANT: Adicionar todas as unidades de uma só vez pode causar interrupções. Para obter as melhores práticas relacionadas à adição e remoção de unidades, consulte https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/Element_Software/What_is_the_best_practice_on_adding_or_removing_drives_from_a_cluster_on_Element%3F["Este artigo da KB"^] (login necessário).
+
+. Selecione *Drives*.
+. Selecione *Available* na lista suspensa para exibir as unidades disponíveis.
+. Selecione as unidades que deseja adicionar e selecione *Adicionar*.
+
+
+
+
+== Encontre mais informações
+
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+* http://docs.netapp.com/sfe-122/index.jsp["Centro de Documentação de Software SolidFire e Element"^]
+

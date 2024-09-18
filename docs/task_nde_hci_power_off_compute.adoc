@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: docs/task_nde_hci_power_off_compute.html 
+summary: Saiba como desativar os nós de computação do NetApp HCI. 
+keywords: netapp, hci, netapp deployment engine, deployment, vsphere 
+---
+= Desligue os recursos de computação para um sistema NetApp HCI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Para desativar os recursos de computação do NetApp HCI, você precisa desligar hosts VMware ESXi individuais, bem como o dispositivo VMware vCenter Server em uma determinada ordem.
+
+.Passos
+. Faça login na instância do vCenter que controla o sistema NetApp HCI e determine a máquina ESXi que hospeda o vCSA (vCenter Server Virtual Appliance).
+. Depois de determinar o host ESXi executando o vCSA, desligue todas as outras máquinas virtuais que não o vCSA da seguinte forma:
++
+.. Selecione uma máquina virtual.
+.. Clique com o botão direito do rato e selecione *Power > Shut Down Guest os*.
+
+
+. Desligue todos os hosts ESXi que não são o host ESXi executando o vCSA.
+. Desligue o vCSA.
++
+Isso fará com que a sessão do vCenter termine porque o vCSA se desconeta durante o processo de desligamento. Agora, todas as máquinas virtuais devem ser desligadas com apenas um host ESXi ligado.
+
+. Faça login no host ESXi em execução.
+. Verifique se todas as máquinas virtuais no host estão desligadas.
+. Encerre o host ESXi.
++
+Isso desconeta todas as sessões iSCSI abertas ao cluster de armazenamento NetApp HCI.
+
+
+
+[discrete]
+== Encontre mais informações
+
+* link:firmware_driver_versions.html["Versões de firmware e driver ESXi compatíveis para versões de NetApp HCI e firmware para nós de storage NetApp HCI"]
+

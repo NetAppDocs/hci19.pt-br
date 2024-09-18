@@ -1,0 +1,57 @@
+---
+sidebar: sidebar 
+permalink: docs/concept_nde_node_compatibility.html 
+summary: Saiba mais sobre os requisitos de compatibilidade de nós do NetApp HCI para implantação. 
+keywords: netapp, hci, deployment, compatibility, nodes 
+---
+= Seleção de inventário e compatibilidade de nós
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Ao escolher nós para sua implantação, algumas restrições se aplicam às configurações de nós que você pode combinar na mesma implantação.
+
+
+
+== Compatibilidade do nó de storage
+
+O NetApp HCI dá suporte a nós de storage e unidades com funcionalidade de criptografia de unidade FIPS 140-2 e SED (unidade com autocriptografia). Ao implantar ou expandir o NetApp HCI, você pode misturar nós com diferentes níveis relatados de criptografia, mas o NetApp HCI só suporta a forma mais básica de criptografia nessa situação. Por exemplo, se você misturar um nó de storage capaz de criptografia FIPS com nós que só suportam criptografia SED, a criptografia SED será compatível com essa configuração, mas a criptografia de unidade FIPS não será.
+
+
+NOTE: A adição de nós de storage capazes de criptografia de unidade FIPS ao cluster de storage não ativa automaticamente o recurso de criptografia da unidade FIPS. Depois de implantar ou expandir uma instalação com nós compatíveis com FIPS, será necessário habilitar manualmente a criptografia de unidade FIPS. Consulte https://docs.netapp.com/us-en/element-software/index.html["Documentação do software Element"^] para obter instruções.
+
+Todos os nós de storage devem executar a mesma versão menor do software Element para serem compatíveis na mesma implantação. Por exemplo, você não pode misturar um nó de storage executando o elemento 11.3.1 com outros nós de storage executando o elemento 11,5.
+
+
+NOTE: Dependendo da configuração do hardware do nó, H410S nós de storage podem aparecer na lista de inventário rotulados como H300S, H500S ou H700S nós de storage.
+
+O NetApp HCI é compatível com apenas certos modelos de nós de storage em clusters de storage de dois nós. Para obter mais informações, consulte link:concept_hci_clusters.html#two-node-storage-clusters["clusters de storage de dois nós"] ou as Notas de versão da sua versão do NetApp HCI.
+
+
+NOTE: Para implantações de cluster de storage de dois nós, os tipos de nós de storage são limitados a nós com unidades de 480GB TB e 960GB TB.
+
+
+
+== Compatibilidade de nós de computação
+
+Os nós de computação devem atender aos seguintes requisitos para serem selecionáveis como inventário:
+
+* As gerações de CPU em todos os nós de computação devem corresponder à funcionalidade adequada do VMware vMotion. Depois de selecionar um nó de computação no inventário, não é possível selecionar nós de computação com diferentes gerações de CPU.
+* Não é possível misturar nós de computação com nós de computação habilitados para GPU no mesmo cluster de computação. Se você selecionar um nó de computação habilitado para GPU, os nós de computação somente de CPU ficarão inselecionáveis e vice-versa.
+* A versão de software em execução no nó de computação deve corresponder à versão principal e menor do mecanismo de implantação do NetApp que hospeda a implantação. Se esse não for o caso, você precisará fazer uma nova imagem do nó de computação usando o processo RTFI. Consulte os artigos da base de conhecimento da NetApp sobre RTFI para obter instruções.
+* O nó de computação deve ter a configuração de cabeamento selecionada na página topologia de rede para ser selecionável na lista *Compute Nodes*.
+* As configurações de cabeamento de rede para nós de computação do mesmo modelo devem ser correspondentes em um único cluster de computação.
+
+
+
+
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://docs.netapp.com/us-en/element-software/index.html["Documentação do software SolidFire e Element"^]
+

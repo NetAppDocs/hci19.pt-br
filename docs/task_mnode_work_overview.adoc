@@ -1,0 +1,61 @@
+---
+sidebar: sidebar 
+permalink: docs/task_mnode_work_overview.html 
+summary: 'Você pode usar o nó de gerenciamento (mNode) para usar serviços do sistema, gerenciar ativos e configurações de cluster, executar testes e utilitários do sistema, configurar o Active IQ para monitoramento do sistema e ativar o acesso ao suporte NetApp para solução de problemas.' 
+keywords: netapp, mnode, api, rest api, mnode ui, management node ui 
+---
+= Visão geral do nó de gerenciamento
+:allow-uri-read: 
+
+
+[role="lead"]
+Você pode usar o nó de gerenciamento (mNode) para usar serviços do sistema, gerenciar ativos e configurações de cluster, executar testes e utilitários do sistema, configurar o Active IQ para monitoramento do sistema e ativar o acesso ao suporte NetApp para solução de problemas.
+
+
+NOTE: Como prática recomendada, associe apenas um nó de gerenciamento a uma instância do VMware vCenter e evite definir os mesmos recursos de storage e computação ou instâncias do vCenter em vários nós de gerenciamento.
+
+Para clusters que executam o software Element versão 11,3 ou posterior, é possível trabalhar com o nó de gerenciamento usando uma de duas interfaces:
+
+* Com a IU do nó de gerenciamento (`https://[mNode IP]:442`), você pode fazer alterações nas configurações de rede e cluster, executar testes do sistema ou usar utilitários do sistema.
+* Com a IU da API REST incorporada (`https://[mNode IP]/mnode`), você pode executar ou entender APIs relacionadas aos serviços do nó de gerenciamento, incluindo configuração do servidor proxy, atualizações de nível de serviço ou gerenciamento de ativos.
+
+
+Instale ou recupere um nó de gerenciamento:
+
+* link:task_mnode_install.html["Instale um nó de gerenciamento"]
+* link:task_mnode_install_add_storage_NIC.html["Configurar um controlador de interface de rede (NIC) de armazenamento"]
+* link:task_mnode_recover.html["Recuperar um nó de gerenciamento"]
+
+
+Acesse o nó de gerenciamento:
+
+* link:task_mnode_access_ui.html["Acessar o nó de gerenciamento (UI ou API REST)"]
+
+
+Altere o certificado SSL padrão:
+
+* link:reference_change_mnode_default_ssl_certificate.html["Altere o certificado SSL padrão do nó de gerenciamento"]
+
+
+Execute tarefas com a IU do nó de gerenciamento:
+
+* link:task_mnode_work_overview_UI.html["Visão geral da IU do nó de gerenciamento"]
+
+
+Execute tarefas com as APIs REST do nó de gerenciamento:
+
+* link:task_mnode_work_overview_API.html["Visão geral da IU da API REST do nó de gerenciamento"]
+
+
+Desative ou ative a funcionalidade SSH remota ou inicie uma sessão de túnel de suporte remoto com o suporte NetApp para ajudá-lo a solucionar problemas:
+
+* link:task_mnode_enable_remote_support_connections.html["Ativar ligações remotas de suporte NetApp"]
+* link:task_mnode_ssh_management.html["Gerencie a funcionalidade SSH no nó de gerenciamento"]
+
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

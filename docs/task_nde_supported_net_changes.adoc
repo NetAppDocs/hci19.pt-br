@@ -1,0 +1,140 @@
+---
+sidebar: sidebar 
+permalink: docs/task_nde_supported_net_changes.html 
+summary: Saiba mais sobre as tarefas pós-implantação que você deve executar após a implantação do NetApp HCI. 
+keywords: netapp, hci, deployment, review, deploy 
+---
+= Alterações de rede suportadas
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Depois de implantar o NetApp HCI, você pode fazer alterações limitadas na configuração de rede padrão. No entanto, certas configurações são necessárias para uma operação suave e uma deteção adequada da rede. Alterar essas configurações causará um comportamento inesperado e poderá impedir que você expanda os recursos de computação e armazenamento.
+
+Depois de implantar o sistema, você pode fazer as seguintes alterações na configuração de rede padrão no VMware vSphere, conforme ditado pelos requisitos de rede:
+
+* Altere os nomes do vSwitch
+* Alterar nomes de grupos de portas
+* Adicione e remova grupos de portas adicionais
+* Altere a ordem de failover da interface vmnic para quaisquer grupos de portas adicionais adicionados
+
+
+
+
+== Nós de computação de H300E, H500E, H700E e H410C
+
+A NetApp HCI espera a seguinte configuração de rede para os nós H300E, H500E, H700E e H410C.
+
+A seguir, há uma configuração de seis interfaces com o VMware vSphere Distributed Switching (VDS). Essa configuração só é suportada quando usada com os switches distribuídos VMware vSphere e requer o licenciamento do VMware vSphere Enterprise Plus.
+
+|===
+| Função de rede | vmkernel | vmnic (interface física) 
+
+
+| Gerenciamento | vmk0 | vmnic2 (porta A), vmnic3 (porta B) 
+
+
+| ISCSI-A. | vmk1 | vmnic5 (porta e) 
+
+
+| ISCSI-B | vmk2 | vmnic1 (porta D) 
+
+
+| VMotion | vmk3 | vmnic4 (porta C), vmnic0 (porta F) 
+|===
+A seguir, há uma configuração de seis interfaces com o VMware vSphere Standard Switching (VSS). Essa configuração usa o VSS (VMware vSphere Standard switches).
+
+|===
+| Função de rede | vmkernel | vmnic (interface física) 
+
+
+| Gerenciamento | vmk0 | vmnic2 (porta A), vmnic3 (porta B) 
+
+
+| ISCSI-A. | vmk2 | vmnic1 (porta e) 
+
+
+| ISCSI-B | vmk3 | vmnic5 (porta D) 
+
+
+| VMotion | vmk1 | vmnic4 (porta C), vmnic0 (porta F) 
+|===
+A seguir está uma configuração de duas interfaces. Essa configuração só é suportada quando usada com o VMware vSphere Distributed switches (VDS) e requer o licenciamento do VMware vSphere Enterprise Plus.
+
+|===
+| Função de rede | vmkernel | vmnic (interface física) 
+
+
+| Gerenciamento | vmk0 | vmnic1 (porta D), vmnic5 (porta e) 
+
+
+| ISCSI-A. | vmk1 | vmnic1 (porta e) 
+
+
+| ISCSI-B | vmk2 | vmnic5 (porta D) 
+
+
+| VMotion | vmk3 | vmnic1 (porta C), vmnic5 (porta F) 
+|===
+
+
+== H610C nós de computação
+
+O NetApp HCI espera a seguinte configuração de rede para H610C nós.
+
+Essa configuração só é suportada quando usada com o VMware vSphere Distributed switches (VDS) e requer o licenciamento do VMware vSphere Enterprise Plus.
+
+
+NOTE: As portas A e B não são utilizadas no H610C.
+
+|===
+| Função de rede | vmkernel | vmnic (interface física) 
+
+
+| Gerenciamento | vmk0 | vmnic2 (porta C), vmnic3 (porta D) 
+
+
+| ISCSI-A. | vmk1 | vmnic3 (porta D) 
+
+
+| ISCSI-B | vmk2 | vmnic2 (porta C) 
+
+
+| VMotion | vmk3 | vmnic2 (porta C), vmnic3 (porta D) 
+|===
+
+
+== H615C nós de computação
+
+O NetApp HCI espera a seguinte configuração de rede para H615C nós.
+
+Essa configuração só é suportada quando usada com o VMware vSphere Distributed switches (VDS) e requer o licenciamento do VMware vSphere Enterprise Plus.
+
+|===
+| Função de rede | vmkernel | vmnic (interface física) 
+
+
+| Gerenciamento | vmk0 | vmnic0 (porta A), vmnic1 (porta B) 
+
+
+| ISCSI-A. | vmk1 | vmnic0 (porta B) 
+
+
+| ISCSI-B | vmk2 | vmnic1 (porta A) 
+
+
+| VMotion | vmk3 | vmnic0 (porta A), vmnic1 (porta B) 
+|===
+
+
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/element-software/index.html["Documentação do software SolidFire e Element"^]
+

@@ -1,0 +1,58 @@
+---
+sidebar: sidebar 
+permalink: docs/concept_hci_storage_maintenance_mode.html 
+summary: Se você precisar colocar um nó de storage off-line para manutenção, como atualizações de software ou reparos de host, poderá minimizar o impacto de e/S para o restante do cluster de storage, habilitando o modo de manutenção desse nó. Você pode usar o modo de manutenção com os nós de dispositivo e os nós de SDS empresarial do SolidFire. 
+keywords: netapp, hci, storage nodes, maintenance, mode 
+---
+= Modo de manutenção
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Se você precisar colocar um nó de storage off-line para manutenção, como atualizações de software ou reparos de host, poderá minimizar o impacto de e/S para o restante do cluster de storage, habilitando o modo de manutenção desse nó. Você pode usar o modo de manutenção com os nós de dispositivo e os nós de SDS empresarial do SolidFire.
+
+
+NOTE: Quando um nó de armazenamento é desligado, ele é exibido como *indisponível* na coluna Status do nó na página armazenamento no HCC, pois essa coluna exibe o status do nó da perspetiva do cluster. O status desligado do nó é indicado pelo ícone *Offline* ao lado do nome do host do nó.
+
+Você só poderá fazer a transição de um nó de storage para o modo de manutenção se o nó estiver em bom estado (não tiver falhas de cluster de bloqueio) e se o cluster de storage for tolerante a uma falha de nó único. Depois de ativar o modo de manutenção para um nó saudável e tolerante, o nó não é transferido imediatamente; ele é monitorado até que as seguintes condições sejam verdadeiras:
+
+* Todos os volumes hospedados no nó falharam
+* O nó não está mais hospedando como o principal para qualquer volume
+* Um nó de espera temporário é atribuído para cada volume que está sendo reprovado
+
+
+Depois que esses critérios são atendidos, o nó é transferido para o modo de manutenção. Se esses critérios não forem atendidos dentro de um período de 5 minutos, o nó não entrará no modo de manutenção.
+
+Quando você desativa o modo de manutenção para um nó de armazenamento, o nó é monitorado até que as seguintes condições sejam verdadeiras:
+
+* Todos os dados são totalmente replicados para o nó
+* Todas as avarias do bloco de bloqueio são resolvidas
+* Todas as atribuições temporárias de nó de espera para os volumes hospedados no nó foram inativadas
+
+
+Depois que esses critérios são atendidos, o nó é transferido para fora do modo de manutenção. Se esses critérios não forem atendidos dentro de uma hora, o nó não fará a transição para fora do modo de manutenção.
+
+Você pode ver os estados das operações do modo de manutenção ao trabalhar com o modo de manutenção usando a API Element:
+
+* *Disabled*: Nenhuma manutenção foi solicitada.
+* *FailedToRecoover*: O nó não conseguiu recuperar da manutenção.
+* *RecoveringFromMaintenance*: O nó está em processo de recuperação da manutenção.
+* *PreparingForMaintenance*: Ações estão sendo tomadas para permitir que um nó tenha a manutenção executada.
+* *ReadyForMaintenance*: O nó está pronto para a manutenção ser executada.
+
+
+
+
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/element-software/api/reference_element_api_enablemaintenancemode.html["Ative o modo de manutenção com a API Element"^]
+* https://docs.netapp.com/us-en/element-software/api/reference_element_api_disablemaintenancemode.html["Desative o modo de manutenção com a API Element"^]
+* https://docs.netapp.com/us-en/element-software/api/concept_element_api_about_the_api.html["Documentação da API do NetApp Element"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+

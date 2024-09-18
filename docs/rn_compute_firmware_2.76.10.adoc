@@ -1,0 +1,128 @@
+---
+sidebar: sidebar 
+permalink: docs/rn_compute_firmware_2.76.10.html 
+summary: Obtenha links para notas de lançamento dos pacotes de firmware que você pode baixar e aplicar aos nós do NetApp HCI. 
+keywords: netapp, hci, compute firmware 
+---
+= Notas de lançamento do pacote de firmware de computação 2.76.10
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+O pacote de firmware de computação para download contém os mais recentes aprimoramentos de recursos do BIOS e do BMC, correções de bugs e suporte de hardware para todos os nós de computação NetApp HCI compatíveis.
+
+
+
+== Novidades
+
+A versão 2.76.10 contém correções gerais de bugs.
+
+
+
+=== Componentes de firmware atualizados
+
+Este pacote de firmware contém as seguintes versões de firmware para componentes de hardware, com versões atualizadas em negrito:
+
+|===
+| Componente | H300E, H500E, H700E | H410C | H610C | H615C 
+
+
+| BIOS | NA2.1 | NATP3.9 | 3B03 | 3B08.CO 
+
+
+| BMC | 6.84.00 | *6.71.20* | 4.00.07 | 4.68.07 
+
+
+| NIC / Mellanox | 14.25.1020 | 14.25.1020 | 14.25.1020 | 14.24.1000 
+|===
+
+
+=== Alterações nos componentes do firmware
+
+Aqui estão os detalhes das melhorias e alterações incluídas em cada novo componente de firmware:
+
+|===
+| Componente de nó e firmware | Melhorias e mudanças 
+
+
+| NATP3.9  a| 
+* CSESF-284 Tatooine e BMC 6.71.18 não relatam quando a função PPR funciona bem.
+* CSESF-289 NA3,7 BIOS não tem a capacidade de relatar um sucesso no hPPR (Hard PPR).
+* Atualizado SKX ucode para 0x6906 e CLX ucode para 0x2F01.
+
+
+|===
+
+
+=== Compatibilidade do driver de firmware da placa de rede Mellanox
+
+As versões 14.25.1020 e 14.24.1000 do firmware Mellanox atualizadas são compatíveis apenas com as seguintes versões do driver VMware ESXi:
+
+* *ESXi 7,0*: H300E/H500E/H700E/H410C: Versão 4.19.16.1
+* *ESXi 7,0*: H610C/H615C: Versão 4.17.15.16
+* *ESXi 6,7*: Versão 4.17.15.16
+* *ESXi 6,5*: Versão 4.16.13.5
+
+
+
+NOTE: Antes de atualizar para a versão 2.76.10, verifique a versão atual do driver ESXi. Se o driver estiver desatualizado, atualize o driver primeiro. Em seguida, atualize o firmware de computação para a versão 2,99 para os seus nós de computação. Visite link:task_hcc_upgrade_compute_node_drivers.html["Atualizar drivers de nós de computação"] para obter instruções sobre como atualizar seus drivers de nó de computação, que incluem o driver ESXi.
+
+Embora o mecanismo de implantação do NetApp 1.8P1 não implante o ESXi versão 7,0, o ESXi 7,0 é compatível como uma opção de instalação automática ou atualização manual. Quando você instala ou atualiza manualmente os sistemas operacionais host, o NetApp não pode controlar os drivers e o firmware desses sistemas operacionais.
+
+
+
+== Baixar Compute firmware Bundle 2.76.10
+
+Para baixar o pacote de firmware do Compute, vá para a https://mysupport.netapp.com/site/products/all/details/netapp-hci/downloads-tab/download/62542/Compute_Firmware_Bundle["Pacote de firmware de computação do NetApp HCI"^] página.
+
+Visite link:task_hcc_upgrade_compute_node_firmware.html#use-the-baseboard-management-controller-bmc-user-interface-ui["Atualize o firmware do nó de computação"] para obter instruções sobre como atualizar o firmware do nó de computação.
+
+
+
+== Vulnerabilidades de segurança resolvidas
+
+A seguir estão vulnerabilidades de segurança que foram resolvidas nesta versão:
+
+
+
+=== H410C BMC 6.71.20
+
+* CVE--, CVE--9169, CVE-2017-15804, CVE-8983-2017, CVE-2019-15670, CVE-2019-1010023, CVE-2015-8982, CVE-2017-2018, CVE-11236-16997, CVE-2019-20838, CVE-2015, CVE-2019-1010022,
+* CVE--, CVE--1000409, CVE-2018-1000001, CVE-1752-2019, CVE-2017-5155, CVE-2018-20796, CVE-2016-3706, CVE-2009-2018, CVE-19591-1010024, CVE-2019-1010025, CVE-2020, CVE-2017-1000408,
+* CVE-2017-15671, CVE-2015-8985, CVE-2016-4429, CVE-2016-10739, CVE-2018-6485, CVE-2020-10029, CVE-2020-14155
+
+
+
+
+== Problemas resolvidos e conhecidos
+
+Consulte o https://mysupport.netapp.com/site/bugs-online/product["Ferramenta Bugs Online"^] para obter detalhes sobre os problemas que foram resolvidos e sobre quaisquer problemas novos.
+
+
+
+=== Aceder à ferramenta Bol
+
+. Navegue até o  https://mysupport.netapp.com/site/bugs-online/product["Ferramenta Bol"^] e selecione *Element Software* na lista suspensa:
++
+image::bol_dashboard.png[Notas de lançamento do pacote de firmware de armazenamento]
+
+. No campo de pesquisa de palavra-chave, digite "Compute firmware Bundle" e clique em *New Search*:
++
+image::compute_firmware_bundle_choice.png[Notas de lançamento do pacote de firmware de armazenamento]
+
+. Uma lista de bugs resolvidos ou abertos é exibida. Você pode refinar ainda mais os resultados, conforme mostrado:
++
+image::bol_list_bugs_found.png[Notas de lançamento do pacote de firmware de armazenamento]
+
+
+
+[discrete]
+== Encontre mais informações
+
+* link:firmware_driver_versions.html["Versões de firmware e driver ESXi compatíveis para versões de NetApp HCI e firmware para nós de storage NetApp HCI"]
+

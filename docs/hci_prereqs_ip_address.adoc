@@ -1,0 +1,75 @@
+---
+sidebar: sidebar 
+permalink: docs/hci_prereqs_ip_address.html 
+summary: Saiba mais sobre os requisitos de endereço IP do NetApp HCI. 
+keywords: netapp, hci, IP address, requirements 
+---
+= Requisitos de endereço IP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+O NetApp HCI tem requisitos específicos de endereço IP que dependem do tamanho da implantação. Observe que, por padrão, os endereços IP iniciais atribuídos a cada nó antes de usar o mecanismo de implantação do NetApp para implantar o sistema são temporários e não podem ser reutilizados. Você precisa reservar um segundo conjunto permanente de endereços IP não utilizados que você pode atribuir durante a implantação final.
+
+
+
+== Número de endereços IP necessários por implantação do NetApp HCI
+
+A rede de armazenamento NetApp HCI e a rede de gerenciamento devem usar intervalos contíguos separados de endereços IP. Use a tabela a seguir para determinar quantos endereços IP você precisa para sua implantação:
+
+|===
+| Componente do sistema | Endereços IP da rede de gerenciamento necessários | Endereços IP da rede de armazenamento necessários | Endereços IP de rede VMotion necessários | Total de endereços IP necessários por componente 
+
+
+| Nó de computação | 1 | 2 | 1 | 4 
+
+
+| Nó de storage | 1 | 1 |  | 2 
+
+
+| Cluster de storage | 1 | 1 |  | 2 
+
+
+| VMware vCenter | 1 |  |  | 1 
+
+
+| Nó de gerenciamento | 1 | 1 |  | 2 
+
+
+| Witness Node | 1 | 1 |  | 2 nós por testemunha (dois nós de testemunha são implantados para cada cluster de storage de dois ou três nós) 
+|===
+
+
+== Endereços IP reservados pelo NetApp HCI
+
+O NetApp HCI reserva os seguintes intervalos de endereços IP para componentes do sistema. Ao Planejar sua rede, evite usar esses endereços IP:
+
+|===
+| Intervalo de endereços IP | Descrição 
+
+
+| 10.0.0.0/24 | Rede de sobreposição do Docker 
+
+
+| 10.0.1.0/24 | Rede de sobreposição do Docker 
+
+
+| 10.255.0.0/16 | Rede de entrada de enxame Docker 
+
+
+| 169.254.100.1/22 | Rede de ponte Docker 
+
+
+| 169.254.104.0/22 | Rede de ponte Docker 
+|===
+[discrete]
+== Encontre mais informações
+
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+

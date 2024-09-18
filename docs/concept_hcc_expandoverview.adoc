@@ -1,0 +1,47 @@
+---
+sidebar: sidebar 
+permalink: docs/concept_hcc_expandoverview.html 
+summary: Você pode expandir seu sistema NetApp HCI usando o controle de nuvem híbrida da NetApp. 
+keywords: NetApp, HCI, on premise, expand, hcc, hybrid cloud control 
+---
+= Visão geral da expansão
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você pode expandir seu sistema NetApp HCI usando o controle de nuvem híbrida da NetApp. Você pode expandir recursos de storage ou computação separadamente ou expandi-los ao mesmo tempo.
+
+
+NOTE: Nós de storage H610S novos e sobressalentes podem ter requisitos de instalação adicionais com base na versão de software Element existente do cluster de storage. Entre em Contato com o suporte da NetApp para obter mais informações.
+
+Depois de instalar o nó no chassi do NetApp HCI, use o Controle de nuvem híbrida da NetApp para configurar o NetApp HCI para usar os novos recursos. O NetApp HCI deteta a configuração de rede existente e oferece opções de configuração dentro das redes e VLANs existentes, se houver.
+
+
+NOTE: Se você expandiu recentemente sua instalação e os novos ativos não foram adicionados automaticamente à sua configuração, talvez seja necessário adicionar os ativos manualmente. link:task_mnode_work_overview.html["Visão geral do nó de gerenciamento"]Consulte .
+
+O NetApp HCI usa o VMware Enhanced vMotion Compatibility (EVC) para garantir a funcionalidade vMotion quando há nós de computação com diferentes gerações de CPU no cluster vSphere. Quando o EVC é necessário para expansão, o NetApp HCI o ativa automaticamente sempre que possível.
+
+Nas situações a seguir, talvez seja necessário alterar manualmente as configurações de EVC no cliente vSphere para concluir a expansão:
+
+* Os nós de computação existentes têm uma geração de CPU mais recente do que os nós de computação que você está tentando adicionar.
+* A instância de controle do vCenter não suporta o nível EVC necessário.
+* Os nós de computação que você está tentando adicionar têm uma geração de CPU mais antiga do que a configuração EVC da instância Controladora do vCenter.
+
+
+
+NOTE: Ao expandir os recursos de computação ou storage do NetApp HCI no mecanismo de implantação do NetApp, você deve se conectar à instância do vCenter que gerencia os nós de computação existentes do NetApp HCI.
+
+[discrete]
+== Encontre mais informações
+
+* link:task_hcc_expand_compute.html["Expanda os recursos de computação do NetApp HCI"]
+* link:task_hcc_expand_storage.html["Expanda os recursos de storage do NetApp HCI"]
+* link:task_hcc_expand_compute_and_storage.html["Expanda os recursos de computação e storage do NetApp HCI ao mesmo tempo"]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+

@@ -1,0 +1,51 @@
+---
+sidebar: sidebar 
+permalink: docs/hci_prereqs_witness_nodes.html 
+summary: Saiba mais sobre os requisitos do nó NetApp HCI Witness. 
+keywords: netapp, hci, element, Witness Node 
+---
+= Testemunhe os requisitos de recursos do Node para clusters de storage de dois nós
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:keywords: netapp, hci, element, Witness Node
+
+
+[role="lead"]
+O NetApp HCI dá suporte a um tamanho mínimo de instalação de dois nós de storage e dois nós de computação. Quando você instala o NetApp HCI usando um cluster de storage de dois ou três nós, precisa estar ciente dos nós de testemunha do NetApp HCI e dos requisitos de recursos de máquina virtual (VM).
+
+Quando um cluster de storage usa dois ou três nós, ele também implanta um par de nós de testemunhas ao lado de cada cluster de storage. Os nós testemunha têm os seguintes requisitos de recursos de VM:
+
+|===
+| Recurso | Requisito 
+
+
+| VCPU | 4 
+
+
+| Memória | 12 GB 
+
+
+| Tamanho do disco | 67 GB 
+|===
+O NetApp HCI é compatível com apenas certos modelos de nós de storage em clusters de storage de dois ou três nós. Para obter mais informações, consulte as Notas de versão da sua versão do NetApp HCI.
+
+|===
+
+
+ a| 
+*Prática recomendada:* Configure as VMs do nó testemunha para usar o armazenamento de dados local do nó de computação (padrão definido pelo NDE), não as configure em armazenamento compartilhado, como volumes de armazenamento SolidFire. Para impedir que as VMs migrem automaticamente, defina o nível de automação DRS (Distributed Resource Scheduler) da VM do nó testemunha como *Disabled*. Isso impede que ambos os nós de testemunhas sejam executados no mesmo nó de computação e criem uma configuração de par de HA (non-high availability).
+
+|===
+
+NOTE: Quando o processo de instalação do NetApp HCI instala nós de testemunha, um modelo de VM é armazenado no VMware vCenter que você pode usar para reimplantar um nó de testemunha caso ele seja removido, perdido ou corrompido acidentalmente. Você também pode usar o modelo para reimplantar um nó de testemunha se precisar substituir um nó de computação com falha que estava hospedando o nó de testemunha. Para obter instruções, consulte a seção *Redeploy Witness Nodes para clusters de storage de dois e três nós* link:task_hci_h410crepl.html["aqui"^].
+
+[discrete]
+== Encontre mais informações
+
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+

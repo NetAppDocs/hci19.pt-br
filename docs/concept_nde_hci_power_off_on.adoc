@@ -1,0 +1,48 @@
+---
+sidebar: sidebar 
+permalink: docs/concept_nde_hci_power_off_on.html 
+summary: Saiba como configurar o VMware vSphere durante a implantação do NetApp HCI. 
+keywords: netapp, hci, netapp deployment engine, deployment, vsphere 
+---
+= Desligar ou ligar o sistema NetApp HCI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você pode desligar ou ligar o sistema NetApp HCI se tiver uma interrupção programada, precisar executar manutenção de hardware ou precisar expandir o sistema. Utilize as seguintes tarefas para desligar ou ligar o sistema NetApp HCI, conforme necessário.
+
+Pode ser necessário desligar o sistema NetApp HCI em várias circunstâncias diferentes, tais como:
+
+* Interrupções programadas
+* Substituições da ventoinha do chassis
+* Atualizações de firmware
+* Expansão de recursos de computação ou storage
+
+
+A seguir, você verá uma visão geral das tarefas que você precisa concluir para desligar um sistema NetApp HCI:
+
+* Desligue todas as máquinas virtuais, exceto o VMware vCenter Server (vCSA).
+* Desligue todos os servidores ESXi, exceto aquele que hospeda o vCSA.
+* Desligue o vCSA.
+* Desligue o sistema de armazenamento NetApp HCI.
+
+
+A seguir, você verá uma visão geral das tarefas que você precisa concluir para ligar um sistema NetApp HCI:
+
+* Ligue todos os nós de storage físico.
+* Potência em todos os nós de computação física.
+* Ligue o vCSA.
+* Verifique o sistema e ligue máquinas virtuais adicionais.
+
+
+
+
+== Encontre mais informações
+
+* link:firmware_driver_versions.html["Versões de firmware e driver ESXi compatíveis para versões de NetApp HCI e firmware para nós de storage NetApp HCI"]
+

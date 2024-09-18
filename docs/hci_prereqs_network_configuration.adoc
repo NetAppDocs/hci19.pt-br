@@ -1,0 +1,96 @@
+---
+sidebar: sidebar 
+permalink: docs/hci_prereqs_network_configuration.html 
+summary: Saiba mais sobre as opções de configuração de rede para o NetApp HCI. 
+keywords: netapp, hci, cabling, network configuration 
+---
+= Configuração de rede
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+O NetApp HCI pode utilizar várias configurações de cabeamento de rede e VLAN diferentes. É importante Planejar sua configuração de rede para garantir uma implantação bem-sucedida.
+
+
+
+== Segmentos de rede necessários
+
+O NetApp HCI requer um mínimo de três segmentos de rede: Gerenciamento, armazenamento e tráfego de virtualização (que inclui máquinas virtuais e tráfego VMware vMotion). Você também pode separar a máquina virtual e o tráfego vMotion. Esses segmentos de rede geralmente existem como VLANs logicamente separadas na infraestrutura de rede NetApp HCI.
+
+A forma como os nós de computação e storage se conetam a essas redes depende de como você cria a rede e faz o cabeamento dos nós. As ilustrações de exemplo de rede neste guia assumem as seguintes redes:
+
+|===
+| Nome da rede | ID DA VLAN 
+
+
+| Gerenciamento | 100 
+
+
+| Armazenamento | 105 
+
+
+| VMotion | 107 
+
+
+| Máquinas virtuais | 200, 201 
+|===
+Para descoberta e configuração automática de seus nós NetApp HCI no mecanismo de implantação do NetApp, você deve ter um segmento de rede disponível como uma VLAN nativa ou não marcada em todas as portas do switch usadas para as interfaces SFP/SFP28 nos nós. Isso fornecerá comunicação de camada 2 entre todos os nós para descoberta e implantação. Sem uma VLAN nativa, você deve configurar as interfaces SFP mais/SFP28 de todos os nós manualmente com uma VLAN e endereço IPv4 para ser detetável. Nos exemplos de configuração de rede neste documento, a rede de gerenciamento (VLAN ID 100) é usada para esse fim.
+
+O mecanismo de implantação do NetApp permite configurar rapidamente redes para nós de computação e storage durante a implantação inicial. Você pode colocar certos componentes de gerenciamento integrados, como o vCenter e o nó de gerenciamento, em seu próprio segmento de rede. Esses segmentos de rede exigem roteamento para permitir que o vCenter e o nó de gerenciamento se comuniquem com redes de gerenciamento de storage e computação. Na maioria das implantações, esses componentes usam a mesma rede de gerenciamento (VLAN ID 100 neste exemplo).
+
+
+NOTE: Você configura redes de máquinas virtuais usando o vCenter. A rede padrão da máquina virtual (grupo de portas "VM_Network") nas implantações do NetApp HCI é configurada sem um ID de VLAN. Se você planeja usar várias redes de máquinas virtuais marcadas (IDs de VLAN 200 e 201 no exemplo anterior), certifique-se de incluí-las no Planejamento inicial da rede.
+
+
+
+== Opções de configuração de rede e cabeamento
+
+Você pode usar uma configuração de rede de dois cabos para os nós de computação H410C, simplificando o roteamento de cabos. Essa configuração usa duas interfaces SFP mais/SFP28 e uma interface RJ45 opcional (mas recomendada) para comunicação IPMI. Esses nós também podem usar uma configuração de seis cabos com duas interfaces RJ45 e quatro SFP28/SFP.
+
+Os nós de storage H410S e H610S oferecem suporte a uma topologia de rede que usa quatro portas de rede (portas A A D).
+
+Os nós de computação oferecem suporte a três topologias de rede, dependendo da plataforma de hardware:
+
+|===
+| Opção de configuração | Cabeamento para H410C nós | Cabeamento para H610C nós | Cabeamento para H615C nós 
+
+
+| Opção A | Dois cabos usando as portas D e e | Dois cabos usando as portas C e D | Dois cabos usando as portas A e B 
+
+
+| Opção B | Seis cabos usando as portas A A F | Não disponível | Não disponível 
+
+
+| Opção C 3+| Semelhante à opção B, mas com VLANs nativas (ou "portas de acesso") no switch para o gerenciamento, armazenamento e redes vMotion 
+|===
+Os nós que não têm o número correto de cabos conetados não podem participar da implantação. Por exemplo, você não pode implantar um nó de computação em uma configuração de seis cabos se ele tiver apenas as portas D e e conetadas.
+
+
+NOTE: Você pode ajustar a configuração de rede NetApp HCI após a implantação para atender às necessidades de infraestrutura. No entanto, ao expandir recursos do NetApp HCI, lembre-se de que novos nós precisam ter a mesma configuração de cabos que os nós de computação e storage existentes.
+
+[NOTE]
+====
+Se o mecanismo de implantação do NetApp falhar porque sua rede não suporta quadros jumbo, você poderá executar uma das seguintes soluções alternativas:
+
+* Use um endereço IP estático e defina manualmente uma unidade de transmissão máxima (MTU) de 9000 bytes na rede Bond10G.
+* Configure o Dynamic Host Configuration Protocol para anunciar uma MTU de interface de 9000 bytes na rede Bond10G.
+
+
+====
+.Opções de configuração de rede
+* link:hci_prereqs_network_configuration_option_A.html["Opção de configuração de rede A"]
+* link:hci_prereqs_network_configuration_option_B.html["Opção de configuração de rede B"]
+* link:hci_prereqs_network_configuration_option_C.html["Configuração de rede opção C"]
+
+
+[discrete]
+== Encontre mais informações
+
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+

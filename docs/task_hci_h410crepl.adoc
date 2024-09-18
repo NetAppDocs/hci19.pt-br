@@ -1,0 +1,951 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hci_h410crepl.html 
+summary: Você deve substituir um nó de computação em caso de falha de CPU, outros problemas de placa-mãe ou se ele não ligar. As instruções se aplicam a H410C nós. Se você tiver um nó de computação H410C que executa o NetApp HCI Bootstrap os versão 1.6P1 ou posterior, não será necessário substituir o nó se o DIMM de memória falhar; você precisará substituir apenas o DIMM com falha. Se os DIMMs no nó não tiverem falhado, você poderá usá-los no nó de substituição. 
+keywords: netapp, hci, H410C nodes, replacement, node replacement 
+---
+= Substitua H410C nós
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você deve substituir um nó de computação em caso de falha de CPU, outros problemas de placa-mãe ou se ele não ligar. As instruções se aplicam a H410C nós. Se você tiver um nó de computação H410C que executa o NetApp HCI Bootstrap os versão 1.6P1 ou posterior, não será necessário substituir o nó se o DIMM de memória falhar; você precisará substituir apenas o DIMM com falha. Se os DIMMs no nó não tiverem falhado, você poderá usá-los no nó de substituição.
+
+[NOTE]
+====
+O nó de substituição deve ter a mesma versão do NetApp HCI Bootstrap os que o restante dos nós de computação na instalação do NetApp HCI.
+
+A NetApp recomenda o uso do mecanismo de implantação do NetApp para adicionar um nó de computação de substituição. Se você não puder continuar usando o mecanismo de implantação do NetApp para a instalação do ESXi, consulte o artigo da base de dados de Conhecimento da NetApp https://kb.netapp.com/Legacy/NetApp_HCI/OS/How_to_install_ESXi_on_NetApp_HCI_compute_node_manually["Como instalar o ESXi no nó de computação do NetApp HCI manualmente"^] .
+
+====
+.O que você vai precisar
+* Você determinou que o nó de computação precisa ser substituído.
+* Você tem um nó de computação de substituição. Para solicitar um nó de substituição, entre em Contato com o suporte da NetApp. O nó de computação é enviado para você com o Bootstrap os instalado. Os nós são enviados de fábrica com a versão mais recente do Bootstrap os. Talvez seja necessário executar o processo de retorno à imagem de fábrica (RTFI) no nó nos seguintes cenários:
++
+** Sua instalação atual do NetApp HCI está executando uma versão do Bootstrap os anterior à versão mais recente. Nesse caso, o processo RTFI fará o downgrade do novo nó para a versão do sistema operacional que sua instalação do NetApp HCI está sendo executada.
+** O nó de substituição fornecido está executando uma versão do sistema operacional de inicialização anterior à versão mais recente e a instalação do NetApp HCI onde o nó está sendo substituído já está executando a versão mais recente. Neste caso, o processo RTFI atualizará a versão do sistema operacional no novo nó para a versão mais recente. link:https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/NetApp_HCI/HCI_-_How_to_RTFI_using_a_USB_key["Como RTFI usando uma chave USB (login necessário)"^]Consulte e link:https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/NetApp_HCI/How_to_RTFI_an_HCI_Compute_Node_via_BMC["Como fazer o RTFI usando o BMC (login necessário)"^].
+
+
+* Você tem uma pulseira de descarga eletrostática (ESD) ou tomou outras precauções antiestáticas.
+* Você rotulou cada cabo conetado ao nó de computação.
+
+
+.Sobre esta tarefa
+Os alarmes no VMware vSphere Web Client alertam você quando um nó falha. Você deve corresponder o número de série do nó com falha do VMware vSphere Web Client com o número de série no adesivo na parte de trás do nó.
+
+Ao substituir um nó de computação H410C, considere o seguinte:
+
+* É possível combinar o nó de computação H410C com os nós de storage e computação NetApp HCI existentes no mesmo chassi e cluster.
+* O nó de computação H410C opera apenas com tensão de alta linha (200-240 Vac). Você deve garantir que os requisitos de energia sejam atendidos ao adicionar H410C nós a um sistema NetApp HCI existente.
+
+
+.Visão geral dos passos
+Aqui está uma visão geral de alto nível das etapas deste procedimento: <<Etapa 1: Prepare-se para substituir o nó de computação>> <<Etapa 2: Substitua o nó de computação no chassi>> <<Etapa 3: Remova o ativo do nó de computação no NetApp HCI 1,7 e posterior>> <<Etapa 4: Adicione o nó de computação ao cluster>> <<Etapa 5: Reimplante nós de testemunhas para clusters de storage de dois ou três nós>>
+
+Aqui estão algumas tarefas adicionais, que você pode precisar executar se seu sistema tiver as condições específicas às quais são aplicáveis:
+
+* link:task_hci_removewn.html["Remova os nós de testemunhas para liberar os recursos de computação"]
+* <<Altere a senha se você recebeu um nó de substituição por uma senha BMC não padrão>>
+* <<Atualize o firmware do BMC no nó>>
+
+
+
+
+== Etapa 1: Prepare-se para substituir o nó de computação
+
+Você deve migrar as máquinas virtuais (VMs) hospedadas no nó para um host disponível e remover o nó com falha do cluster. Você deve obter detalhes sobre o nó com falha, como número de série e informações de rede.
+
+.Passos
+. No VMware vSphere Web Client, execute as etapas para migrar as VMs para outro host disponível.
++
+
+NOTE: Consulte a documentação da VMware para obter as etapas de migração.
+
+. Execute as etapas para remover o nó do inventário. As etapas dependem da versão do NetApp HCI em sua instalação atual:
++
+[cols="2*"]
+|===
+| Número da versão do NetApp HCI | Passos 
+
+
+| NetApp HCI 1,3 e posterior  a| 
+.. Selecione o nó com falha e selecione *Monitor > Status do hardware > Sensores*.
+.. Observe o número de série do nó com falha. Isso ajuda você a identificar o nó no chassi, combinando o número de série no adesivo na parte traseira do nó com o número de série que você anotou.
+.. Clique com o botão direito do rato no nó com falha e selecione *ligação > Desligar*.
+.. Selecione *Sim* para confirmar a ação.
+.. Clique com o botão direito do rato no nó com falha e selecione *Remover do inventário*.
+.. Selecione *Sim* para confirmar a ação.
+
+
+
+
+| Versões do NetApp HCI anteriores a 1,3  a| 
+.. Clique com o botão direito do rato no nó e selecione *Remover do inventário*.
+.. Selecione o nó com falha e selecione *Monitor > Status do hardware > Sensores*.
+.. Observe o número de série do nó 0, que é o número de série do nó com falha. Isso ajuda você a identificar o nó no chassi, combinando o número de série no adesivo na parte traseira do nó com o número de série que você anotou.
+.. Com o nó com falha selecionado, selecione *Manage > Networking > VMkernel adapters* e copie os quatro endereços IP listados. Você pode reutilizar essas informações quando executar as etapas iniciais de configuração de rede no VMware ESXi.
+
+
+|===
+
+
+
+
+== Etapa 2: Substitua o nó de computação no chassi
+
+Depois de remover o nó com falha do cluster, você pode remover o nó do chassi e instalar o nó de substituição.
+
+
+NOTE: Certifique-se de que tem proteção antiestática antes de executar os passos aqui.
+
+.Passos
+. Coloque proteção antiestática.
+. Desembale o novo nó e coloque-o numa superfície nivelada perto do chassis. Mantenha o material de embalagem durante quando devolver o nó com falha ao NetApp.
+. Identifique cada cabo inserido na parte de trás do nó que você deseja remover. Depois de instalar o novo nó, você deve inserir os cabos de volta nas portas originais.
+. Desconete todos os cabos do nó.
+. Se você quiser reutilizar os DIMMs, remova-os.
+. Puxe a alça do came para baixo no lado direito do nó e puxe o nó para fora usando ambas as alças do came. A alça da came que você deve puxar para baixo tem uma seta sobre ela para indicar a direção em que ela se move. A outra alça de came não se move e está lá para ajudá-lo a puxar o nó para fora.
++
+
+NOTE: Apoie o nó com as duas mãos quando o retirar do chassis.
+
+. Coloque o nó numa superfície nivelada. Você deve empacotar o nó e devolvê-lo ao NetApp.
+. Instale o nó de substituição.
+. Empurre o nó até ouvir um clique.
++
+
+CAUTION: Certifique-se de que não utiliza força excessiva ao deslizar o nó para o chassis.
+
++
+
+NOTE: Certifique-se de que o nó é ligado. Se ele não ligar automaticamente, pressione o botão liga/desliga na parte frontal do nó.
+
+. Se você removeu DIMMs do nó com falha anteriormente, insira-os no nó de substituição.
++
+
+NOTE: Você deve substituir DIMMs nos mesmos slots dos quais foram removidos no nó com falha.
+
+. Volte a ligar os cabos às portas das quais os desligou originalmente. As etiquetas que você tinha conetado aos cabos quando você os desconectou ajudam a guiá-lo.
++
+
+CAUTION: Se as saídas de ar na parte traseira do chassis estiverem bloqueadas por cabos ou etiquetas, pode provocar avarias prematuras dos componentes devido ao sobreaquecimento. Não force os cabos para as portas; poderá danificar os cabos, as portas ou ambas.
+
++
+
+TIP: Certifique-se de que o nó de substituição seja cabeado da mesma forma que os outros nós no chassi.
+
+
+
+
+
+== Etapa 3: Remova o ativo do nó de computação no NetApp HCI 1,7 e posterior
+
+No NetApp HCI 1,7 e posterior, depois de substituir fisicamente o nó, você deve remover o ativo do nó de computação usando as APIs do nó de gerenciamento. Para usar APIS REST, seu cluster de storage deve estar executando o software NetApp Element 11,5 ou posterior e você deve ter implantado um nó de gerenciamento executando a versão 11,5 ou posterior.
+
+.Passos
+. Introduza o endereço IP do nó de gestão seguido de /mnode:
+`https://[IP address]/mnode`
+. Selecione *autorizar* ou qualquer ícone de bloqueio e insira credenciais de administrador de cluster para permissões para usar APIs.
++
+.. Introduza o nome de utilizador e a palavra-passe do cluster.
+.. Selecione o corpo da solicitação na lista suspensa tipo se o valor ainda não estiver selecionado.
+.. Insira o ID do cliente como mnode-client se o valor ainda não estiver preenchido. Não insira um valor para o segredo do cliente.
+.. Selecione *autorizar* para iniciar uma sessão.
++
+
+NOTE: Se você receber a `Auth Error TypeError: Failed to fetch` mensagem de erro depois de tentar autorizar, talvez seja necessário aceitar o certificado SSL para o MVIP do cluster. Copie o IP no URL do Token, cole o IP em outra guia do navegador e autorize novamente. Se você tentar executar um comando após o token expirar, você receberá um `Error: UNAUTHORIZED` erro. Se receber esta resposta, autorize novamente.
+
+
+
+. Feche a caixa de diálogo autorizações disponíveis.
+. Selecione *GET/Assets*.
+. Selecione *Experimente*.
+. Selecione *Executar*. Role para baixo no corpo da resposta até a seção Compute (calcular) e copie os valores pai e id para o nó de computação com falha.
+. Selecione *DELETE/assets/(Asset_id)/Compute-nonos/(Compute_id)*.
+. Selecione *Experimente*. Insira os valores pai e id que você obteve no passo 7.
+. Selecione *Executar*.
+
+
+
+
+== Etapa 4: Adicione o nó de computação ao cluster
+
+Você deve adicionar o nó de computação de volta ao cluster. As etapas variam de acordo com a versão do NetApp HCI que você está executando.
+
+
+
+=== NetApp HCI 1.6P1 e posterior
+
+Você pode usar o Controle de nuvem híbrida do NetApp somente se a instalação do NetApp HCI for executada na versão 1.6P1 ou posterior.
+
+.O que você vai precisar
+* Certifique-se de que a instância do vSphere NetApp HCI esteja usando o licenciamento do vSphere Enterprise Plus se você estiver expandindo uma implantação com switches distribuídos virtuais.
+* Certifique-se de que nenhuma das instâncias do vCenter ou do vSphere em uso com o NetApp HCI tenha licenças expiradas.
+* Certifique-se de que você tem endereços IPv4 livres e não utilizados no mesmo segmento de rede que os nós existentes (cada novo nó deve ser instalado na mesma rede que os nós existentes de seu tipo).
+* Certifique-se de que as credenciais da conta de administrador do vCenter estão prontas.
+* Certifique-se de que cada novo nó use a mesma topologia de rede e cabeamento que os clusters de computação ou storage existentes.
+* link:task_hcc_manage_vol_access_groups.html["Gerenciar os iniciadores e os grupos de acesso de volume"] para o novo nó de computação.
+
+
+.Passos
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web. Por exemplo:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage da NetApp HCI.
+. No painel expandir instalação, selecione *expandir*.
+. Faça login no mecanismo de implantação do NetApp fornecendo as credenciais de administrador do cluster de storage do NetApp HCI local.
++
+
+NOTE: Não é possível iniciar sessão utilizando credenciais Lightweight Directory Access Protocol.
+
+. Na página de boas-vindas, selecione *Sim*.
+. Na página Licença de Usuário final, execute as seguintes ações:
++
+.. Leia o Contrato de licença do usuário final da VMware.
+.. Se aceitar os termos, selecione *Aceito* no final do texto do contrato.
+
+
+. Selecione *continuar*.
+. Na página do vCenter, execute as seguintes etapas:
++
+.. Insira um endereço FQDN ou IP e credenciais de administrador para a instância do vCenter associada à instalação do NetApp HCI.
+.. Selecione *continuar*.
+.. Selecione um data center vSphere existente para adicionar o novo nó de computação ou selecione *criar novo data center* para adicionar os novos nós de computação a um novo data center.
++
+
+NOTE: Se selecionar criar novo centro de dados, o campo Cluster é preenchido automaticamente.
+
+.. Se você selecionou um data center existente, selecione um cluster vSphere ao qual os novos nós de computação devem ser associados.
++
+
+NOTE: Se o NetApp HCI não conseguir reconhecer as configurações de rede do cluster selecionado, certifique-se de que o mapeamento vmkernel e vmnic para as redes de gerenciamento, armazenamento e vMotion estejam definidos para os padrões de implantação.
+
+.. Selecione *continuar*.
+
+
+. Na página credenciais do ESXi, insira uma senha raiz do ESXi para o nó ou nós de computação que você está adicionando. Você deve usar a mesma senha que foi criada durante a implantação inicial do NetApp HCI.
+. Selecione *continuar*.
+. Se você criou um novo cluster de data center vSphere, na página topologia de rede, selecione uma topologia de rede para corresponder aos novos nós de computação que você está adicionando.
++
+
+NOTE: Você só pode selecionar a opção de dois cabos se seus nós de computação estiverem usando a topologia de dois cabos e a implantação existente do NetApp HCI estiver configurada com IDs de VLAN.
+
+. Na página Inventário disponível, selecione o nó que deseja adicionar à instalação existente do NetApp HCI.
++
+
+TIP: Para alguns nós de computação, talvez seja necessário habilitar o EVC no nível mais alto que sua versão do vCenter suporta antes de adicioná-los à sua instalação. Você deve usar o cliente vSphere para habilitar o EVC para esses nós de computação. Depois de ativá-lo, atualize a página *Inventário* e tente adicionar os nós de computação novamente.
+
+. Selecione *continuar*.
+. Opcional: Se você criou um novo cluster do vSphere Datacenter, na página Configurações de rede, importe informações de rede de uma implantação existente do NetApp HCI selecionando a caixa de seleção *Copiar de um cluster existente*. Isso preenche as informações padrão de gateway e sub-rede para cada rede.
+. Na página Configurações de rede, algumas das informações de rede foram detetadas desde a implantação inicial. O novo nó de computação é listado por número de série e você deve atribuir novas informações de rede a ele. Para o novo nó de computação, execute as seguintes etapas:
++
+.. Se o NetApp HCI detetou um prefixo de nomenclatura, copie-o do campo prefixo de nomenclatura detetado e insira-o como prefixo para o novo nome de host exclusivo que você adiciona no campo *Nome de host*.
+.. No campo *Endereço IP de gerenciamento*, insira um endereço IP de gerenciamento para o nó de computação que está dentro da sub-rede da rede de gerenciamento.
+.. No campo Endereço IP do vMotion , digite um endereço IP do vMotion para o nó de computação que está dentro da sub-rede da rede vMotion.
+.. No campo Iscsi A - IP Address (Endereço IP iSCSI A -), introduza um endereço IP para a primeira porta iSCSI do nó de computação que se encontra na sub-rede da rede iSCSI.
+.. No campo iSCSI B - IP Address (Endereço IP iSCSI B - Endereço IP), introduza um endereço IP para a segunda porta iSCSI do nó de computação que se encontra na sub-rede da rede iSCSI.
+
+
+. Selecione *continuar*.
+. Na página Review (Revisão), na secção Network Settings (Definições de rede), o novo nó é apresentado em negrito. Se você precisar fazer alterações nas informações em qualquer seção, execute as seguintes etapas:
++
+.. Selecione *Editar* para essa seção.
+.. Quando terminar de fazer alterações, clique em continuar em qualquer página subsequente para voltar à página Revisão.
+
+
+. Opcional: Se você não quiser enviar estatísticas de cluster e informações de suporte para servidores SolidFire Active IQ hospedados em NetApp, desmarque a caixa de seleção final. Isto desativa a monitorização de diagnóstico e saúde em tempo real para o NetApp HCI. A desativação desse recurso remove a capacidade do NetApp de oferecer suporte e monitorar proativamente o NetApp HCI para detetar e resolver problemas antes que a produção seja afetada.
+. Selecione *Adicionar nós*. Você pode monitorar o progresso enquanto o NetApp HCI adiciona e configura os recursos.
+. Opcional: Verifique se o novo nó de computação está visível no vCenter.
+
+
+
+
+=== NetApp HCI 1,4 P2, 1,4 e 1,3
+
+Se a instalação do NetApp HCI executar a versão 1.4P2, 1,4 ou 1,3, você poderá usar o mecanismo de implantação do NetApp para adicionar o nó ao cluster.
+
+.O que você vai precisar
+* Certifique-se de que a instância do vSphere NetApp HCI esteja usando o licenciamento do vSphere Enterprise Plus se você estiver expandindo uma implantação com switches distribuídos virtuais.
+* Certifique-se de que nenhuma das instâncias do vCenter ou do vSphere em uso com o NetApp HCI tenha licenças expiradas.
+* Certifique-se de que você tem endereços IPv4 livres e não utilizados no mesmo segmento de rede que os nós existentes (cada novo nó deve ser instalado na mesma rede que os nós existentes de seu tipo).
+* Certifique-se de que as credenciais da conta de administrador do vCenter estão prontas.
+* Certifique-se de que cada novo nó use a mesma topologia de rede e cabeamento que os clusters de computação ou storage existentes.
+
+
+.Passos
+. Navegue até o endereço IP de gerenciamento de um dos nós de storage existentes:
+`http://<storage_node_management_IP_address>/`
+. Faça login no mecanismo de implantação do NetApp fornecendo as credenciais de administrador do cluster de storage do NetApp HCI local.
++
+
+NOTE: Não é possível iniciar sessão utilizando credenciais Lightweight Directory Access Protocol.
+
+. Selecione *expanda sua instalação*.
+. Na página de boas-vindas, selecione *Sim*.
+. Na página Licença de Usuário final, execute as seguintes ações:
++
+.. Leia o Contrato de licença do usuário final da VMware.
+.. Se aceitar os termos, selecione *Aceito* no final do texto do contrato.
+
+
+. Selecione *continuar*.
+. Na página do vCenter, execute as seguintes etapas:
++
+.. Insira um endereço FQDN ou IP e credenciais de administrador para a instância do vCenter associada à instalação do NetApp HCI.
+.. Selecione *continuar*.
+.. Selecione um data center vSphere existente para adicionar o novo nó de computação.
+.. Selecione um cluster do vSphere ao qual o novo nó de computação deve ser associado.
++
+
+NOTE: Se você estiver adicionando um nó de computação com uma geração de CPU diferente da geração de CPU dos nós de computação existentes e a EVC (Enhanced vMotion Compatibility) estiver desativada na instância Controlling vCenter, você deverá habilitar o EVC antes de continuar. Isso garante a funcionalidade do vMotion após a conclusão da expansão.
+
+.. Selecione *continuar*.
+
+
+. Na página credenciais do ESXi, crie credenciais de administrador do ESXi para o nó de computação que você está adicionando. Você deve usar as mesmas credenciais mestras que foram criadas durante a implantação inicial do NetApp HCI.
+. Selecione *continuar*.
+. Na página Inventário disponível, selecione o nó que deseja adicionar à instalação existente do NetApp HCI.
++
+
+TIP: Para alguns nós de computação, talvez seja necessário habilitar o EVC no nível mais alto que sua versão do vCenter suporta antes de adicioná-los à sua instalação. Você deve usar o cliente vSphere para habilitar o EVC para esses nós de computação. Depois de ativá-lo, atualize a página Inventário e tente adicionar os nós de computação novamente.
+
+. Selecione *continuar*.
+. Na página Configurações de rede, execute as seguintes etapas:
++
+.. Verifique as informações detetadas a partir da implantação inicial.
+.. Cada novo nó de computação é listado por número de série e você deve atribuir novas informações de rede a ele. Para cada novo nó de storage, execute as seguintes etapas:
++
+... Se o NetApp HCI detetar um prefixo de nomenclatura, copie-o do campo prefixo de nomenclatura detetado e insira-o como prefixo para o novo nome de host exclusivo que você adicionar no campo Nome de host.
+... No campo Endereço IP de gerenciamento , insira um endereço IP de gerenciamento para o nó de computação que está dentro da sub-rede da rede de gerenciamento.
+... No campo Endereço IP do vMotion , digite um endereço IP do vMotion para o nó de computação que está dentro da sub-rede da rede vMotion.
+... No campo Iscsi A - IP Address (Endereço IP iSCSI A -), introduza um endereço IP para a primeira porta iSCSI do nó de computação que se encontra na sub-rede da rede iSCSI.
+... No campo iSCSI B - IP Address (Endereço IP iSCSI B - Endereço IP), introduza um endereço IP para a segunda porta iSCSI do nó de computação que se encontra na sub-rede da rede iSCSI.
+
+
+.. Selecione *continuar*.
+
+
+. Na página Review (Revisão), na secção Network Settings (Definições de rede), o novo nó é apresentado em negrito. Se você quiser fazer alterações nas informações em qualquer seção, execute as seguintes etapas:
++
+.. Selecione *Editar* para essa seção.
+.. Quando terminar de fazer alterações, selecione *continuar* em qualquer página subsequente para retornar à página Revisão.
+
+
+. Opcional: Se você não quiser enviar estatísticas de cluster e informações de suporte para servidores Active IQ hospedados em NetApp, desmarque a caixa de seleção final. Isto desativa a monitorização de diagnóstico e saúde em tempo real para o NetApp HCI. A desativação desse recurso remove a capacidade do NetApp de oferecer suporte e monitorar proativamente o NetApp HCI para detetar e resolver problemas antes que a produção seja afetada.
+. Selecione *Adicionar nós*. Você pode monitorar o progresso enquanto o NetApp HCI adiciona e configura os recursos.
+. Opcional: Verifique se o novo nó de computação está visível no vCenter.
+
+
+
+
+=== NetApp HCI 1,2, 1,1 e 1,0
+
+Depois de substituir fisicamente o nó, você deve adicioná-lo de volta ao cluster do VMware ESXi e executar várias configurações de rede para que você possa usar todas as funcionalidades disponíveis.
+
+
+NOTE: Você deve ter um console ou teclado, vídeo, Mouse (KVM) para executar estas etapas.
+
+.Passos
+. Instale e configure o VMware ESXi versão 6.0.0 da seguinte forma:
++
+.. Na consola remota ou no ecrã KVM, selecione *Power Control > Set Power Reset*. Isso reinicia o nó.
+.. Na janela Boot Menu (Menu de inicialização) que se abre, selecione *ESXi Install* pressionando a tecla de seta para baixo.
++
+
+NOTE: Esta janela permanece aberta por apenas cinco segundos. Se você não fizer a seleção em cinco segundos, reinicie o nó novamente.
+
+.. Pressione *Enter* para iniciar o processo de instalação.
+.. Conclua as etapas no assistente de instalação.
++
+
+NOTE: Quando solicitado a selecionar o disco para instalar o ESXi, você deve selecionar a segunda unidade de disco na lista selecionando a tecla seta para baixo. Quando solicitado a inserir uma senha de root, você deve digitar a mesma senha que você configurou no mecanismo de implantação do NetApp quando configurar o NetApp HCI.
+
+.. Após a conclusão da instalação, pressione *Enter* para reiniciar o nó.
++
+
+NOTE: Por padrão, o nó é reiniciado com o sistema operacional NetApp HCI Bootstrap. Você deve executar uma configuração única no nó para que ele use o VMware ESXi.
+
+
+
+. Configure o VMware ESXi no nó da seguinte forma:
++
+.. Na janela de login da interface de usuário do terminal do NetApp HCI Bootstrap os (TUI), insira as seguintes informações:
++
+... Nome de usuário: Elemento
+... Senha: CatchTheFire!
+
+
+.. Pressione a tecla de seta para baixo para selecionar *OK*.
+.. Pressione *Enter* para fazer login.
+.. No menu principal, use a tecla seta para baixo para selecionar *túnel de suporte > túnel de suporte aberto*.
+.. Na janela exibida, insira as informações da porta.
++
+
+NOTE: Você deve entrar em Contato com o suporte da NetApp para obter essas informações. O suporte do NetApp faz login no nó para definir o arquivo de configuração de inicialização e concluir a tarefa de configuração.
+
+.. Reinicie o nó.
+
+
+. Configure a rede de gerenciamento da seguinte forma:
++
+.. Faça login no VMware ESXi inserindo as seguintes credenciais:
++
+... Nome de usuário: Root
+... Senha: A senha definida quando você instalou o VMware ESXi.
++
+
+NOTE: A senha deve corresponder ao que você configurou no mecanismo de implantação do NetApp ao configurar o NetApp HCI.
+
+
+
+.. Selecione *Configure Management Network* e pressione *Enter*.
+.. Selecione *adaptadores de rede* e pressione *Enter*.
+.. Selecione *vmnic2* e *vmnic3* e pressione *Enter*.
+.. Selecione *Configuração IPv4* e pressione a barra de espaço no teclado para selecionar a opção de configuração estática.
+.. Insira o endereço IP, a máscara de sub-rede e as informações padrão do gateway e pressione *Enter*. Você pode reutilizar as informações copiadas antes de remover o nó. O endereço IP que você insere aqui é o endereço IP da rede de gerenciamento que você copiou anteriormente.
+.. Pressione *ESC* para sair da seção Configurar rede de gerenciamento.
+.. Selecione *Sim* para aplicar as alterações.
+
+
+. Configure a rede de modo que o nó seja sincronizado com os outros nós no cluster da seguinte forma:
++
+[role="tabbed-block"]
+====
+.Plug-in Element para vCenter 5,0 e posterior
+--
+A partir do Element Plug-in para vCenter 5,0, adicione o nó (host) ao data center.
+
+.. No VMware vSphere Web Client, selecione *Inventory > hosts and clusters*.
+.. Clique com o botão direito do rato no centro de dados e selecione *Adicionar anfitrião*.
++
+O assistente orienta você pela adição do host.
+
++
+
+NOTE: Quando lhe for pedido que introduza o nome de utilizador e a palavra-passe, utilize as seguintes credenciais: Nome de utilizador: Palavra-passe raiz: A palavra-passe que configurou no motor de implementação do NetApp quando configurou o NetApp HCI
+
++
+Pode levar alguns minutos para que o nó seja adicionado ao cluster. Depois que o processo for concluído, o nó recém-adicionado é listado sob o cluster.
+
+.. Selecione o nó e, em seguida, selecione *Configurar > rede > switches virtuais* e execute as seguintes etapas:
++
+... Expandir *vSwitch0*.
+... No gráfico exibido, selecione o ícone rede VM image:three_horizontal_dots.PNG["ícone de menu"]seguido de *Remover*.
++
+image::h410c-esxi-vm.PNG[Mostra a tela para remover a VM.]
+
+... Confirme a ação.
+... Selecione *edit* no cabeçalho vSwitch0.
+... Na janela vSwitch0 - Editar configurações, selecione *agrupamento e failover*.
+... Verifique se vmnic3 está listado em adaptadores em espera e selecione *OK*.
+
+
+.. No gráfico exibido, selecione o ícone rede de gerenciamento image:three_horizontal_dots.PNG["ícone de menu"]seguido de *Editar configurações*.
++
+image::h410c-esxi-mgmt-network.PNG[Mostra o ecrã para editar a rede de gestão.]
+
++
+... Na janela Management Network - Edit settings (rede de gerenciamento - Editar configurações), selecione *Teaming (agrupamento) e failover*.
+... Verifique se vmnic3 está listado em adaptadores em espera e selecione *OK*.
+
+
+.. Selecione *Adicionar rede* no cabeçalho vSwitch0 e insira os seguintes detalhes na janela exibida:
++
+... Para o tipo de conexão, selecione *Grupo de portas da máquina virtual para um switch padrão* e selecione *Next*.
+... Para o dispositivo de destino, selecione *Nova chave padrão* e *Avançar*.
+... Em criar um switch padrão, mova vmnic0 e vmnic4 para adaptadores ativos e selecione *Next*.
+... Em Configurações de conexão, verifique se a rede VM é a etiqueta de rede e, se necessário, insira a ID da VLAN.
+... Selecione *seguinte*.
+... Revise a tela Pronto para concluir e selecione *concluir*.
+
+
+.. Expanda vSwitch1 e selecione *edit* para editar as configurações da seguinte forma:
++
+... Em Propriedades, defina MTU como 9000 e selecione *OK*.
+
+
+.. No gráfico exibido, selecione o ícone rede VM image:three_horizontal_dots.PNG["ícone de menu"]seguido de *Editar*.
++
+... Selecione *Segurança* e faça as seguintes seleções:
++
+image::vswitch1_vcp_50.PNG[Mostra as seleções de segurança a serem feitas para a rede VM.]
+
+... Selecione *agrupamento e failover* e marque a caixa de seleção *Substituir*.
+... Mova vmnic0 para adaptadores em espera.
+... Selecione *OK*.
+
+
+.. Selecione *ADD NETWORKING* no cabeçalho vSwitch1 e insira os seguintes detalhes na janela Add Networking (Adicionar rede):
++
+... Para o tipo de conexão, selecione *VMkernel Network Adapter* e *Next*.
+... Para o dispositivo de destino, selecione a opção para usar um switch padrão existente, navegue até vSwitch1 e selecione *Next*.
+... Em criar um switch padrão, mova vmnic1 e vmnic5 para adaptadores ativos e selecione *Next*.
+... Em propriedades de porta, altere a etiqueta de rede para vMotion, marque a caixa de seleção para tráfego vMotion em Ativar serviços e selecione *Next*.
+... Em IPv4 configurações, forneça as informações IPv4 e selecione *Next*.
+... Se estiver pronto para continuar, selecione *Finish*.
+
+
+.. No gráfico exibido, selecione o ícone vMotion image:three_horizontal_dots.PNG["ícone de menu"]seguido de *Editar*.
++
+... Selecione *Segurança* e faça as seguintes seleções:
++
+image::vmotion_vcp_50.PNG[Mostra as seleções de segurança para o vMotion.]
+
+... Selecione *agrupamento e failover* e marque a caixa de seleção *Substituir*.
+... Mova vmnic4 para adaptadores em espera.
+... Selecione *OK*.
+
+
+.. Selecione *ADD NETWORKING* no cabeçalho vSwitch1 e insira os seguintes detalhes na janela Add Networking (Adicionar rede):
++
+... Para o tipo de conexão, selecione *VMkernel Network Adapter* e *Next*.
+... Para o dispositivo de destino, selecione *Nova chave padrão* e *Avançar*.
+... Em criar um switch padrão, mova vmnic1 e vmnic5 para adaptadores ativos e selecione *Next*.
+... Em Propriedades da porta, altere a etiqueta da rede para iSCSI-B e selecione *seguinte*.
+... Em IPv4 configurações, forneça as informações IPv4 e selecione *Next*.
+... Se estiver pronto para continuar, selecione *Finish*.
+
+
+.. Expanda *vSwitch2* e selecione *edit*:
++
+... Em Propriedades, defina MTU como 9000 e selecione *OK*.
+
+
+.. No gráfico exibido, selecione o ícone iSCSI-B image:three_horizontal_dots.PNG["ícone de menu"]seguido de *Editar*.
++
+... Selecione *Segurança* e faça as seguintes seleções:
++
+image::iscsi-b-vcp-50.PNG[Mostra as seleções de segurança para a rede iSCSI-B.]
+
+... Selecione *agrupamento e failover* e marque a caixa de seleção *Substituir*.
+... Mova vmnic1 para adaptadores não utilizados.
+... Selecione *OK*.
+
+
+.. Selecione *ADD NETWORKING* no cabeçalho vSwitch1 e insira os seguintes detalhes na janela Add Networking (Adicionar rede):
++
+... Para o tipo de conexão, selecione *VMkernel Network Adapter* e *Next*.
+... Para o dispositivo de destino, selecione a opção para usar um switch padrão existente, navegue até vSwitch2 e selecione *Next*.
+... Em Propriedades da porta, altere a etiqueta da rede para iSCSI-A e selecione *seguinte*.
+... Em IPv4 configurações, forneça as informações IPv4 e selecione *Next*.
+... Se estiver pronto para continuar, selecione *Finish*.
+
+
+.. No gráfico exibido, selecione o ícone iSCSI-A image:three_horizontal_dots.PNG["ícone de menu"]seguido de *Editar*.
++
+... Selecione *Segurança* e faça as seguintes seleções:
++
+image::iscsi-a-vcp-50.PNG[Mostra as seleções de segurança para a rede iSCSI-A.]
+
+... Selecione *agrupamento e failover* e marque a caixa de seleção *Substituir*.
+... Mova vmnic5 para adaptadores não utilizados usando o ícone de seta.
+... Selecione *OK*.
+
+
+.. Com o nó recém-adicionado selecionado e a guia Configurar aberta, selecione *armazenamento > adaptadores de armazenamento* e execute as seguintes etapas:
++
+... Selecione a lista *ADICIONAR ADAPTADOR DE SOFTWARE*.
+... Selecione *Adicionar adaptador iSCSI* e selecione *OK*.
+... Em adaptadores de armazenamento, selecione o adaptador iSCSI
+... Em Propriedades > Geral, copie o nome iSCSI.
++
+image::iscsi-adapter-name-vcp-50.PNG[Mostra a cadeia IQN do adaptador iSCSI.]
+
++
+
+NOTE: É necessário o nome iSCSI quando cria o iniciador.
+
+
+
+.. Execute as seguintes etapas no plug-in do NetApp SolidFire vCenter:
++
+... Selecione a instância de destino.
+... Selecione *Gestão*.
+... Selecione o cluster de destino.
+... Selecione *Gestão > iniciadores*.
+... Selecione *Create Initiator*.
+... Introduza o endereço IQN que copiou anteriormente no campo IQN/WWPN.
+... Selecione *OK*.
+... Selecione o novo iniciador.
+... Selecione *lista ações > ações em massa* e selecione *Adicionar ao Grupo de Acesso*.
+... Selecione o grupo de acesso alvo e selecione *Adicionar*.
+
+
+.. No VMware vSphere Web Client, em adaptadores de armazenamento, selecione o adaptador iSCSI e execute as seguintes etapas:
++
+... Selecione *Dynamic Discovery > Add* (descoberta dinâmica > Adicionar).
+... Introduza o endereço IP SVIP no campo servidor iSCSI.
++
+
+NOTE: Para obter o endereço IP SVIP, selecione *Gerenciamento NetApp Element* e copie o endereço IP SVIP. Deixe o número da porta padrão como está. Deve ser 3260.
+
+... Selecione *OK*.
+... Selecione *ligação de porta de rede* e selecione *ADICIONAR*.
+... Selecione iSCSI-A e iSCSI-B e selecione *OK*
+... Selecione *RESCAN ADAPTER*.
+... Selecione *RESCAN STORAGE*. Procure novos volumes VMFS e selecione *OK*.
+... Após a conclusão da nova verificação, verifique se os volumes no cluster e nos datastores estão visíveis no novo nó de computação (host).
+
+
+
+
+--
+.Plug-in Element para vCenter 4,10 e anterior
+--
+Para o Element Plug-in para vCenter 4,10 e anterior, adicione o nó (host) ao cluster.
+
+.. No VMware vSphere Web Client, selecione *hosts and clusters*.
+.. Clique com o botão direito do rato no cluster ao qual pretende adicionar o nó e selecione *Adicionar anfitrião*.
++
+O assistente orienta você pela adição do host.
+
++
+
+NOTE: Quando lhe for pedido que introduza o nome de utilizador e a palavra-passe, utilize as seguintes credenciais: Nome de utilizador: Palavra-passe raiz: A palavra-passe que configurou no motor de implementação do NetApp quando configurou o NetApp HCI
+
++
+Pode levar alguns minutos para que o nó seja adicionado ao cluster. Depois que o processo for concluído, o nó recém-adicionado é listado sob o cluster.
+
+.. Selecione o nó e, em seguida, selecione *Manage > Networking > Virtual switches* e execute as seguintes etapas:
++
+... Selecione *vSwitch0*. Você deve ver apenas vSwitch0 listado na tabela que é exibida.
+... No gráfico exibido, selecione *rede VM* e clique em *X* para remover o grupo de portas da rede VM.
++
+image::h410c-esxi-1.gif[Mostra a tela para remover o grupo de portas da rede VM.]
+
+... Confirme a ação.
+... Selecione *vSwitch0* e, em seguida, selecione o ícone de lápis para editar as definições.
+... Na janela vSwitch0 - Editar configurações, selecione *agrupamento e failover*.
+... Certifique-se de que vmnic3 esteja listado em adaptadores de espera e selecione *OK*.
+... No gráfico exibido, selecione *rede de gerenciamento* e selecione o ícone de lápis para editar as configurações.
++
+image::h410c-mgmtnetwork.gif[Mostra o ecrã onde edita a rede de gestão.]
+
+... Na janela Management Network - Edit settings (rede de gerenciamento - Editar configurações), selecione *Teaming (agrupamento) e failover*.
+... Mova vmnic3 para adaptadores em espera usando o ícone de seta e selecione *OK*.
+
+
+.. No menu suspenso ações, selecione *Adicionar rede* e insira os seguintes detalhes na janela exibida:
++
+... Para o tipo de conexão, selecione *Grupo de portas da máquina virtual para um switch padrão* e selecione *Next*.
+... Para o dispositivo de destino, selecione a opção para adicionar um novo switch padrão e selecione *Next*.
+... Selecione **.
+... Na janela Add Physical Adapters to Switch (Adicionar adaptadores físicos ao comutador), selecione vmnic0 e vmnic4 e selecione *OK*. vmnic0 e vmnic4 agora estão listados em ative Adapters (adaptadores ativos).
+... Selecione *seguinte*.
+... Em configurações de conexão, verifique se a rede VM é a etiqueta de rede e selecione *Next*.
+... Se você estiver pronto para continuar, selecione *Finish*. vSwitch1 é exibido na lista de switches virtuais.
+
+
+.. Selecione *vSwitch1* e selecione o ícone de lápis para editar as configurações da seguinte forma:
++
+... Em Propriedades, defina MTU como 9000 e selecione *OK*. No gráfico exibido, selecione *rede VM* e clique no ícone de lápis para editar as configurações da seguinte forma:
+
+
+.. Selecione *Segurança* e faça as seguintes seleções:
++
+image::vswitch1.gif[Mostra as seleções de segurança a serem feitas para a rede VM.]
+
++
+... Selecione *agrupamento e failover* e marque a caixa de seleção *Substituir*.
+... Mova vmnic0 para adaptadores em espera usando o ícone de seta.
+... Selecione *OK*.
+
+
+.. Com vSwitch1 selecionado, no menu suspenso ações, selecione *Adicionar rede* e insira os seguintes detalhes na janela exibida:
++
+... Para o tipo de conexão, selecione *VMkernel Network Adapter* e *Next*.
+... Para o dispositivo de destino, selecione a opção para usar um switch padrão existente, navegue até vSwitch1 e selecione *Next*.
+... Em propriedades de porta, altere a etiqueta de rede para vMotion, marque a caixa de seleção para tráfego vMotion em Ativar serviços e selecione *Next*.
+... Em IPv4 configurações, forneça as informações IPv4 e selecione *Next*. O endereço IP digitado aqui é o endereço IP do vMotion que você copiou anteriormente.
+... Se estiver pronto para continuar, selecione *Finish*.
+
+
+.. No gráfico exibido, selecione vMotion e selecione o ícone de lápis para editar as configurações da seguinte forma:
++
+... Selecione *Segurança* e faça as seguintes seleções:
++
+image::vmotion.gif[Mostra as seleções de segurança para o vMotion.]
+
+... Selecione *agrupamento e failover* e marque a caixa de seleção *Substituir*.
+... Mova vmnic4 para adaptadores em espera usando o ícone de seta.
+... Selecione *OK*.
+
+
+.. Com vSwitch1 selecionado, no menu suspenso ações, selecione *Adicionar rede* e insira os seguintes detalhes na janela exibida:
++
+... Para o tipo de conexão, selecione *VMkernel Network Adapter* e *Next*.
+... Para o dispositivo de destino, selecione a opção para adicionar um novo switch padrão e selecione *Next*.
+... Selecione **.
+... Na janela Add Physical Adapters to Switch (Adicionar adaptadores físicos ao comutador), selecione vmnic1 e vmnic5 e selecione *OK*. vmnic1 e vmnic5 agora estão listados em ative Adapters (adaptadores ativos).
+... Selecione *seguinte*.
+... Em Propriedades da porta, altere a etiqueta da rede para iSCSI-B e selecione *seguinte*.
+... Em IPv4 configurações, forneça as informações IPv4 e selecione *Next*. O endereço IP introduzido aqui é o endereço IP iSCSI-B que copiou anteriormente.
+... Se você estiver pronto para continuar, selecione *Finish*. vSwitch2 é exibido na lista de switches virtuais.
+
+
+.. Selecione *vSwitch2* e selecione o ícone de lápis para editar as configurações da seguinte forma:
++
+... Em Propriedades, defina MTU como 9000 e selecione *OK*.
+
+
+.. No gráfico exibido, selecione *iSCSI-B* e selecione o ícone de lápis para editar as configurações da seguinte forma:
++
+... Selecione *Segurança* e faça as seguintes seleções:
++
+image::iscsi-b.gif[Mostra as seleções de segurança para a rede iSCSI-B.]
+
+... Selecione *agrupamento e failover* e marque a caixa de seleção *Substituir*.
+... Mova vmnic1 para adaptadores não utilizados usando o ícone de seta.
+... Selecione *OK*.
+
+
+.. No menu suspenso ações, selecione *Adicionar rede* e insira os seguintes detalhes na janela exibida:
++
+... Para o tipo de conexão, selecione *VMkernel Network Adapter* e *Next*.
+... Para o dispositivo de destino, selecione a opção para usar um switch padrão existente, navegue até vSwitch2 e selecione *Next*.
+... Em Propriedades da porta, altere a etiqueta da rede para iSCSI-A e selecione *seguinte*.
+... Em IPv4 configurações, forneça as informações IPv4 e selecione *Next*. O endereço IP introduzido aqui é o endereço IP iSCSI-A que copiou anteriormente.
+... Se estiver pronto para continuar, selecione *Finish*.
+
+
+.. No gráfico exibido, selecione *iSCSI-A* e selecione o ícone de lápis para editar as configurações da seguinte forma:
++
+... Selecione *Segurança* e faça as seguintes seleções:
++
+image::iscsi-a.gif[Mostra as seleções de segurança para a rede iSCSI-A.]
+
+... Selecione *agrupamento e failover* e marque a caixa de seleção *Substituir*.
+... Mova vmnic5 para adaptadores não utilizados usando o ícone de seta.
+... Selecione *OK*.
+
+
+.. Com o nó recém-adicionado selecionado e a guia Gerenciar aberta, selecione *armazenamento > adaptadores de armazenamento* e execute as seguintes etapas:
++
+... Selecione * * * e selecione *Software iSCSI Adapter*.
+... Para adicionar o adaptador iSCSI, selecione *OK* na caixa de diálogo.
+... Em adaptadores de armazenamento, selecione o adaptador iSCSI e, na guia Propriedades, copie o nome iSCSI.
++
+image::iscsi adapter name.gif[Mostra a cadeia IQN do adaptador iSCSI.]
+
++
+
+NOTE: É necessário o nome iSCSI quando cria o iniciador.
+
+
+
+.. Execute as seguintes etapas no plug-in do NetApp SolidFire vCenter:
++
+... Selecione *Gestão > iniciadores > criar*.
+... Selecione *criar um único Iniciador*.
+... Introduza o endereço IQN que copiou anteriormente no campo IQN/WWPN.
+... Selecione *OK*.
+... Selecione *ações em massa* e selecione *Adicionar ao Grupo de Acesso por volume*.
+... Selecione *NetApp HCI* e *Add*.
+
+
+.. No VMware vSphere Web Client, em adaptadores de armazenamento, selecione o adaptador iSCSI e execute as seguintes etapas:
++
+... Em Detalhes do adaptador, selecione *alvos > descoberta dinâmica > Adicionar*.
+... Introduza o endereço IP SVIP no campo servidor iSCSI.
++
+
+NOTE: Para obter o endereço IP SVIP, selecione *Gerenciamento NetApp Element* e copie o endereço IP SVIP. Deixe o número da porta padrão como está. Deve ser 3260.
+
+... Selecione *OK*. É apresentada uma mensagem a recomendar uma nova digitalização do adaptador de armazenamento.
+... Selecione o ícone de nova digitalização.
++
+image::rescan.gif[Mostra o ícone de redigitalização para os adaptadores de armazenamento.]
+
+... Em Detalhes do adaptador, selecione *ligação de porta de rede* e selecione **.
+... Selecione as caixas de verificação iSCSI-B e iSCSI-A e clique em OK. É apresentada uma mensagem a recomendar uma nova digitalização do adaptador de armazenamento.
+... Selecione o ícone de nova digitalização. Após a conclusão da nova verificação, verifique se os volumes no cluster estão visíveis no novo nó de computação (host).
+
+
+
+
+--
+====
+
+
+
+
+== Etapa 5: Reimplante nós de testemunhas para clusters de storage de dois ou três nós
+
+Depois de substituir fisicamente o nó de computação com falha, você deve reimplantar a VM do nó testemunha do NetApp HCI se o nó de computação com falha estiver hospedando o nó testemunha. Essas instruções se aplicam somente a nós de computação que fazem parte de uma instalação do NetApp HCI com clusters de storage de dois ou três nós.
+
+.O que você vai precisar
+* Reúna as seguintes informações:
++
+** Nome do cluster a partir do cluster de armazenamento
+** Máscara de sub-rede, endereço IP do gateway, servidor DNS e informações de domínio para a rede de gerenciamento
+** Máscara de sub-rede para a rede de armazenamento
+
+
+* Certifique-se de ter acesso ao cluster de storage para poder adicionar os nós de testemunha ao cluster.
+* Considere as seguintes condições para ajudá-lo a decidir se deseja remover o nó de testemunho existente do VMware vSphere Web Client ou do cluster de armazenamento:
++
+** Se você quiser usar o mesmo nome de VM para o novo nó de testemunha, exclua todas as referências ao nó de testemunha antigo do vSphere.
+** Se você quiser usar o mesmo nome de host no novo nó testemunha, primeiro remova o antigo nó testemunha do cluster de armazenamento.
++
+
+NOTE: Não é possível remover o antigo nó de testemunha se o cluster estiver com apenas dois nós de storage físico (e nenhum nó de testemunha). Nesse cenário, você deve adicionar o novo nó de testemunha ao cluster primeiro antes de remover o antigo. Você pode remover o nó testemunha do cluster usando o ponto de extensão Gerenciamento do NetApp Element.
+
+
+
+
+
+.Quando você deve reimplantar os nós de testemunhas?
+Você deve reimplantar nós de testemunhas nos seguintes cenários:
+
+* Você substituiu um nó de computação com falha que faz parte de uma instalação do NetApp HCI, que tem um cluster de storage de dois ou três nós e o nó de computação com falha estava hospedando uma VM nó testemunha.
+* Você executou o procedimento de retorno à imagem de fábrica (RTFI) no nó de computação.
+* A VM Witness Node está corrompida.
+* A VM Witness Node foi acidentalmente removida do ESXi. A VM é configurada usando o modelo que é criado como parte da implantação inicial usando o mecanismo de implantação do NetApp. Aqui está um exemplo de como uma VM Witness Node se parece:
++
+image::vm-template.png[Mostra uma captura de tela do modelo de VM Witness Node.]
+
+
+
+
+NOTE: Se você excluiu o modelo de VM, entre em Contato com o suporte da NetApp para obter a imagem .ova do nó testemunha e reimplantá-la. Pode transferir o modelo a partir de link:https://mysupport.netapp.com/site/products/all/details/netapp-hci/downloads-tab/download/62542/WN_12.0/downloads["aqui (login necessário)"^]. No entanto, você deve envolver o suporte para obter orientação sobre como configurá-lo.
+
+.Passos
+. No VMware vSphere Web Client, selecione *hosts and clusters*.
+. Clique com o botão direito do Mouse no nó de computação que hospedará a VM Witness Node e selecione *Nova Máquina Virtual*.
+. Selecione *Deploy from template* e selecione *Next*.
+. Siga as etapas no assistente:
++
+.. Selecione *Data Center*, localize o modelo de VM e selecione *Next*.
+.. Digite um nome para a VM no seguinte formato: NetApp-Witness-Node-Number
++
+
+NOTE: o número deve ser substituído por um número.
+
+.. Deixe a seleção padrão para a localização da VM como está e selecione *Next*.
+.. Deixe a seleção padrão para o recurso de computação de destino como está e selecione *Next*.
+.. Selecione o datastore local e selecione *Next*. O espaço livre no armazenamento de dados local varia dependendo da plataforma de computação.
+.. Selecione *ligar a máquina virtual após a criação* na lista de opções de implementação e selecione *seguinte*.
+.. Reveja as seleções e selecione *Finish*.
+
+
+. Configure a rede de gerenciamento e armazenamento e as configurações de cluster para o nó testemunha da seguinte forma:
++
+.. No VMware vSphere Web Client, selecione *hosts and clusters*.
+.. Clique com o botão direito do rato no nó testemunha e ligue-o se ainda não estiver ligado.
+.. Na exibição Resumo do nó testemunha, selecione *Launch Web Console*.
+.. Aguarde até que o Witness Node inicialize até o menu com o fundo azul.
+.. Selecione qualquer lugar dentro do console para acessar o menu.
+.. Configure a rede de gerenciamento da seguinte forma:
++
+... Pressione a tecla de seta para baixo para navegar até rede e pressione *Enter* para OK.
+... Navegue até *Network Config* e pressione *Enter* para OK.
+... Navegue até *net0* e pressione *Enter* para OK.
+... Pressione *Tab* até chegar ao campo IPv4 e, se aplicável, exclua o IP existente no campo e insira as informações de IP de gerenciamento para o nó testemunha. Verifique também a máscara de sub-rede e o gateway.
++
+
+NOTE: Nenhuma marcação de VLAN será aplicada no nível do host da VM; a marcação será tratada no vSwitch.
+
+... Pressione *Tab* para navegar para OK e pressione *Enter* para salvar as alterações. Após a configuração da rede de gestão, o ecrã regressa à rede.
+
+
+.. Configure a rede de armazenamento da seguinte forma:
++
+... Pressione a tecla de seta para baixo para navegar até rede e pressione *Enter* para OK.
+... Navegue até *Network Config* e pressione *Enter* para OK.
+... Navegue até *net1* e pressione *Enter* para OK.
+... Pressione *Tab* até chegar ao campo IPv4 e, se aplicável, exclua o IP existente no campo e insira as informações de IP de armazenamento do nó testemunha.
+... Pressione *Tab* para navegar para OK e pressione *Enter* para salvar as alterações.
+... Defina MTU como 9000.
++
+
+NOTE: Se a MTU não estiver definida antes de adicionar o nó testemunha ao cluster, você verá avisos de cluster para configurações de MTU inconsistentes. Isso pode impedir que a coleta de lixo seja executada e causar problemas de desempenho.
+
+... Pressione *Tab* para navegar para OK e pressione *Enter* para salvar as alterações. Após a configuração da rede de armazenamento, o ecrã regressa à rede.
+
+
+.. Configure as definições do cluster da seguinte forma:
++
+... Pressione *Tab* para navegar até Cancelar e pressione *Enter*.
+... Navegue até *Configurações de cluster* e pressione *Enter* para OK.
+... Pressione *Tab* para navegar até alterar configurações e pressione *Enter* para alterar configurações.
+... Pressione *Tab* para navegar até o campo Nome do host e insira o nome do host.
+... Prima a tecla de seta para baixo para aceder ao campo Cluster e introduza o nome do cluster a partir do cluster de armazenamento.
+... Pressione a tecla *Tab* para navegar até o botão OK e pressione *Enter*.
+
+
+
+
+. Adicione o nó testemunha ao cluster de armazenamento da seguinte forma:
++
+.. No vSphere Web Client, acesse o ponto de extensão Gerenciamento do NetApp Element na guia *Atalhos* ou no painel lateral.
+.. Selecione *Gerenciamento de NetApp Element > cluster*.
+.. Selecione a subguia *nodes*.
+.. Selecione *pendente* na lista suspensa para exibir a lista de nós. O nó testemunha deve aparecer na lista de nós pendentes.
+.. Marque a caixa de seleção do nó que deseja adicionar e selecione *Adicionar nó*. Quando a ação estiver concluída, o nó aparece na lista de nós ativos para o cluster.
+
+
+
+
+
+
+== Altere a senha se você recebeu um nó de substituição por uma senha BMC não padrão
+
+Alguns nós de substituição podem ser enviados com senhas não padrão para a IU do controlador de gerenciamento de base (BMC). Se receber um nó de substituição com uma palavra-passe BMC não padrão, deve alterar a palavra-passe para a predefinição, ADMIN.
+
+.Passos
+. Identifique se recebeu um nó de substituição com uma palavra-passe BMC não padrão:
++
+.. Procure um adesivo sob a porta IPMI na parte de trás do nó de substituição que você recebeu. Se você localizar um adesivo sob a porta IPMI, isso significa que você recebeu um nó com uma senha BMC não padrão. Veja a seguinte imagem de exemplo:
++
+image::bmc pw sticker.png[Mostra a parte de trás do nó com o adesivo sob a porta IPMI.]
+
+.. Anote a senha.
+
+
+. Faça login na IU do BMC usando a senha exclusiva encontrada no adesivo.
+. Selecione *predefinição de fábrica* e selecione o botão de opção *Remover definições atuais e defina as predefinições do utilizador para ADMIN/ADMIN*:
+. Selecione *Restaurar*.
+. Faça logout e faça login novamente para confirmar que as credenciais agora foram alteradas.
+
+
+
+
+== Atualize o firmware do BMC no nó
+
+Depois de substituir o nó de computação, talvez seja necessário atualizar a versão do firmware. Pode transferir o ficheiro de firmware mais recente a partir do menu pendente no link:https://mysupport.netapp.com/site/products/all/details/netapp-hci/downloads-tab["Site de suporte da NetApp (login necessário)"^].
+
+.Passos
+. Inicie sessão na IU do controlador de gestão de base (BMC).
+. Selecione *Manutenção > Atualização de firmware*.
++
+image::h410c-bmc1.png[Mostra a navegação da IU do BMC para atualizações de firmware.]
+
+. No console BMC, selecione *Manutenção*.
++
+image::h410c-bmc2.png[Mostra o ecrã de manutenção na IU do BMC.]
+
+. Na guia Manutenção, selecione *Atualização de firmware* na navegação à esquerda da interface do usuário e selecione *entrar no modo de atualização*.
++
+image::h410c-bmc3.png[Mostra o ecrã de atualização do firmware na IU do BMC.]
+
+. Selecione *Sim* na caixa de diálogo de confirmação.
+. Selecione *Procurar* para selecionar a imagem de firmware a carregar e selecione *carregar firmware*. O carregamento de firmware a partir de um local fora da proximidade direta do nó pode causar tempos de carregamento prolongados e possíveis tempos limite.
+. Permita as verificações de configuração preservar e selecione *Iniciar atualização*. A atualização deve levar aproximadamente 5 minutos. Se o tempo de carregamento exceder 60 minutos, cancele o carregamento e transfira o ficheiro para uma máquina local nas proximidades do nó. Se o tempo limite da sessão, você poderá ver vários alertas ao tentar fazer login novamente na área de atualização do firmware da IU do BMC. Se você cancelar a atualização, você será redirecionado para a página de login.
+. Depois que a atualização estiver concluída, selecione *OK* e aguarde que o nó seja reiniciado. Inicie sessão após a atualização e selecione *sistema* para verificar se a versão *Revisão do firmware* corresponde à versão que carregou.
+
+
+
+
+== Encontre mais informações
+
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+* http://docs.netapp.com/sfe-122/index.jsp["Centro de Documentação de Software SolidFire e Element"^]
+

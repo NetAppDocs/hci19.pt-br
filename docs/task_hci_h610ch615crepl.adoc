@@ -1,0 +1,277 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hci_h610ch615crepl.html 
+summary: Você deve substituir um chassi para reparar falhas de nó de computação relacionadas à CPU, à placa-mãe ou se ele não ligar. Se você tiver um DIMM com defeito no nó de computação H610C que executa o NetApp HCI Bootstrap os versão 1,6 ou posterior, você poderá substituir o DIMM e não precisará substituir o chassi. Para nós H615C, você não precisa substituir o chassi se um DIMM falhar; você pode substituir apenas o DIMM com falha. 
+keywords: netapp, hci, H610C, H615C, chassis replacement, node replacement 
+---
+= Substitua os nós H610C e H615C
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você deve substituir um chassi para reparar falhas de nó de computação relacionadas à CPU, à placa-mãe ou se ele não ligar. Se você tiver um DIMM com defeito no nó de computação H610C que executa o NetApp HCI Bootstrap os versão 1,6 ou posterior, você poderá substituir o DIMM e não precisará substituir o chassi. Para nós H615C, você não precisa substituir o chassi se um DIMM falhar; você pode substituir apenas o DIMM com falha.
+
+[NOTE]
+====
+Para H610C e H615C, os termos "nó" e "chassi" são usados alternadamente, porque o nó e o chassi não são componentes separados.
+
+A NetApp recomenda o uso do mecanismo de implantação do NetApp para adicionar um nó de computação de substituição. Se você não puder continuar usando o mecanismo de implantação do NetApp para a instalação do ESXi, consulte o artigo da base de dados de Conhecimento da NetApp https://kb.netapp.com/Legacy/NetApp_HCI/OS/How_to_install_ESXi_on_NetApp_HCI_compute_node_manually["Como instalar o ESXi no nó de computação do NetApp HCI manualmente"^] .
+
+====
+.O que você vai precisar
+* Você verificou que o nó falhou.
+* Tem um chassis de substituição. Para solicitar uma substituição, você deve entrar em Contato com o suporte da NetApp.
+* Você tem uma pulseira de descarga eletrostática (ESD), ou você tomou outra proteção antiestática.
+* Você etiquetou cada cabo que está conetado ao chassi.
+
+
+.Sobre esta tarefa
+Os alarmes no VMware vSphere Web Client alertam você quando um host falha. Você deve corresponder o número de série do host com falha do VMware vSphere Web Client com o número de série no adesivo na parte de trás do nó.
+
+
+
+== Etapa 1: Prepare-se para substituir o nó
+
+Antes de substituir o nó, você deve migrar as máquinas virtuais (VMs) hospedadas no nó para um host disponível e remover o nó do cluster. Você deve Registrar detalhes sobre o nó, como o número de série e informações de rede. A migração das VMs e a gravação dos detalhes do nó também se aplica no caso de falhas de componentes em que o nó ainda está on-line e funcionando, por exemplo, uma falha de módulo de memória dupla inline (DIMM).
+
+.Passos
+. No VMware vSphere Web Client, execute as etapas para migrar as VMs para outro host disponível.
++
+
+NOTE: Consulte a documentação da VMware para obter as etapas de migração.
+
+. Selecione o nó com falha e selecione *Monitor > Status do hardware > Sensores*.
+. Anote o número de série do nó com falha. A seguinte captura de tela é apenas um exemplo:
++
+image::h610c serial number.gif[Mostra o número de série do nó com falha no VMware vSphere Web Client.]
+
++
+Você precisa do número de série para identificar o chassi, combinando o número que você anotou com o número de série no adesivo na parte traseira do nó.
+
+. Clique com o botão direito do rato no nó com falha e selecione *ligação > Desligar*.
+. Selecione *Sim* para confirmar a ação.
+. Clique com o botão direito do rato no nó com falha e selecione *Remover do inventário*.
+. Clique em *Yes* para confirmar a ação.
+
+
+
+
+== Etapa 2: Substitua o nó
+
+Depois de remover o nó com falha do cluster, você pode remover o chassi com falha e instalar o chassi de substituição.
+
+
+NOTE: Certifique-se de que tem proteção antiestática antes de executar os passos aqui.
+
+.Passos
+. Desembale o novo chassis e coloque-o numa superfície nivelada. Mantenha o material de embalagem durante quando devolver o chassis com falha ao NetApp.
+. Identifique cada cabo inserido na parte de trás do chassi que você vai remover. Depois de instalar o novo chassi, você deve inserir os cabos de volta nas portas originais.
+. Desligue todos os cabos da parte posterior do chassis.
+. Retire o chassis desapertando os parafusos de aperto manual nas orelhas de montagem. Você deve empacotar e retornar o chassi com falha ao NetApp.
+. Faça deslizar o chassis de substituição para os trilhos.
++
+
+CAUTION: Certifique-se de que não utiliza força excessiva ao deslizar o chassis para os trilhos.
+
+. Apenas para H615C. Remova os DIMMs do chassi com falha e insira esses DIMMs no chassi de substituição.
++
+
+NOTE: Você deve substituir os DIMMs nos mesmos slots dos quais foram removidos no nó com falha.
+
+. Remova as duas unidades de fonte de alimentação de ambos os lados do chassi com falha e insira-as no chassi de substituição.
+. Volte a ligar os cabos às portas das quais os desligou originalmente. As etiquetas que você adicionou nos cabos quando você os desconetou ajudarão a guiá-lo.
++
+
+CAUTION: Se as saídas de ar na parte traseira do chassis estiverem bloqueadas por cabos ou etiquetas, pode provocar avarias prematuras dos componentes devido ao sobreaquecimento. Não force os cabos para as portas; poderá danificar os cabos, as portas ou ambas.
+
+. Ligue o chassis.
+
+
+
+
+== Etapa 3: Adicione o nó ao cluster
+
+Você deve configurar o NetApp HCI para usar o novo nó de computação.
+
+.O que você vai precisar
+* A instância do vSphere NetApp HCI está usando o licenciamento do vSphere Enterprise Plus se você estiver adicionando o nó a uma implantação com switches distribuídos virtuais.
+* Nenhuma das instâncias do vCenter ou do vSphere em uso com o NetApp HCI tem licenças expiradas.
+* Você tem endereços IPv4 livres e não utilizados no mesmo segmento de rede que os nós existentes (o novo nó deve ser instalado na mesma rede que os nós existentes de seu tipo).
+* Você tem as credenciais da conta de administrador do vCenter prontas.
+
+
+.Passos
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web. Por exemplo:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage da NetApp HCI.
+. No painel expandir instalação, selecione *expandir*.
++
+O navegador abre o mecanismo de implantação do NetApp.
+
+. Faça login no mecanismo de implantação do NetApp fornecendo as credenciais de administrador do cluster de storage do NetApp HCI local.
++
+
+NOTE: Não é possível iniciar sessão utilizando credenciais Lightweight Directory Access Protocol.
+
+. Na página de boas-vindas, selecione *Sim*.
+. Na página Licença de Usuário final, execute as seguintes ações:
++
+.. Leia o Contrato de licença do usuário final da VMware.
+.. Se aceitar os termos, selecione *Aceito* no final do texto do contrato.
+
+
+. Clique em continuar.
+. Na página do vCenter, execute as seguintes etapas:
++
+.. Insira um endereço FQDN ou IP e credenciais de administrador para a instância do vCenter associada à instalação do NetApp HCI.
+.. Selecione *continuar*.
+.. Selecione um data center vSphere existente para adicionar os novos nós de computação ou selecione criar novo data center para adicionar os novos nós de computação a um novo data center.
++
+
+NOTE: Se selecionar criar novo centro de dados, o campo Cluster é preenchido automaticamente.
+
+.. Se você selecionou um data center existente, selecione um cluster vSphere ao qual os novos nós de computação devem ser associados.
++
+
+NOTE: Se o NetApp HCI não conseguir reconhecer as configurações de rede do cluster que você selecionou para expansão, verifique se o mapeamento vmkernel e vmnic para as redes de gerenciamento, armazenamento e vMotion estão definidos com os padrões de implantação.
+
+.. Selecione *continuar*.
+
+
+. Na página credenciais do ESXi, insira uma senha raiz do ESXi para o nó ou nós de computação que você está adicionando. Você deve usar a mesma senha que foi criada durante a implantação inicial do NetApp HCI.
+. Selecione *continuar*.
+. Se você criou um novo cluster de data center vSphere, na página topologia de rede, selecione uma topologia de rede para corresponder aos novos nós de computação que você está adicionando.
++
+
+NOTE: Você só pode selecionar a opção de dois cabos se seus nós de computação estiverem usando a topologia de dois cabos e a implantação existente do NetApp HCI estiver configurada com IDs de VLAN.
+
+. Na página Inventário disponível, selecione o nó a ser adicionado à instalação existente do NetApp HCI.
++
+
+TIP: Para alguns nós de computação, talvez seja necessário habilitar o EVC no nível mais alto que sua versão do vCenter suporta antes de adicioná-los à sua instalação. Você deve usar o cliente vSphere para habilitar o EVC para esses nós de computação. Depois de ativá-lo, atualize a página Inventário e tente adicionar os nós de computação novamente.
+
+. Selecione *continuar*.
+. Opcional: Se você criou um novo cluster do vSphere Datacenter, na página Configurações de rede, importe informações de rede de uma implantação existente do NetApp HCI selecionando a caixa de seleção *Copiar de um cluster existente*. Isso preenche as informações padrão de gateway e sub-rede para cada rede.
+. Na página Configurações de rede, algumas das informações de rede foram detetadas desde a implantação inicial. Cada novo nó de computação é listado por número de série e você deve atribuir novas informações de rede a ele. Para cada novo nó de computação, execute as seguintes etapas:
++
+.. Se o NetApp HCI detetar um prefixo de nomenclatura, copie-o do campo prefixo de nomenclatura detetado e insira-o como prefixo para o novo nome de host exclusivo que você adicionar no campo Nome de host.
+.. No campo Endereço IP de gerenciamento , insira um endereço IP de gerenciamento para o nó de computação que está dentro da sub-rede da rede de gerenciamento.
+.. No campo Endereço IP do vMotion , digite um endereço IP do vMotion para o nó de computação que está dentro da sub-rede da rede vMotion.
+.. No campo Iscsi A - IP Address (Endereço IP iSCSI A -), introduza um endereço IP para a primeira porta iSCSI do nó de computação que se encontra na sub-rede da rede iSCSI.
+.. No campo iSCSI B - IP Address (Endereço IP iSCSI B - Endereço IP), introduza um endereço IP para a segunda porta iSCSI do nó de computação que se encontra na sub-rede da rede iSCSI.
+
+
+. Selecione *continuar*.
+. Na página Review (Revisão), na secção Network Settings (Definições de rede), o novo nó é apresentado em negrito. Se você precisar fazer alterações nas informações em qualquer seção, execute as seguintes etapas:
++
+.. Selecione *Editar* para essa seção.
+.. Quando terminar de fazer alterações, selecione *continuar* em qualquer página subsequente para retornar à página Revisão.
+
+
+. Opcional: Se você não quiser enviar estatísticas de cluster e informações de suporte para servidores SolidFire Active IQ hospedados em NetApp, desmarque a caixa de seleção final. Isto desativa a monitorização de diagnóstico e saúde em tempo real para o NetApp HCI. A desativação desse recurso remove a capacidade do NetApp de oferecer suporte e monitorar proativamente o NetApp HCI para detetar e resolver problemas antes que a produção seja afetada.
+. Selecione *Adicionar nós*. Você pode monitorar o progresso enquanto o NetApp HCI adiciona e configura os recursos.
+. Opcional: Verifique se todos os novos nós de computação estão visíveis no vCenter.
+
+
+
+
+== Passo 4: Instale os drivers da GPU
+
+Os nós de computação com unidades de processamento gráfico (GPUs) da NVIDIA, como o nó H610C, precisam dos drivers de software NVIDIA instalados no VMware ESXi para que possam aproveitar o maior poder de processamento. Para instalar os drivers de GPU, o nó de computação deve ter uma placa de GPU.
+
+.Passos
+. Abra um navegador e navegue até o portal de licenciamento do NVIDIA no seguinte URL:
+`https://nvid.nvidia.com/dashboard/`
+. Transfira a versão do pacote de controladores para o seu computador, dependendo do ambiente.
++
+O exemplo a seguir mostra a versão do pacote de driver para o vSphere 6,0, 6,5 e 6,7:
+
++
+[cols="2*"]
+|===
+| Versão do vSphere | Pacote de driver 
+
+
+| VSphere 6,0  a| 
+NVIDIA-GRID-vSphere-6.0-390.94-390.96-392.05.zip
+
+
+
+| VSphere 6,5  a| 
+NVIDIA-GRID-vSphere-6.5-410.92-410.91-412.16.zip
+
+
+
+| VSphere 6,7  a| 
+NVIDIA-GRID-vSphere-6.7-410.92-410.91-412.16.zip
+
+|===
+. Extraia o pacote de driver no computador. O arquivo .VIB resultante é o arquivo de driver não compactado.
+. Copie o arquivo de driver .VIB do computador para o ESXi em execução no nó de computação. O utilitário SCP (Secure Copy Protocol) está prontamente disponível na maioria das distribuições Linux, ou disponível como um utilitário para download para todas as versões do Windows.
++
+O exemplo a seguir mostra os comandos do ESXi 6,0, 6,5 e 6,7. Os comandos assumem que o driver está localizado no diretório home/NVIDIA/ESX6.x/ no host de gerenciamento:
+
++
+[cols="2*"]
+|===
+| Opção | Descrição 
+
+
+| ESXi 6,0  a| 
+NVIDIA/ESX6,0/NVIDIA**.vib Root at <ESXi_IP_ADDR>:/.
+
+
+
+| ESXi 6,5  a| 
+NVIDIA/ESX6,5/NVIDIA**.vib Root at <ESXi_IP_ADDR>:/.
+
+
+
+| ESXi 6,7  a| 
+NVIDIA/ESX6,7/NVIDIA**.vib Root at <ESXi_IP_ADDR>:/.
+
+|===
+. Siga as etapas a seguir para fazer login como root no host ESXi e instalar o gerenciador de vGPU do NVIDIA no ESXi.
++
+.. Execute o seguinte comando para efetuar login no host ESXi como usuário raiz:
+`ssh root@<ESXi_IP_ADDRESS>`
+.. Execute o seguinte comando para verificar se nenhum driver de GPU do NVIDIA está instalado no momento:
+`nvidia-smi` Esse comando deve retornar a mensagem `nvidia-smi: not found`.
+.. Execute os seguintes comandos para ativar o modo de manutenção no host e instalar o Gerenciador de vGPU do NVIDIA a partir do arquivo VIB:
+`esxcli system maintenanceMode set --enable true`
+`esxcli software vib install -v /NVIDIA**.vib` Você deve ver a mensagem `Operation finished successfully`.
+.. Execute o seguinte comando e verifique se todos os oito drivers de GPU estão listados na saída do comando:
+`nvidia-smi`
+.. Execute o seguinte comando para verificar se o pacote NVIDIA vGPU foi instalado e carregado corretamente:
+`vmkload_mod -l | grep nvidia` O comando deve retornar uma saída semelhante ao seguinte: `nvidia 816 13808`
+.. Execute os seguintes comandos para sair do modo de manutenção e reiniciar o host:
+`esxcli system maintenanceMode set –enable false`
+`reboot -f`
+
+
+. Repita as etapas 4-6 para quaisquer outros nós de computação recém-implantados com GPUs NVIDIA.
+. Execute as seguintes tarefas usando as instruções no site de documentação do NVIDIA:
++
+.. Instale o servidor de licença NVIDIA.
+.. Configure os convidados da máquina virtual para o software NVIDIA vGPU.
+.. Se você estiver usando desktops habilitados para vGPU em um contexto de infraestrutura de desktop virtual (VDI), configure o software VMware Horizon View for NVIDIA vGPU.
+
+
+
+
+
+
+== Encontre mais informações
+
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+* http://docs.netapp.com/sfe-122/index.jsp["Centro de Documentação de Software SolidFire e Element"^]
+

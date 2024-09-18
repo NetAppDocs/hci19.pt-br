@@ -1,0 +1,688 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hcc_upgrade_management_node.html 
+summary: Como parte de uma atualização do sistema NetApp HCI, você atualiza o nó de gerenciamento. 
+keywords: netapp, hci, on premise, cluster, management node, mNode, upgrade, 10, 11.0, 11.1, 11.3, 11.5, 11.7, 12.0, 12.2, 12.3, 12.3.1, 12.3.2, 12.3.x 
+---
+= Atualizar um nó de gerenciamento
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você pode atualizar seu nó de gerenciamento para o nó de gerenciamento versão 12,3.x a partir da versão 11,0 ou posterior.
+
+A atualização do sistema operacional de nós de gerenciamento não é mais necessária para atualizar o software Element no cluster de storage. Se o nó de gerenciamento for a versão 11,3 ou posterior, você pode simplesmente atualizar os serviços de gerenciamento para a versão mais recente para executar atualizações de elementos usando o Controle de nuvem híbrida da NetApp. Siga o procedimento de atualização do nó de gerenciamento para o cenário se desejar atualizar o sistema operacional do nó de gerenciamento por outros motivos, como correção de segurança.
+
+
+NOTE: O vCenter Plug-in 4,4 ou posterior requer um nó de gerenciamento 11,3 ou posterior criado com arquitetura modular e que fornece serviços individuais.
+
+.Opções de atualização
+Escolha uma das seguintes opções de atualização do nó de gerenciamento:
+
+[NOTE]
+====
+* O nó de gerenciamento 12.3.2 contém uma mitigação de segurança para clusters de storage com o recurso volumes virtuais (VVols) habilitado. Se o cluster de storage já estiver no Element 12,3 e o recurso VVols estiver ativado, você deverá atualizar para 12,3.2.
+* Não há alterações adicionais de funcionalidade ou correções de bugs no nó de gerenciamento 12,3.1. Se você já estiver executando o nó de gerenciamento 12,3, não será necessário atualizá-lo para 12,3.1.
+
+
+====
+* Se você estiver atualizando a partir do nó de gerenciamento 12,3: Não há alterações de funcionalidade adicionais ou correções de bugs no nó de gerenciamento 12,3.1. Se você já estiver executando o nó de gerenciamento 12,3, não será necessário atualizá-lo para 12,3.1.
+
+
+
+NOTE: Se você optar por continuar com uma atualização em um nó de gerenciamento 12,3 implantado usando o NDE, a atualização para o 12,3.x será concluída. No entanto, a atualização pode encontrar um erro durante a reinicialização. Se isso ocorrer, reinicie o nó de gerenciamento para que ele mostre corretamente 12,3.x.
+
+* Se você estiver atualizando do nó de gerenciamento 12,2: <<Atualize um nó de gerenciamento para a versão 12,3.x de 12,2>>
+* Se você estiver atualizando do nó de gerenciamento 12,0: <<Atualize um nó de gerenciamento para a versão 12,3.x de 12,0>>
+* Se você estiver atualizando do nó de gerenciamento 11,3, 11,5, 11,7 ou 11,8: <<Atualize um nó de gerenciamento para a versão 12,3.x de 11,3 a 11,8>>
+* Se você estiver atualizando do nó de gerenciamento 11,0 ou 11,1: <<Atualize um nó de gerenciamento para a versão 12,3.x de 11,1 ou 11,0>>
+* Se você estiver atualizando a partir de um nó de gerenciamento versão 10.x: <<Migração do nó de gerenciamento versão 10.x para 11.x>>
+
+
+Escolha a opção a seguir se você tiver *sequencialmente* atualizado (1) a versão dos serviços de gerenciamento e (2) a versão de armazenamento do elemento e quiser *manter* o nó de gerenciamento existente:
+
+
+NOTE: Se você não atualizar sequencialmente seus serviços de gerenciamento seguidos pelo armazenamento de elementos, não poderá reconfigurar a reautenticação usando este procedimento. Em vez disso, siga o procedimento de atualização apropriado.
+
+* Se você estiver mantendo o nó de gerenciamento existente: <<Reconfigure a autenticação usando a API REST do nó de gerenciamento>>
+
+
+
+
+== Atualize um nó de gerenciamento para a versão 12,3.x de 12,2
+
+Você pode fazer uma atualização no local do nó de gerenciamento da versão 12,2 para a versão 12,3.x sem precisar provisionar uma nova máquina virtual de nó de gerenciamento.
+
+
+NOTE: O nó de gerenciamento do Element 12,3.x é uma atualização opcional. Não é necessário para implantações existentes.
+
+.O que você vai precisar
+* A RAM da VM do nó de gerenciamento é 24GB.
+* O nó de gerenciamento que você pretende atualizar é a versão 12,0 e usa a rede IPv4. O nó de gerenciamento versão 12,3.x não suporta IPv6.
++
+
+TIP: Para verificar a versão do nó de gerenciamento, faça login no nó de gerenciamento e veja o número da versão do elemento no banner de login.
+
+* Você atualizou seu pacote de serviços de gerenciamento para a versão mais recente usando o Controle de nuvem híbrida (HCC) da NetApp. Pode aceder ao HCC a partir do seguinte IP: `https://<ManagementNodeIP>`
+* Se você estiver atualizando seu nó de gerenciamento para a versão 12,3.x, precisará dos serviços de gerenciamento 2.14.60 ou posterior para continuar.
+* Você configurou um adaptador de rede adicional (se necessário) usando as instruções do link:task_mnode_install_add_storage_NIC.html["Configurando uma NIC de armazenamento adicional"].
++
+
+NOTE: Os volumes persistentes podem exigir um adaptador de rede adicional se o eth0 não puder ser roteado para o SVIP. Configure um novo adaptador de rede na rede de armazenamento iSCSI para permitir a configuração de volumes persistentes.
+
+* Os nós de storage executam o Element 11,3 ou posterior.
+
+
+.Passos
+. Faça login na máquina virtual do nó de gerenciamento usando SSH ou acesso ao console.
+. Faça o download do https://mysupport.netapp.com/site/products/all/details/netapp-hci/downloads-tab["Nó de gestão ISO"^] para NetApp HCI do site de suporte da NetApp para a máquina virtual do nó de gerenciamento.
++
+
+NOTE: O nome do ISO é semelhante `solidfire-fdva-<Element release>-patchX-XX.X.X.XXXX.iso`
+
+. Verifique a integridade do download executando o md5sum no arquivo baixado e compare a saída com o que está disponível no site de suporte da NetApp para software NetApp HCI ou Element, como no exemplo a seguir:
++
+`sudo md5sum -b <path to iso>/solidfire-fdva-<Element release>-patchX-XX.X.X.XXXX.iso`
+
+. Monte a imagem ISO do nó de gerenciamento e copie o conteúdo para o sistema de arquivos usando os seguintes comandos:
++
+[listing]
+----
+sudo mkdir -p /upgrade
+----
++
+[listing]
+----
+sudo mount <solidfire-fdva-<Element release>-patchX-XX.X.X.XXXX.iso> /mnt
+----
++
+[listing]
+----
+sudo cp -r /mnt/* /upgrade
+----
+. Mude para o diretório inicial e desmonte o arquivo ISO de `/mnt`:
++
+[listing]
+----
+sudo umount /mnt
+----
+. Exclua o ISO para economizar espaço no nó de gerenciamento:
++
+[listing]
+----
+sudo rm <path to iso>/solidfire-fdva-<Element release>-patchX-XX.X.X.XXXX.iso
+----
+. No nó de gerenciamento que você está atualizando, execute o seguinte comando para atualizar a versão do SO do nó de gerenciamento. O script retém todos os arquivos de configuração necessários após a atualização, como o coletor Active IQ e as configurações de proxy.
++
+[listing]
+----
+sudo /sf/rtfi/bin/sfrtfi_inplace file:///upgrade/casper/filesystem.squashfs sf_upgrade=1
+----
++
+O nó de gerenciamento reinicializa com um novo sistema operacional após a conclusão do processo de atualização.
+
++
+
+NOTE: Depois de executar o comando sudo descrito nesta etapa, a sessão SSH é morta. O acesso ao console é necessário para monitoramento contínuo. Se não houver acesso ao console disponível ao executar a atualização, tente novamente o login SSH e verifique a conetividade após 15 a 30 minutos. Depois de fazer login, você pode confirmar a nova versão do sistema operacional no banner SSH que indica que a atualização foi bem-sucedida.
+
+. No nó de gerenciamento, execute o `redeploy-mnode` script para reter as configurações anteriores dos serviços de gerenciamento:
++
+
+NOTE: O script retém a configuração anterior dos serviços de gerenciamento, incluindo a configuração do serviço coletor Active IQ, controladores (vCenters) ou proxy, dependendo de suas configurações.
+
++
+[listing]
+----
+sudo /sf/packages/mnode/redeploy-mnode -mu <mnode user>
+----
+
+
+
+IMPORTANT: Se você já tinha desabilitado a funcionalidade SSH no nó de gerenciamento, você precisa link:task_mnode_ssh_management.html["Desative o SSH novamente"]no nó de gerenciamento recuperado. O recurso SSH que fornece link:task_mnode_enable_remote_support_connections.html["Acesso à sessão do túnel de suporte remoto (RST) do suporte da NetApp"] está habilitado no nó de gerenciamento por padrão.
+
+
+
+== Atualize um nó de gerenciamento para a versão 12,3.x de 12,0
+
+Você pode fazer uma atualização no local do nó de gerenciamento da versão 12,0 para a versão 12,3.x sem precisar provisionar uma nova máquina virtual de nó de gerenciamento.
+
+
+NOTE: O nó de gerenciamento do Element 12,3.x é uma atualização opcional. Não é necessário para implantações existentes.
+
+.O que você vai precisar
+* O nó de gerenciamento que você pretende atualizar é a versão 12,0 e usa a rede IPv4. O nó de gerenciamento versão 12,3.x não suporta IPv6.
++
+
+TIP: Para verificar a versão do nó de gerenciamento, faça login no nó de gerenciamento e veja o número da versão do elemento no banner de login.
+
+* Você atualizou seu pacote de serviços de gerenciamento para a versão mais recente usando o Controle de nuvem híbrida (HCC) da NetApp. Pode aceder ao HCC a partir do seguinte IP: `https://<ManagementNodeIP>`
+* Se você estiver atualizando seu nó de gerenciamento para a versão 12,3.x, precisará dos serviços de gerenciamento 2.14.60 ou posterior para continuar.
+* Você configurou um adaptador de rede adicional (se necessário) usando as instruções do link:task_mnode_install_add_storage_NIC.html["Configurando uma NIC de armazenamento adicional"].
++
+
+NOTE: Os volumes persistentes podem exigir um adaptador de rede adicional se o eth0 não puder ser roteado para o SVIP. Configure um novo adaptador de rede na rede de armazenamento iSCSI para permitir a configuração de volumes persistentes.
+
+* Os nós de storage executam o Element 11,3 ou posterior.
+
+
+.Passos
+. Configurar o nó de gerenciamento VM RAM:
++
+.. Desligue a VM do nó de gerenciamento.
+.. Altere a RAM da VM do nó de gerenciamento de 12GB GB para 24GB GB de RAM.
+.. Ligue a VM do nó de gerenciamento.
+
+
+. Faça login na máquina virtual do nó de gerenciamento usando SSH ou acesso ao console.
+. Faça o download do https://mysupport.netapp.com/site/products/all/details/netapp-hci/downloads-tab["Nó de gestão ISO"^] para NetApp HCI do site de suporte da NetApp para a máquina virtual do nó de gerenciamento.
++
+
+NOTE: O nome do ISO é semelhante `solidfire-fdva-<Element release>-patchX-XX.X.X.XXXX.iso`
+
+. Verifique a integridade do download executando o md5sum no arquivo baixado e compare a saída com o que está disponível no site de suporte da NetApp para software NetApp HCI ou Element, como no exemplo a seguir:
++
+`sudo md5sum -b <path to iso>/solidfire-fdva-<Element release>-patchX-XX.X.X.XXXX.iso`
+
+. Monte a imagem ISO do nó de gerenciamento e copie o conteúdo para o sistema de arquivos usando os seguintes comandos:
++
+[listing]
+----
+sudo mkdir -p /upgrade
+----
++
+[listing]
+----
+sudo mount <solidfire-fdva-<Element release>-patchX-XX.X.X.XXXX.iso> /mnt
+----
++
+[listing]
+----
+sudo cp -r /mnt/* /upgrade
+----
+. Mude para o diretório inicial e desmonte o arquivo ISO de `/mnt`:
++
+[listing]
+----
+sudo umount /mnt
+----
+. Exclua o ISO para economizar espaço no nó de gerenciamento:
++
+[listing]
+----
+sudo rm <path to iso>/solidfire-fdva-<Element release>-patchX-XX.X.X.XXXX.iso
+----
+. No nó de gerenciamento que você está atualizando, execute o seguinte comando para atualizar a versão do SO do nó de gerenciamento. O script retém todos os arquivos de configuração necessários após a atualização, como o coletor Active IQ e as configurações de proxy.
++
+[listing]
+----
+sudo /sf/rtfi/bin/sfrtfi_inplace file:///upgrade/casper/filesystem.squashfs sf_upgrade=1
+----
++
+O nó de gerenciamento reinicializa com um novo sistema operacional após a conclusão do processo de atualização.
+
++
+
+NOTE: Depois de executar o comando sudo descrito nesta etapa, a sessão SSH é morta. O acesso ao console é necessário para monitoramento contínuo. Se não houver acesso ao console disponível ao executar a atualização, tente novamente o login SSH e verifique a conetividade após 15 a 30 minutos. Depois de fazer login, você pode confirmar a nova versão do sistema operacional no banner SSH que indica que a atualização foi bem-sucedida.
+
+. No nó de gerenciamento, execute o `redeploy-mnode` script para reter as configurações anteriores dos serviços de gerenciamento:
++
+
+NOTE: O script retém a configuração anterior dos serviços de gerenciamento, incluindo a configuração do serviço coletor Active IQ, controladores (vCenters) ou proxy, dependendo de suas configurações.
+
++
+[listing]
+----
+sudo /sf/packages/mnode/redeploy-mnode -mu <mnode user>
+----
+
+
+
+IMPORTANT: O recurso SSH que fornece link:task_mnode_enable_remote_support_connections.html["Acesso à sessão do túnel de suporte remoto (RST) do suporte da NetApp"] é desativado por padrão nos nós de gerenciamento que executam os serviços de gerenciamento 2,18 e posteriores. Se você já ativou a funcionalidade SSH no nó de gerenciamento, talvez seja necessário fazer link:task_mnode_ssh_management.html["Desative o SSH novamente"]isso no nó de gerenciamento atualizado.
+
+
+
+== Atualize um nó de gerenciamento para a versão 12,3.x de 11,3 a 11,8
+
+Você pode fazer uma atualização no local do nó de gerenciamento da versão 11,3, 11,5, 11,7 ou 11,8 para a versão 12,3.x sem precisar provisionar uma nova máquina virtual de nó de gerenciamento.
+
+
+NOTE: O nó de gerenciamento do Element 12,3.x é uma atualização opcional. Não é necessário para implantações existentes.
+
+.O que você vai precisar
+* O nó de gerenciamento que você pretende atualizar é a versão 11,3, 11,5, 11,7 ou 11,8 e usa a rede IPv4. O nó de gerenciamento versão 12,3.x não suporta IPv6.
++
+
+TIP: Para verificar a versão do nó de gerenciamento, faça login no nó de gerenciamento e veja o número da versão do elemento no banner de login.
+
+* Você atualizou seu pacote de serviços de gerenciamento para a versão mais recente usando o Controle de nuvem híbrida (HCC) da NetApp. Pode aceder ao HCC a partir do seguinte IP: `https://<ManagementNodeIP>`
+* Se você estiver atualizando seu nó de gerenciamento para a versão 12,3.x, precisará dos serviços de gerenciamento 2.14.60 ou posterior para continuar.
+* Você configurou um adaptador de rede adicional (se necessário) usando as instruções do link:task_mnode_install_add_storage_NIC.html["Configurando uma NIC de armazenamento adicional"].
++
+
+NOTE: Os volumes persistentes podem exigir um adaptador de rede adicional se o eth0 não puder ser roteado para o SVIP. Configure um novo adaptador de rede na rede de armazenamento iSCSI para permitir a configuração de volumes persistentes.
+
+* Os nós de storage executam o Element 11,3 ou posterior.
+
+
+.Passos
+. Configurar o nó de gerenciamento VM RAM:
++
+.. Desligue a VM do nó de gerenciamento.
+.. Altere a RAM da VM do nó de gerenciamento de 12GB GB para 24GB GB de RAM.
+.. Ligue a VM do nó de gerenciamento.
+
+
+. Faça login na máquina virtual do nó de gerenciamento usando SSH ou acesso ao console.
+. Faça o download do https://mysupport.netapp.com/site/products/all/details/netapp-hci/downloads-tab["Nó de gestão ISO"^] para NetApp HCI do site de suporte da NetApp para a máquina virtual do nó de gerenciamento.
++
+
+NOTE: O nome do ISO é semelhante `solidfire-fdva-<Element release>-patchX-XX.X.X.XXXX.iso`
+
+. Verifique a integridade do download executando o md5sum no arquivo baixado e compare a saída com o que está disponível no site de suporte da NetApp para software NetApp HCI ou Element, como no exemplo a seguir:
++
+`sudo md5sum -b <path to iso>/solidfire-fdva-<Element release>-patchX-XX.X.X.XXXX.iso`
+
+. Monte a imagem ISO do nó de gerenciamento e copie o conteúdo para o sistema de arquivos usando os seguintes comandos:
++
+[listing]
+----
+sudo mkdir -p /upgrade
+----
++
+[listing]
+----
+sudo mount <solidfire-fdva-<Element release>-patchX-XX.X.X.XXXX.iso> /mnt
+----
++
+[listing]
+----
+sudo cp -r /mnt/* /upgrade
+----
+. Mude para o diretório inicial e desmonte o arquivo ISO de `/mnt`:
++
+[listing]
+----
+sudo umount /mnt
+----
+. Exclua o ISO para economizar espaço no nó de gerenciamento:
++
+[listing]
+----
+sudo rm <path to iso>/solidfire-fdva-<Element release>-patchX-XX.X.X.XXXX.iso
+----
+. No nó de gerenciamento 11,3, 11,5, 11,7 ou 11,8, execute o seguinte comando para atualizar a versão do SO do nó de gerenciamento. O script retém todos os arquivos de configuração necessários após a atualização, como o coletor Active IQ e as configurações de proxy.
++
+[listing]
+----
+sudo /sf/rtfi/bin/sfrtfi_inplace file:///upgrade/casper/filesystem.squashfs sf_upgrade=1
+----
++
+O nó de gerenciamento reinicializa com um novo sistema operacional após a conclusão do processo de atualização.
+
++
+
+NOTE: Depois de executar o comando sudo descrito nesta etapa, a sessão SSH é morta. O acesso ao console é necessário para monitoramento contínuo. Se não houver acesso ao console disponível ao executar a atualização, tente novamente o login SSH e verifique a conetividade após 15 a 30 minutos. Depois de fazer login, você pode confirmar a nova versão do sistema operacional no banner SSH que indica que a atualização foi bem-sucedida.
+
+. No nó de gerenciamento, execute o `redeploy-mnode` script para reter as configurações anteriores dos serviços de gerenciamento:
++
+
+NOTE: O script retém a configuração anterior dos serviços de gerenciamento, incluindo a configuração do serviço coletor Active IQ, controladores (vCenters) ou proxy, dependendo de suas configurações.
+
++
+[listing]
+----
+sudo /sf/packages/mnode/redeploy-mnode -mu <mnode user>
+----
+
+
+
+IMPORTANT: O recurso SSH que fornece link:task_mnode_enable_remote_support_connections.html["Acesso à sessão do túnel de suporte remoto (RST) do suporte da NetApp"] é desativado por padrão nos nós de gerenciamento que executam os serviços de gerenciamento 2,18 e posteriores. Se você já ativou a funcionalidade SSH no nó de gerenciamento, talvez seja necessário fazer link:task_mnode_ssh_management.html["Desative o SSH novamente"]isso no nó de gerenciamento atualizado.
+
+
+
+== Atualize um nó de gerenciamento para a versão 12,3.x de 11,1 ou 11,0
+
+Você pode fazer uma atualização no local do nó de gerenciamento de 11,0 ou 11,1 para a versão 12,3.x sem precisar provisionar uma nova máquina virtual de nó de gerenciamento.
+
+.O que você vai precisar
+* Os nós de storage executam o Element 11,3 ou posterior.
++
+
+NOTE: Use as mais recentes HealthTools para atualizar o software Element.
+
+* O nó de gerenciamento que você pretende atualizar é a versão 11,0 ou 11,1 e usa a rede IPv4. O nó de gerenciamento versão 12,3.x não suporta IPv6.
++
+
+TIP: Para verificar a versão do nó de gerenciamento, faça login no nó de gerenciamento e veja o número da versão do elemento no banner de login.
+
+* Para o nó de gerenciamento 11,0, a memória da VM precisa ser aumentada manualmente para 12GB GB.
+* Você configurou um adaptador de rede adicional (se necessário) usando as instruções para configurar uma NIC de armazenamento (eth1) no guia do usuário do nó de gerenciamento do produto.
++
+
+NOTE: Os volumes persistentes podem exigir um adaptador de rede adicional se o eth0 não puder ser roteado para o SVIP. Configure um novo adaptador de rede na rede de armazenamento iSCSI para permitir a configuração de volumes persistentes.
+
+
+
+.Passos
+. Configurar o nó de gerenciamento VM RAM:
++
+.. Desligue a VM do nó de gerenciamento.
+.. Altere a RAM da VM do nó de gerenciamento de 12GB GB para 24GB GB de RAM.
+.. Ligue a VM do nó de gerenciamento.
+
+
+. Faça login na máquina virtual do nó de gerenciamento usando SSH ou acesso ao console.
+. Faça o download do https://mysupport.netapp.com/site/products/all/details/netapp-hci/downloads-tab["Nó de gestão ISO"^] para NetApp HCI do site de suporte da NetApp para a máquina virtual do nó de gerenciamento.
++
+
+NOTE: O nome do ISO é semelhante `solidfire-fdva-<Element release>-patchX-XX.X.X.XXXX.iso`
+
+. Verifique a integridade do download executando o md5sum no arquivo baixado e compare a saída com o que está disponível no site de suporte da NetApp para software NetApp HCI ou Element, como no exemplo a seguir:
++
+[listing]
+----
+sudo md5sum -b <path to iso>/solidfire-fdva-<Element release>-patchX-XX.X.X.XXXX.iso
+----
+. Monte a imagem ISO do nó de gerenciamento e copie o conteúdo para o sistema de arquivos usando os seguintes comandos:
++
+[listing]
+----
+sudo mkdir -p /upgrade
+----
++
+[listing]
+----
+sudo mount solidfire-fdva-<Element release>-patchX-XX.X.X.XXXX.iso /mnt
+----
++
+[listing]
+----
+sudo cp -r /mnt/* /upgrade
+----
+. Mude para o diretório inicial e desmonte o arquivo ISO de /mnt:
++
+[listing]
+----
+sudo umount /mnt
+----
+. Exclua o ISO para economizar espaço no nó de gerenciamento:
++
+[listing]
+----
+sudo rm <path to iso>/solidfire-fdva-<Element release>-patchX-XX.X.X.XXXX.iso
+----
+. Execute um dos seguintes scripts com opções para atualizar a versão do SO do nó de gerenciamento. Execute apenas o script apropriado para sua versão. Cada script retém todos os arquivos de configuração necessários após a atualização, como Active IQ Collector e configurações de proxy.
++
+.. Em um nó de gerenciamento 11,1 (11,1.0,73), execute o seguinte comando:
++
+[listing]
+----
+sudo /sf/rtfi/bin/sfrtfi_inplace file:///upgrade/casper/filesystem.squashfs sf_upgrade=1 sf_keep_paths="/sf/packages/solidfire-sioc-4.2.3.2288 /sf/packages/solidfire-nma-1.4.10/conf /sf/packages/sioc /sf/packages/nma"
+----
+.. Em um nó de gerenciamento 11,1 (11,1.0,72), execute o seguinte comando:
++
+[listing]
+----
+sudo /sf/rtfi/bin/sfrtfi_inplace file:///upgrade/casper/filesystem.squashfs sf_upgrade=1 sf_keep_paths="/sf/packages/solidfire-sioc-4.2.1.2281 /sf/packages/solidfire-nma-1.4.10/conf /sf/packages/sioc /sf/packages/nma"
+----
+.. Em um nó de gerenciamento 11,0 (11,0.0,781), execute o seguinte comando:
++
+[listing]
+----
+sudo /sf/rtfi/bin/sfrtfi_inplace file:///upgrade/casper/filesystem.squashfs sf_upgrade=1 sf_keep_paths="/sf/packages/solidfire-sioc-4.2.0.2253 /sf/packages/solidfire-nma-1.4.8/conf /sf/packages/sioc /sf/packages/nma"
+----
++
+O nó de gerenciamento reinicializa com um novo sistema operacional após a conclusão do processo de atualização.
+
++
+
+NOTE: Depois de executar o comando sudo descrito nesta etapa, a sessão SSH é morta. O acesso ao console é necessário para monitoramento contínuo. Se não houver acesso ao console disponível ao executar a atualização, tente novamente o login SSH e verifique a conetividade após 15 a 30 minutos. Depois de fazer login, você pode confirmar a nova versão do sistema operacional no banner SSH que indica que a atualização foi bem-sucedida.
+
+
+
+. No nó de gerenciamento 12,3.x, execute o `upgrade-mnode` script para manter as configurações anteriores.
++
+
+NOTE: Se você estiver migrando de um nó de gerenciamento 11,0 ou 11,1, o script copiará o coletor Active IQ para o novo formato de configuração.
+
++
+.. Para um único cluster de storage gerenciado por um nó de gerenciamento existente 11,0 ou 11,1 com volumes persistentes:
++
+[listing]
+----
+sudo /sf/packages/mnode/upgrade-mnode -mu <mnode user> -pv <true - persistent volume> -pva <persistent volume account name - storage volume account>
+----
+.. Para um único cluster de storage gerenciado por um nó de gerenciamento existente 11,0 ou 11,1 sem volumes persistentes:
++
+[listing]
+----
+sudo /sf/packages/mnode/upgrade-mnode -mu <mnode user>
+----
+.. Para vários clusters de storage gerenciados por um nó de gerenciamento existente 11,0 ou 11,1 com volumes persistentes:
++
+[listing]
+----
+sudo /sf/packages/mnode/upgrade-mnode -mu <mnode user> -pv <true - persistent volume> -pva <persistent volume account name - storage volume account> -pvm <persistent volumes mvip>
+----
+.. Para vários clusters de storage gerenciados por um nó de gerenciamento existente 11,0 ou 11,1 sem volumes persistentes (o `-pvm` sinalizador é fornecer um dos endereços MVIP do cluster):
++
+[listing]
+----
+sudo /sf/packages/mnode/upgrade-mnode -mu <mnode user> -pvm <mvip for persistent volumes>
+----
+
+
+. (Para todas as instalações do NetApp HCI com plug-in do NetApp Element para vCenter Server) Atualize o plug-in do vCenter no nó de gerenciamento 12,3.x seguindo as etapas do link:task_vcp_upgrade_plugin.html["Atualize o plug-in Element para o vCenter Server"]tópico.
+. Localize o ID do ativo para sua instalação usando a API do nó de gerenciamento:
++
+.. A partir de um navegador, faça login na IU da API REST do nó de gerenciamento:
++
+... Vá para o MVIP de armazenamento e faça login. Esta ação faz com que o certificado seja aceito para a próxima etapa.
+
+
+.. Abra a IU da API REST do serviço de inventário no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/inventory/1/
+----
+.. Selecione *autorizar* e preencha o seguinte:
++
+... Introduza o nome de utilizador e a palavra-passe do cluster.
+... Introduza a ID do cliente como `mnode-client`.
+... Selecione *autorizar* para iniciar uma sessão.
+... Feche a janela.
+
+
+.. Na IU da API REST, selecione *GET ​/installations*.
+.. Selecione *Experimente*.
+.. Selecione *Executar*.
+.. A partir do corpo de resposta do código 200, copie o `id` para a instalação.
++
+Sua instalação tem uma configuração de ativo base que foi criada durante a instalação ou atualização.
+
+
+
+. Localize a etiqueta de hardware do seu nó de computação no vSphere:
++
+.. Selecione o host no navegador vSphere Web Client.
+.. Selecione a guia *Monitor* e *integridade do hardware*.
+.. O fabricante do BIOS do nó e o número do modelo estão listados. Copie e salve o valor para `tag` ser usado em uma etapa posterior.
+
+
+. Adicione um ativo de controlador do vCenter para monitoramento de HCI e controle de nuvem híbrida ao nó de gerenciamento ativos conhecidos:
++
+.. Selecione *POST /assets/ Asset_id/controllers* para adicionar um subativo de controlador.
+.. Selecione *Experimente*.
+.. Insira o ID do ativo base pai que você copiou para a área de transferência no campo *ASSET_id*.
+.. Insira os valores de carga útil necessários com o tipo `vCenter` e as credenciais do vCenter.
+.. Selecione *Executar*.
+
+
+. Adicione um ativo de nó de computação ao nó de gerenciamento ativos conhecidos:
++
+.. Selecione *POST /assets/(Asset_id)/Compute-nonos* para adicionar um subativo de nó de computação com credenciais para o ativo de nó de computação.
+.. Selecione *Experimente*.
+.. Insira o ID do ativo base pai que você copiou para a área de transferência no campo *ASSET_id*.
+.. Na carga útil, introduza os valores de carga útil necessários, conforme definido no separador modelo. Introduza `ESXi Host` como `type` e cole a etiqueta de hardware guardada durante uma etapa anterior para `hardware_tag`o .
+.. Selecione *Executar*.
+
+
+
+
+
+
+== Migração do nó de gerenciamento versão 10.x para 11.x
+
+Se você tiver um nó de gerenciamento na versão 10.x, não será possível atualizar de 10.x para 11.x. Em vez disso, você pode usar esse procedimento de migração para copiar a configuração do 10.x para um nó de gerenciamento 11,1 recém-implantado. Se o seu nó de gerenciamento estiver atualmente em 11,0 ou superior, você deve ignorar este procedimento. Você precisa do nó de gerenciamento 11,0 ou 11,1 e do link:task_upgrade_element_latest_healthtools.html["últimas HealthTools"] para atualizar o software Element de 10,3 até 11.x.
+
+.Passos
+. A partir da interface do VMware vSphere, implante o nó de gerenciamento 11,1 OVA e ligue-o.
+. Abra o console VM do nó de gerenciamento, que traz a interface do usuário do terminal (TUI).
+. Use a TUI para criar uma nova ID de administrador e atribuir uma senha.
+. No nó de gerenciamento TUI, faça login no nó de gerenciamento com a nova ID e senha e valide que ele funciona.
+. A partir do vCenter ou nó de gerenciamento TUI, obtenha o endereço IP do nó de gerenciamento 11,1 e navegue até o endereço IP na porta 9443 para abrir a IU do nó de gerenciamento.
++
+[listing]
+----
+https://<mNode 11.1 IP address>:9443
+----
+. No vSphere, selecione *Configuração do NetApp Element* > *Configurações do mNode*. (Em versões mais antigas, o menu de nível superior é *Configuração do NetApp SolidFire*.)
+. Selecione *ações* > *Limpar*.
+. Para confirmar, selecione *Yes*. O campo Status do mNode deve reportar não configurado.
++
+
+NOTE: Quando você acessa a guia *mNode Settings* pela primeira vez, o campo mNode Status pode ser exibido como *not configured* em vez do *UP* esperado; talvez você não consiga escolher *actions* > *clear*. Atualize o navegador. O campo Status do mNode exibirá *UP*.
+
+. Faça logout do vSphere.
+. Em um navegador da Web, abra o utilitário de Registro de nó de gerenciamento e selecione *QoSSIOC Service Management*:
++
+[listing]
+----
+https://<mNode 11.1 IP address>:9443
+----
+. Defina a nova senha do QoSSIOC.
++
+
+NOTE: A senha padrão é `solidfire`. Esta palavra-passe é necessária para definir a nova palavra-passe.
+
+. Selecione a guia *vCenter Plug-in Registration*.
+. Selecione *Atualizar Plug-in*.
+. Introduza os valores necessários. Quando terminar, selecione *UPDATE*.
+. Faça login no vSphere e selecione *Configuração do NetApp Element* > *Configurações do mNode*.
+. Selecione *ações* > *Configurar*.
+. Forneça o endereço IP do nó de gerenciamento, o ID do usuário do nó de gerenciamento (o nome do usuário é `admin`), a senha definida na guia *QoSSIOC Service Management* do utilitário de Registro e o ID e a senha do usuário do vCenter.
++
+No vSphere, a guia *mNode Settings* deve exibir o status mNode como *UP*, o que indica que o nó de gerenciamento 11,1 está registrado no vCenter.
+
+. A partir do utilitário de Registro de nó de gerenciamento (`https://<mNode 11.1 IP address>:9443`), reinicie o serviço SIOC de *QoSSIOC Service Management*.
+. Aguarde um minuto e verifique a guia *Configuração do NetApp Element* > *Configurações do mNode*. Isso deve exibir o status mNode como *UP*.
++
+Se o status for *PARA BAIXO*, verifique as permissões para `/sf/packages/sioc/app.properties`. O arquivo deve ter permissões de leitura, gravação e execução para o proprietário do arquivo. As permissões corretas devem aparecer da seguinte forma:
+
++
+[listing]
+----
+-rwx------
+----
+. Após o início do processo SIOC e o vCenter exibir o status mNode como *UP*, verifique os logs para o `sf-hci-nma` serviço no nó de gerenciamento. Não deve haver mensagens de erro.
+. (Somente para o nó de gerenciamento 11,1) SSH no nó de gerenciamento versão 11,1 com root Privileges e inicie o serviço NMA com os seguintes comandos:
++
+[listing]
+----
+# systemctl enable /sf/packages/nma/systemd/sf-hci-nma.service
+----
++
+[listing]
+----
+# systemctl start sf-hci-nma21
+----
+. Execute ações do vCenter para remover uma unidade, adicionar uma unidade ou reinicializar nós. Isso aciona alertas de storage, que devem ser reportados no vCenter. Se isso estiver funcionando, os alertas do sistema NMA estão funcionando conforme esperado.
+. Se o ONTAP Select estiver configurado no vCenter, configure alertas do ONTAP Select no NMA copiando o `.ots.properties` arquivo do nó de gerenciamento anterior para o arquivo do nó de gerenciamento versão 11,1 `/sf/packages/nma/conf/.ots.properties` e reinicie o serviço NMA usando o seguinte comando:
++
+[listing]
+----
+systemctl restart sf-hci-nma
+----
+. Verifique se o ONTAP Select está funcionando visualizando os logs com o seguinte comando:
++
+[listing]
+----
+journalctl -f | grep -i ots
+----
+. Configure o Active IQ fazendo o seguinte:
++
+.. Faça o SSH no nó de gerenciamento versão 11,1 e vá para `/sf/packages/collector` o diretório.
+.. Execute o seguinte comando:
++
+[listing]
+----
+sudo ./manage-collector.py --set-username netapp --set-password --set-mvip <MVIP>
+----
+.. Insira a senha da IU do nó de gerenciamento quando solicitado.
+.. Execute os seguintes comandos:
++
+[listing]
+----
+./manage-collector.py --get-all
+----
++
+[listing]
+----
+sudo systemctl restart sfcollector
+----
+.. Verifique `sfcollector` os logs para confirmar que está funcionando.
+
+
+. No vSphere, a guia *Configuração do NetApp Element* > *Configurações do mNode* deve exibir o status do mNode como *UP*.
+. Verifique se o NMA está relatando alertas do sistema e alertas do ONTAP Select.
+. Se tudo estiver funcionando como esperado, encerre e exclua o nó de gerenciamento 10.x VM.
+
+
+
+
+== Reconfigure a autenticação usando a API REST do nó de gerenciamento
+
+Você pode manter seu nó de gerenciamento existente se tiver atualizado sequencialmente (1) serviços de gerenciamento e (2) storage de elementos. Se você seguiu uma ordem de atualização diferente, consulte os procedimentos para atualizações de nós de gerenciamento no local.
+
+.Antes de começar
+* Você atualizou seus serviços de gerenciamento para 2.10.29 ou posterior.
+* Seu cluster de storage está executando o Element 12,0 ou posterior.
+* Seu nó de gerenciamento é 11,3 ou posterior.
+* Você atualizou seus serviços de gerenciamento sequencialmente, seguindo a atualização do storage Element. Não é possível reconfigurar a autenticação utilizando este procedimento, a menos que tenha concluído atualizações na sequência descrita.
+
+
+.Passos
+. Abra a IU da API REST do nó de gerenciamento no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/mnode
+----
+. Selecione *autorizar* e preencha o seguinte:
++
+.. Introduza o nome de utilizador e a palavra-passe do cluster.
+.. Introduza a ID do cliente como `mnode-client` se o valor ainda não estivesse preenchido.
+.. Selecione *autorizar* para iniciar uma sessão.
+
+
+. Na IU da API REST, selecione *POST /services/reconfigure-auth*.
+. Selecione *Experimente*.
+. Para o parâmetro *load_images*, `true` selecione .
+. Selecione *Executar*.
++
+O corpo de resposta indica que a reconfiguração foi bem-sucedida.
+
+
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

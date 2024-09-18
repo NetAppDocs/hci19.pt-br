@@ -1,0 +1,177 @@
+---
+sidebar: sidebar 
+permalink: docs/rn_compute_firmware_2.146.html 
+summary: Obtenha links para notas de lançamento dos pacotes de firmware que você pode baixar e aplicar aos nós do NetApp HCI. 
+keywords: netapp, hci, compute firmware 
+---
+= Notas de lançamento do pacote de firmware de computação 2,146
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+O pacote de firmware de computação para download contém os mais recentes aprimoramentos de recursos do BIOS e do BMC, correções de bugs e suporte de hardware para todos os nós de computação NetApp HCI compatíveis.
+
+
+
+== Novidades
+
+A versão 2,146 contém correções gerais de bugs.
+
+
+
+=== Componentes de firmware atualizados
+
+Este pacote de firmware contém as seguintes versões de firmware para componentes de hardware, com versões atualizadas em negrito:
+
+|===
+| Componente | H300E, H500E, H700E | H410C | H610C | H615C 
+
+
+| BIOS | *NAT3.4* | *NATP3.10* | *3B07* | *3B12.CO* 
+
+
+| BMC | *6.98.00* | 6.71.20 | *4.04.07* | *4.72.07* 
+
+
+| NIC / Mellanox | 14.25.10.20 | 14.25.10.20 | 14.25.10.20 | 14.25.10.20 
+|===
+
+
+=== Alterações nos componentes do firmware
+
+Aqui estão os detalhes das melhorias e alterações incluídas em cada novo componente de firmware:
+
+|===
+| Componente de nó e firmware | Melhorias e mudanças 
+
+
+| *H300E/H500E/H700E NA3,4*  a| 
+* Ativar reparação pós-pacote (PPR)
+* Microcódigo IPU 2020,2
+
+
+
+
+| *H410C NATP3,10*  a| 
+* Microcódigo IPU 2020,2
+
+
+
+
+| *H610C 3B07*  a| 
+* Melhorar o registo de eventos PPR no SEL
+* Microcódigo IPU 2020,2
+
+
+
+
+| *H615C 3B12.CO*  a| 
+* Melhorar o registo de eventos PPR no SEL
+* Microcódigo IPU 2020,2
+
+
+
+
+| *H300E/H500E/H700E 6.98.00*  a| 
+* Comprimento do campo ID de VINCULAÇÃO LDAP a 128 carateres
+* Desative o TLS 1,0 e o TLS 1,1
+
+
+
+
+| *H610C 4.04.07*  a| 
+* Análise de log de eventos PPR do BIOS no BMC SEL
+* Comprimento do campo ID de VINCULAÇÃO LDAP a 128 carateres
+* Group Domain of LDAP length to 128 chars
+
+
+
+
+| *H615C 4.72.07*  a| 
+* Análise de log de eventos PPR do BIOS no BMC SEL
+* Group Domain of LDAP length to 128 chars
+
+
+|===
+
+
+=== Compatibilidade do driver de firmware da placa de rede Mellanox
+
+As versões 14.25.1020 e 14.24.1000 do firmware Mellanox atualizadas são compatíveis apenas com as seguintes versões do driver VMware ESXi:
+
+* *ESXi 7,0*: H300E/H500E/H700E/H410C: Versão 4.19.16.1
+* *ESXi 7,0*: H610C/H615C: Versão 4.17.15.16
+* *ESXi 6,7*: Versão 4.17.15.16
+* *ESXi 6,5*: Versão 4.16.13.5
+
+
+
+NOTE: Antes de atualizar para a versão 2,146, verifique a versão atual do driver ESXi. Se o driver estiver desatualizado, atualize o driver primeiro. Em seguida, atualize o firmware de computação para a versão 2,146 para os seus nós de computação. Visite link:task_hcc_upgrade_compute_node_drivers.html["Atualizar drivers de nós de computação"] para obter instruções sobre como atualizar seus drivers de nó de computação, que incluem o driver ESXi.
+
+Embora o mecanismo de implantação do NetApp 1.8P1 não implante o ESXi versão 7,0, o ESXi 7,0 é compatível como uma opção de instalação automática ou atualização manual. Quando você instala ou atualiza manualmente os sistemas operacionais host, o NetApp não pode controlar os drivers e o firmware desses sistemas operacionais.
+
+
+
+== Baixar Compute firmware Bundle 2,146
+
+Para fazer o download do pacote de firmware do Compute:
+
+. Vá para https://mysupport.netapp.com/site/products/all/details/netapp-hci/downloads-tab["A página de downloads do NetApp HCI"^].
+. Escolha *Compute_firmware_Bundle* na lista suspensa.
+. Clique em *Go*.
+
+
+Visite link:task_hcc_upgrade_compute_node_firmware.html#use-the-baseboard-management-controller-bmc-user-interface-ui["Atualize o firmware do nó de computação"] para obter instruções sobre como atualizar o firmware do nó de computação.
+
+
+
+== Vulnerabilidades de segurança resolvidas
+
+A seguir estão vulnerabilidades de segurança que foram resolvidas nesta versão:
+
+* CVE-2019-20636
+* CVE-2019-11599, CVE-2020-12826, CVE-2020-12464, CVE-2020-12114
+* CVE-2019-0151, CVE-2019-0123, CVE-2019-0117
+* CVE-2016-3706, CVE-2011-5320, CVE-2015-8984, CVE-2015-8983, CVE-2015-8982, CVE-2006-7254, CVE-2005-3590
+* CVE-2020-20811, CVE-2020-20812
+* CVE-2020-25641
+* CVE-2020-14386, CVE-2020-14314, CVE-2020-25641, CVE-2020-1438, CVE-2020-14314, CVE-2020-25641
+* CVE-2020-8738, CVE-2020-8764, CVE-2020-0590, CVE-2020-8705
+* CVE-2020-0587, CVE-2020-0591, CVE-2020-0592, CVE-2020-8740
+* CVE-2020-0592, CVE-2020-0588, CVE-2020-8696
+
+
+
+
+== Problemas resolvidos e conhecidos
+
+Consulte o https://mysupport.netapp.com/site/bugs-online/product["Ferramenta Bugs Online"^] para obter detalhes sobre os problemas que foram resolvidos e sobre quaisquer problemas novos.
+
+
+
+=== Aceder à ferramenta Bol
+
+. Navegue até o  https://mysupport.netapp.com/site/bugs-online/product["Ferramenta Bol"^] e selecione *Element Software* na lista suspensa:
++
+image::bol_dashboard.png[Notas de lançamento do pacote de firmware de armazenamento]
+
+. No campo de pesquisa de palavra-chave, digite "Compute firmware Bundle" e clique em *New Search*:
++
+image::compute_firmware_bundle_choice.png[Notas de lançamento do pacote de firmware de armazenamento]
+
+. Uma lista de bugs resolvidos ou abertos é exibida. Você pode refinar ainda mais os resultados, conforme mostrado:
++
+image::bol_list_bugs_found.png[Notas de lançamento do pacote de firmware de armazenamento]
+
+
+
+[discrete]
+== Encontre mais informações
+
+* link:firmware_driver_versions.html["Versões de firmware e driver ESXi compatíveis para versões de NetApp HCI e firmware para nós de storage NetApp HCI"]
+

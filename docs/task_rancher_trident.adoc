@@ -1,0 +1,81 @@
+---
+sidebar: sidebar 
+permalink: docs/task_rancher_trident.html 
+summary: Saiba mais sobre como instalar o Trident depois de instalar o Rancher no NetApp HCI. O Trident permite que você crie, gerencie e interaja com volumes de storage persistentes no formato padrão do Kubernetes que você já conhece. 
+keywords: netapp, hci, rancher, install, trident, persistent volumes, pv 
+---
+= Instale o Trident
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Saiba mais sobre como instalar o Trident depois de instalar o Rancher no NetApp HCI. O Trident é um orquestrador de storage que se integra ao Docker e Kubernetes, além de plataformas desenvolvidas com base nessas tecnologias, como o Red Hat OpenShift, Rancher e IBM Cloud Private. O objetivo do Trident é tornar o provisionamento, a conexão e o consumo de storage transparentes e sem atrito para as aplicações. O Trident é um projeto de código aberto totalmente suportado mantido pela NetApp. O Trident permite que você crie, gerencie e interaja com volumes de storage persistentes no formato padrão do Kubernetes que você já conhece.
+
+
+TIP: Para obter mais informações sobre o Trident, consulte https://netapp-trident.readthedocs.io/en/stable-v20.10/introduction.html["Documentação do Trident"^].
+
+.O que você vai precisar
+* Você instalou o Rancher no NetApp HCI.
+* Você implantou os clusters de usuários.
+* Configurou as redes de cluster de utilizadores para o Trident. link:task_trident_configure_networking.html["Habilite o suporte do Trident para clusters de usuários"]Consulte para obter instruções.
+* Você concluiu as etapas de pré-requisito necessárias para a preparação do nó de trabalho para o Trident. Consulte https://netapp-trident.readthedocs.io/en/stable-v20.10/kubernetes/operations/tasks/worker.html["Documentação do Trident"^] .
+
+
+.Sobre esta tarefa
+O catálogo do instalador do Trident é instalado como parte da instalação do Rancher usando o Controle de nuvem híbrida da NetApp. Nesta tarefa, você usa o catálogo do instalador para instalar e configurar o Trident. Como parte da instalação do Rancher, o NetApp fornece um modelo de nó. Se você não estiver planejando usar o modelo de nó fornecido pelo NetApp e quiser provisionar no RHEL ou CentOS, pode haver requisitos adicionais. Se você alterar o nó de trabalho para RHEL ou CentOS, há vários pré-requisitos que devem ser atendidos. Consulte https://netapp-trident.readthedocs.io/en/stable-v20.10/kubernetes/operations/tasks/worker.html["Documentação do Trident"^] .
+
+.Passos
+. Na IU do Rancher, selecione um projeto para o cluster de usuários.
++
+
+TIP: Para obter informações sobre projetos e namespaces, consulte o https://rancher.com/docs/rancher/v2.x/en/cluster-admin/projects-and-namespaces/["Documentação do fazendeiro"^].
+
+. Selecione *Apps* e selecione *Launch*.
++
+image::rancher-install-trident.jpg[Mostra a navegação para iniciar o instalador do Trident.]
+
+. Na página *Catálogo*, selecione o instalador do Trident.
++
+image::rancher-trident.jpg[O instalador do Trident na página Catálogo no Rancher.]
+
++
+
+NOTE: Na página que se abre, você pode selecionar a seta *descrições detalhadas* para saber mais sobre o aplicativo Trident e também para encontrar o link para o https://netapp-trident.readthedocs.io/en/stable-v20.10/introduction.html["Documentação do Trident"^].
+
+. Selecione a seta *Opções de configurações* e insira as informações de configuração de credenciais e armazenamento.
++
+image::rancher-trident-config.jpg[Mostra as informações de configuração de armazenamento que você deve inserir para o Trident.]
+
++
+
+NOTE: O locatário de storage padrão é NetApp HCI. Pode alterar este valor. Você também pode alterar o nome do backend. No entanto, não altere o valor padrão do driver de armazenamento, que é *SolidFire-san*.
+
+. Selecione *Launch* (Iniciar).
++
+Isso instala a carga de trabalho do Trident no namespace *Trident*.
+
+. Selecione *recursos > cargas de trabalho* e verifique se o namespace *Trident* inclui os seguintes componentes:
++
+image::rancher-trident-workload.jpg[Mostra os componentes do namespace do Trident.]
+
+. (Opcional) Selecione *Storage* para o cluster de usuários para ver as classes de armazenamento que você pode usar para seus volumes persistentes.
++
+
+NOTE: As três classes de armazenamento são *SolidFire-gold*, *SolidFire-silver* e *SolidFire-bronze*. Você pode tornar uma dessas classes de armazenamento padrão selecionando o ícone na coluna *padrão*.
+
+
+
+[discrete]
+== Encontre mais informações
+
+* link:task_trident_configure_networking.html["Habilite o suporte do Trident para clusters de usuários"]
+* https://rancher.com/docs/rancher/v2.x/en/overview/architecture/["Documentação do rancher sobre arquitetura"^]
+* https://rancher.com/docs/rancher/v2.x/en/overview/concepts/["Terminologia do Kubernetes para Rancher"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+

@@ -1,0 +1,59 @@
+---
+sidebar: sidebar 
+permalink: docs/task_mnode_enable_remote_support_connections.html 
+summary: Você pode usar o nó de gerenciamento para habilitar o acesso ao suporte da NetApp para solução de problemas. 
+keywords: netapp, mnode, management node, connect to support, support tunnel, rst 
+---
+= Inicie uma sessão remota de suporte do NetApp
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Se você precisar de suporte técnico para o seu sistema NetApp HCI, o suporte NetApp pode se conetar remotamente ao seu sistema. Para iniciar uma sessão e obter acesso remoto, o suporte da NetApp pode abrir uma conexão SSH (Secure Shell) reversa ao seu ambiente.
+
+Você pode abrir uma porta TCP para uma conexão de túnel reverso SSH com o suporte do NetApp. Essa conexão permite que o suporte da NetApp faça login no nó de gerenciamento.
+
+.Antes de começar
+* Para os serviços de gerenciamento 2,18 e posteriores, o recurso de acesso remoto é desativado no nó de gerenciamento por padrão. Para ativar a funcionalidade de acesso remoto, link:task_mnode_ssh_management.html["Gerencie a funcionalidade SSH no nó de gerenciamento"]consulte .
+* Se o nó de gerenciamento estiver atrás de um servidor proxy, as seguintes portas TCP serão necessárias no arquivo sshd.config:
++
+[cols="15,25,60"]
+|===
+| Porta de TCP | Descrição | Direção da ligação 
+
+
+| 443 | Chamadas de API/HTTPS para reencaminhamento de portas via túnel de suporte aberto para a interface da Web | Nó de gerenciamento para nós de storage 
+
+
+| 22 | Acesso SSH ao login | Nó de gerenciamento para nós de storage ou de nós de storage para nó de gerenciamento 
+|===
+
+
+.Passos
+* Faça login no nó de gerenciamento e abra uma sessão de terminal.
+* Em um prompt, digite o seguinte:
++
+`rst -r  sfsupport.solidfire.com -u element -p <port_number>`
+
+* Para fechar o túnel de suporte remoto, introduza o seguinte:
++
+`rst --killall`
+
+* (Opcional) Desativar link:task_mnode_ssh_management.html["funcionalidade de acesso remoto"]novamente.
++
+
+NOTE: O SSH permanece ativado se você não o desativar. A configuração ativada por SSH persiste no nó de gerenciamento por meio de atualizações e atualizações até que seja desabilitada manualmente.
+
+
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

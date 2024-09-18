@@ -1,0 +1,77 @@
+---
+sidebar: sidebar 
+permalink: docs/task_nde_review_deploy.html 
+summary: Saiba como revisar sua configuração final e implantar o NetApp HCI com essas configurações. 
+keywords: netapp, hci, deployment, review, deploy 
+---
+= Revise e implante a configuração
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Você pode revisar as informações fornecidas antes de iniciar a implantação. Você também pode corrigir qualquer informação incorreta ou incompleta antes de prosseguir.
+
+
+NOTE: Durante a implantação, o processo de instalação do nó de gerenciamento cria volumes com nomes que começam com `NetApp-HCI-` no cluster de storage Element e uma conta SolidFire que começa com o `tenant_` nome . Não exclua esses volumes ou contas; isso causará uma perda na funcionalidade de gerenciamento.
+
+.Passos
+. Opcional: Selecione o ícone *Download* para fazer o download das informações de instalação no formato CSV. Você pode salvar esse arquivo e consultar mais tarde para obter informações de configuração.
++
+
+NOTE: Você pode importar o arquivo CSV como um perfil de instalação na página *Perfil de instalação* do mecanismo de implantação do NetApp (EQM), se necessário durante uma instalação futura.
+
+. Expanda cada seção e revise as informações. Para expandir todas as seções de uma só vez, selecione *expandir tudo*.
+. Opcional: Para fazer alterações nas informações em qualquer seção exibida:
++
+.. Selecione *Editar* na seção correspondente.
+.. Faça as alterações necessárias.
+.. Selecione *continuar* até chegar à página *Revisão*. Suas configurações anteriores são salvas em cada página.
+.. Repita os passos 2 e 3 para efetuar quaisquer outras alterações necessárias.
+
+
+. Se você não quiser enviar estatísticas de cluster e informações de suporte para servidores SolidFire Active IQ hospedados em NetApp, desmarque a caixa de seleção final.
++
+Isto desativa a monitorização de diagnóstico e saúde em tempo real para o NetApp HCI. A desativação desse recurso remove a capacidade do NetApp de oferecer suporte e monitorar proativamente o NetApp HCI para detetar e resolver problemas antes que a produção seja afetada.
+
+. Se todas as informações estiverem corretas, selecione *Iniciar implantação*.
++
+É apresentada uma caixa de diálogo. No caso de problemas de conetividade de rede ou perda de energia durante o processo de configuração final, ou se a sessão do navegador for perdida, você pode copiar o URL exibido na caixa de diálogo e usá-lo para navegar até a página de progresso da configuração final.
+
+. Revise as informações na caixa de diálogo e selecione *Copiar para Área de transferência* para copiar o URL para a área de transferência.
+. Salve o URL em um arquivo de texto no computador.
+. Quando estiver pronto para prosseguir com a implantação, selecione *OK*.
++
+A implantação é iniciada e uma página de progresso é exibida. Não feche a janela do navegador nem navegue para longe da página de progresso até que a implantação esteja concluída. Se a sessão do navegador for perdida por qualquer motivo, você pode navegar até o URL que você copiou anteriormente (e aceitar quaisquer avisos de segurança que aparecem) para recuperar o acesso à página de progresso da configuração final.
+
++
+
+NOTE: Se a implantação falhar, salve qualquer texto de mensagem de erro e entre em Contato com o suporte da NetApp.
+
++
+Após a conclusão da implantação, os nós de computação podem reinicializar mais de uma vez antes de se preparar para o serviço.
+
+
+
+.Depois de terminar
+Comece a usar o NetApp HCI selecionando *Launch vSphere*.
+
+[NOTE]
+====
+* Para instalações do NetApp HCI usando o vSphere 6,7, este link lança a interface da Web do HTML5 vSphere. Para instalações que usam o vSphere 6,5, este link inicia a interface da Web do Adobe Flash vSphere.
+* Em duas configurações de nós de storage ou três, o NDE configura os nós de testemunha para usar o armazenamento de dados local nos nós de computação. Como resultado, o vSphere Client exibe dois avisos *uso do datastore no disco*. Para continuar, selecione o link *Reset to Green* em cada aviso.
+
+
+====
+
+
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/element-software/index.html["Documentação do software SolidFire e Element"^]
+

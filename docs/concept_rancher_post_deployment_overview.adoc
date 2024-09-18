@@ -1,0 +1,33 @@
+---
+sidebar: sidebar 
+permalink: docs/concept_rancher_post_deployment_overview.html 
+summary: Saiba mais sobre as tarefas que você pode precisar executar depois de instalar o Rancher no NetApp HCI. 
+keywords: netapp, hci, Rancher, install, post installation, requirements, tasks 
+---
+= Visão geral das tarefas pós-implantação
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Depois de implantar o Rancher no NetApp HCI, você deve continuar com as atividades pós-implantação.
+
+* link:task_rancher_ensure_rancher_support_parity.html["Garanta a paridade do suporte do Rancher"]
+* link:task_rancher_config_anti_affinity.html["Aprimorar a resiliência da VM Rancher"]
+* link:task_rancher_enable_monitoring.html["Configurar a monitorização"]
+* link:task_rancher_trident.html["Instale o Trident"]
+* link:task_trident_configure_networking.html["Habilite o suporte do Trident para clusters de usuários"]
+
+
+[discrete]
+== Encontre mais informações
+
+* https://rancher.com/docs/rancher/v2.x/en/overview/architecture/["Documentação do rancher sobre arquitetura"^]
+* https://rancher.com/docs/rancher/v2.x/en/overview/concepts/["Terminologia do Kubernetes para Rancher"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+

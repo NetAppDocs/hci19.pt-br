@@ -1,0 +1,42 @@
+---
+sidebar: sidebar 
+permalink: docs/task_rancher_manage.html 
+summary: Saiba mais sobre como gerenciar Rancher no NetApp HCI. 
+keywords: netapp, hci, rancher, deploy, cluster, kubernetes, control plane, monitor, user cluster, workload 
+---
+= Gerenciar Rancher no NetApp HCI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Depois de implantar o Rancher no NetApp HCI, você pode visualizar os URLs e o status do cluster do servidor Rancher. Você também pode excluir o servidor Rancher.
+
+
+
+== Identificar URLs e status do cluster do servidor Rancher
+
+Você pode identificar URLs de cluster de servidor Rancher e determinar o status do servidor.
+
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador de cluster de storage do NetApp HCI ou Element.
+. No Painel, selecione o ícone Opções no canto superior direito e selecione *Configurar*.
++
+image::hcc_configure.png[Página Configuração do rancher]
+
++
+A página Rancher Server clusters exibe uma lista de clusters de servidor Rancher que foram implantados, o URL associado e o status.
+
+
+
+[discrete]
+== Encontre mais informações
+
+* link:task_rancher_remove_deployment.html["Remova o Rancher"]
+* https://rancher.com/docs/rancher/v2.x/en/overview/architecture/["Documentação do rancher sobre arquitetura"^]
+* https://rancher.com/docs/rancher/v2.x/en/overview/concepts/["Terminologia do Kubernetes para Rancher"^]
+* https://www.netapp.com/us/documentation/hci.aspx["Página de recursos do NetApp HCI"^]
+

@@ -1,0 +1,174 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hcc_collectlogs.html 
+summary: Você pode usar o Controle de nuvem híbrida da NetApp para coletar logs da instalação do NetApp HCI ou do Element para ajudar na solução de problemas. 
+keywords: netapp, hci, logs, collection, troubleshooting, monitor 
+---
+= Recolha registos para resolução de problemas
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Se tiver problemas com a instalação do armazenamento all-flash NetApp HCI ou SolidFire, pode recolher registos para enviar para o suporte da NetApp para ajudar no diagnóstico. Você pode usar o Controle de nuvem híbrida da NetApp ou a API REST para coletar logs em sistemas NetApp HCI ou Element.
+
+.O que você vai precisar
+* Verifique se a versão do cluster de storage está executando o software NetApp Element 11,3 ou posterior.
+* Certifique-se de que implantou um nó de gerenciamento executando a versão 11,3 ou posterior.
+
+
+.Opções de coleção de registos
+Escolha uma das seguintes opções:
+
+* <<Use o controle de nuvem híbrida da NetApp para coletar logs>>
+* <<Use a API REST para coletar logs>>
+
+
+
+
+== Use o controle de nuvem híbrida da NetApp para coletar logs
+
+Você pode acessar a área de coleta de logs no Painel de controle de nuvem híbrida da NetApp.
+
+.Passos
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web. Por exemplo:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador de cluster de storage do NetApp HCI ou Element.
+. No Dashboard, clique no menu no canto superior direito.
+. Selecione *Collect Logs*.
++
+A página *Collect Logs* é exibida. Se já tiver recolhido registos antes, pode transferir o pacote de registos existente ou iniciar uma nova coleção de registos.
+
+. Selecione um intervalo de datas no menu suspenso *intervalo de datas* para especificar quais datas os logs devem incluir.
++
+Se especificar uma data de início personalizada, pode selecionar a data para iniciar o intervalo de datas. Os registos serão recolhidos a partir dessa data até à hora atual.
+
+. Na seção *Log Collection*, selecione os tipos de arquivos de log que o pacote de log deve incluir.
++
+Para logs de storage e computação, você pode expandir a lista de nós de computação ou storage e selecionar nós individuais para coletar logs (ou todos os nós da lista).
+
+. Clique em *Collect Logs* para iniciar a coleta de logs.
++
+A coleção de logs é executada em segundo plano e a página mostra o progresso.
+
++
+
+NOTE: Dependendo dos logs que você coletar, a barra de progresso pode permanecer em uma determinada porcentagem por vários minutos, ou progredir muito lentamente em alguns pontos.
+
+. Clique em *Download Logs* para baixar o pacote de log.
++
+O pacote de log está em um formato de arquivo .tgz UNIX compactado.
+
+
+
+
+
+== Use a API REST para coletar logs
+
+Você pode usar a API REST para coletar logs do NetApp HCI ou do Element.
+
+.Passos
+. Localize a ID do cluster de armazenamento:
++
+.. Abra a IU da API REST do nó de gerenciamento no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/logs/1/
+----
+.. Clique em *autorizar* e complete o seguinte:
++
+... Introduza o nome de utilizador e a palavra-passe do cluster.
+... Introduza a ID do cliente como `mnode-client` se o valor ainda não estivesse preenchido.
+... Clique em *autorizar* para iniciar uma sessão.
+
+
+
+
+. Coletar logs do NetApp HCI ou Element:
++
+.. Clique em *POST /bundle*.
+.. Clique em *Experimente*.
+.. Altere os valores dos seguintes parâmetros no campo *corpo da solicitação* dependendo do tipo de logs que você precisa coletar e para qual intervalo de tempo:
++
+|===
+| Parâmetro | Tipo | Descrição 
+
+
+| `modifiedSince` | Cadeia de carateres de data | Inclua somente logs modificados após essa data e hora. Por exemplo, o valor "2020-07-14T20:19:00,000Z" define uma data de início de 14 de julho de 2020 às 20:19 UTC. 
+
+
+| `computeLogs` | Booleano | Defina este parâmetro para `true` incluir logs de nós de computação. 
+
+
+| `computeIds` | Array UUUID | Se `computeLogs` estiver definido como `true`, preencha este parâmetro com as IDs de ativos de nó de gerenciamento dos nós de computação para limitar a coleção de log a esses nós de computação específicos. Use o `GET https://<ManagementNodeIP>/logs/1/bundle/options` endpoint para ver todas as IDs de nó possíveis que você pode usar. 
+
+
+| `mnodeLogs` | Booleano | Defina este parâmetro como `true` para incluir registos de nó de gestão. 
+
+
+| `storageCrashDumps` | Booleano | Defina este parâmetro para `true` incluir logs de depuração de falhas do nó de armazenamento. 
+
+
+| `storageLogs` | Booleano | Defina este parâmetro como `true` para incluir registos de nó de armazenamento. 
+
+
+| `storageNodeIds` | Array UUUID | Se `storageLogs` estiver definido como `true`, preencha este parâmetro com as IDs de nó de cluster de armazenamento para limitar a coleção de logs a esses nós de armazenamento específicos. Use o `GET https://<ManagementNodeIP>/logs/1/bundle/options` endpoint para ver todas as IDs de nó possíveis que você pode usar. 
+|===
+.. Clique em *Executar* para iniciar a coleção de logs. A resposta deve retornar uma resposta semelhante à seguinte:
++
+[listing]
+----
+{
+  "_links": {
+    "self": "https://10.1.1.5/logs/1/bundle"
+  },
+  "taskId": "4157881b-z889-45ce-adb4-92b1843c53ee",
+  "taskLink": "https://10.1.1.5/logs/1/bundle"
+}
+----
+
+
+. Verifique o estado da tarefa de recolha de registos:
++
+.. Clique em *GET /bundle*.
+.. Clique em *Experimente*.
+.. Clique em *Executar* para retornar um status da tarefa de coleta.
+.. Role até a parte inferior do corpo de resposta.
++
+Você deve ver um `percentComplete` atributo detalhando o progresso da coleção. Se a coleção estiver completa, o `downloadLink` atributo contém o link de download completo, incluindo o nome do arquivo do pacote de log.
+
+.. Copie o nome do arquivo no final `downloadLink` do atributo.
+
+
+. Faça o download do pacote de log coletado:
++
+.. Clique em *GET /bundle/
+.. Clique em *Experimente*.
+.. Cole o nome do arquivo copiado anteriormente no `filename` campo de texto do parâmetro.
+.. Clique em *Executar*.
++
+Após a execução, um link de download aparece na área do corpo de resposta.
+
+.. Clique em *Download file* e salve o arquivo resultante no seu computador.
++
+O pacote de log está em um formato de arquivo .tgz UNIX compactado.
+
+
+
+
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

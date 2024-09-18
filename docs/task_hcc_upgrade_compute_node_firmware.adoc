@@ -1,0 +1,572 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hcc_upgrade_compute_node_firmware.html 
+summary: Como parte de uma atualização do sistema NetApp HCI, você atualiza o firmware do nó de computação. 
+keywords: netapp, hci, on premise, cluster, element, compute node, vmware, upgrade firmware 
+---
+= Atualizar o firmware do nó de computação
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Para nós de computação da série H, você pode atualizar o firmware para componentes de hardware, como BMC, BIOS e NIC. Para atualizar o firmware do nó de computação, você pode usar a IU do Controle de nuvem híbrida da NetApp, a API REST, uma unidade USB com a imagem de firmware mais recente ou a IU do BMC.
+
+Após a atualização, o nó de computação inicializa no ESXi e funciona como antes, mantendo a configuração.
+
+.O que você vai precisar
+* *Compute drivers*: Você atualizou seus drivers de nó de computação. Se os drivers de nó de computação não forem compatíveis com o novo firmware, a atualização não será iniciada. Consulte o https://mysupport.netapp.com/matrix["Ferramenta de Matriz de interoperabilidade (IMT)"^] para obter informações sobre compatibilidade de driver e firmware e consulte o mais recente link:rn_relatedrn.html["notas de versão do firmware do nó de computação"] para obter informações importantes sobre firmware e driver de última geração.
+* *Admin Privileges*: Você tem permissões de administrador de cluster e administrador do BMC para executar a atualização.
+* *Portas do sistema*: Se você estiver usando o Controle de nuvem híbrida da NetApp para atualizações, você garantiu que as portas necessárias estejam abertas. Consulte link:hci_prereqs_required_network_ports.html["Portas de rede"] para obter mais informações.
+* *Versões mínimas de BMC e BIOS*: O nó que você pretende atualizar usando o Controle de nuvem híbrida da NetApp atende aos seguintes requisitos mínimos:
++
+[cols="3*"]
+|===
+| Modelo | Versão mínima do BMC | Versão mínima do BIOS 
+
+
+| H410C​ | Todas as versões suportadas (sem necessidade de atualização)​ | Todas as versões suportadas (sem necessidade de atualização)​ 
+
+
+| H610C​ | 3.96.07​ | 3B01 
+
+
+| H615C​ | 4.68.07 | 3B08.CO ​ ​ 
+|===
++
+
+NOTE: Os nós de computação do H615C devem atualizar o firmware do BMC para a versão 4,68 usando o link:rn_compute_firmware_2.27.html["pacote de firmware de computação 2,27"] para permitir que o Controle de nuvem híbrida da NetApp execute futuras atualizações de firmware.
+
++
+
+NOTE: Para obter uma matriz completa de firmware e firmware de driver para seu hardware, link:firmware_driver_versions.html["Versões de firmware e driver ESXi compatíveis"]consulte .
+
+* *Ordem de inicialização do BIOS*: Altere manualmente a ordem de inicialização na configuração do BIOS para cada nó para garantir `USB CD/DVD` que apareça na lista de inicialização. Consulte este link:https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/NetApp_HCI/Known_issues_and_workarounds_for_Compute_Node_upgrades#BootOrder["artigo"^] documento para obter mais informações.
+* *Credenciais do BMC*: Atualize as credenciais que o Controle de nuvem híbrida da NetApp usa para se conetar ao nó de computação BMC. Isso pode ser feito usando o controle de nuvem híbrida da NetApp link:task_hcc_edit_bmc_info.html#use-netapp-hybrid-cloud-control-to-edit-bmc-information["UI"]ou link:task_hcc_edit_bmc_info.html#use-the-rest-api-to-edit-bmc-information["API"]o . A atualização das informações do BMC antes da atualização atualiza o inventário e garante que os serviços de nós de gerenciamento estejam cientes de todos os parâmetros de hardware necessários para concluir a atualização.
+* * Mídia anexada*: Desconete qualquer USB físico ou ISO antes de iniciar uma atualização de nó de computação.
+* * Console KVM ESXi*: Feche todas as sessões Open Serial-over-laN (sol) e sessões KVM ativas na IU do BMC antes de iniciar uma atualização do nó de computação.
+* *Requisitos de nó testemunha*: Em clusters de armazenamento de dois e três nós, um link:concept_hci_nodes.html["Witness Node"]deve estar sempre em execução na instalação do NetApp HCI.
+* *Verificação de integridade do nó de computação*: Você verificou que o nó está pronto para ser atualizado. link:task_upgrade_compute_prechecks.html["Execute verificações de integridade do nó de computação antes de atualizar o firmware da computação"]Consulte .
+* *Contrato de Licença de Usuário final (EULA)*: Começando com os serviços de gerenciamento 2.20.69, você deve aceitar e salvar o EULA antes de usar a interface de usuário ou API do NetApp Hybrid Cloud Control para atualizar o firmware do nó de computação:
++
+.. Abra o endereço IP do nó de gerenciamento em um navegador da Web:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+.. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage.
+.. Selecione *Upgrade* perto do canto superior direito da interface.
+.. O EULA aparece. Role para baixo, selecione *Aceito para atualizações atuais e futuras* e selecione *Salvar*.
+
+
+
+
+.Sobre esta tarefa
+Em ambientes de produção, atualize o firmware em um nó de computação de cada vez.
+
+
+NOTE: O host ESXi deve ser retirado do modo de bloqueio antes de executar uma verificação de integridade e prosseguir com a atualização do firmware. link:https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/NetApp_HCI/How_to_disable_lockdown_mode_on_ESXi_host["Como desativar o modo de bloqueio no host ESXi"^]Consulte e link:https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.security.doc/GUID-F8F105F7-CF93-46DF-9319-F8991839D265.html["Comportamento do modo de bloqueio VMware"^] para obter mais informações.
+
+Para atualizações de UI ou API de controle de nuvem híbrida do NetApp, seu host ESXi será automaticamente colocado no modo de manutenção durante o processo de atualização se você tiver o recurso DRS e o licenciamento necessário. O nó será reinicializado e após o processo de atualização estar concluído, o host ESXi será retirado do modo de manutenção. Para as opções de interface do usuário USB e BMC, você precisará colocar o host ESXi no modo de manutenção manualmente, conforme descrito em cada procedimento.
+
+
+NOTE: Antes de atualizar, verifique a versão atual do driver ESXi. Se o driver estiver desatualizado, atualize o driver primeiro. Em seguida, atualize o firmware de computação para seus nós de computação.
+
+.Opções de atualização
+Escolha a opção relevante para o seu cenário de atualização:
+
+* <<Use a IU do Controle de nuvem híbrida da NetApp para atualizar um nó de computação>> (Recomendado)
+* <<Use a API de controle de nuvem híbrida da NetApp para atualizar um nó de computação>>
+* <<Use uma unidade USB com o pacote de firmware de computação mais recente>>
+* <<Utilizar a interface de utilizador (UI) do controlador de gestão de base (BMC)>>
+
+
+
+
+== Use a IU do Controle de nuvem híbrida da NetApp para atualizar um nó de computação
+
+A partir dos serviços de gerenciamento 2,14, você pode atualizar um nó de computação usando a IU do Controle de nuvem híbrida da NetApp. Na lista de nós, você deve selecionar o nó a ser atualizado. A guia *Current Versions* mostra as versões atuais do firmware e a guia *proposed Versions* mostra as versões de atualização disponíveis, se houver.
+
+
+TIP: Para uma atualização bem-sucedida, certifique-se de que a verificação de integridade no cluster do vSphere seja bem-sucedida.
+
+
+NOTE: A atualização da NIC, BIOS e BMC pode levar aproximadamente 60 minutos por nó, dependendo da velocidade de conetividade de rede entre o nó de gerenciamento e o host BMC.
+
+
+NOTE: O uso da IU de controle de nuvem híbrida da NetApp para atualizar o firmware de computação em nós de computação H300E/H500E/H700E não é mais compatível. Para atualizar, você deve usar um <<manual_method_USB,Unidade USB>> ou o <<manual_method_BMC,IU do BMC>> para montar o pacote de firmware de computação.
+
+.O que você vai precisar
+* Se o nó de gerenciamento não estiver conetado à Internet, você baixou o pacote de firmware de computação do https://mysupport.netapp.com/site/products/all/details/netapp-hci/downloads-tab/download/62542/Compute_Firmware_Bundle["Site de suporte da NetApp"^].
++
+
+NOTE: Você deve extrair o `TAR.GZ` arquivo para um `TAR` arquivo e, em seguida, extrair o `TAR` arquivo para o pacote de firmware de computação.
+
+
+
+.Passos
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage.
+. Selecione *Upgrade* perto do canto superior direito da interface.
+. Na página *Upgrades*, selecione *Compute firmware*.
+. Selecione o cluster que está a atualizar.
++
+Você verá os nós no cluster listados juntamente com as versões atuais do firmware e versões mais recentes, se disponíveis para atualização.
+
+. Selecione *Procurar* para carregar o pacote de firmware de computação que você baixou do https://mysupport.netapp.com/site/products/all/details/netapp-hci/downloads-tab["Site de suporte da NetApp"^] .
+. Aguarde até que o upload seja concluído. Uma barra de progresso mostra o status do upload.
++
+
+TIP: O upload do arquivo acontecerá em segundo plano se você navegar para longe da janela do navegador.
+
++
+É apresentada uma mensagem no ecrã depois de o ficheiro ser carregado e validado com êxito. A validação pode demorar vários minutos.
+
+. Selecione o pacote de firmware de computação.
+. Selecione *Begin Upgrade*.
++
+Depois de selecionar *Begin Upgrade* (Iniciar atualização), a janela mostra as verificações de integridade falhadas, se houver.
+
++
+
+CAUTION: A atualização não pode ser pausada depois de começar. O firmware será atualizado sequencialmente na seguinte ordem: NIC, BIOS e BMC. Não efetue login na IU do BMC durante a atualização. O login no BMC termina a sessão de controle de nuvem híbrida Serial-over-laN (sol) que monitora o processo de atualização.
+
+. Se as verificações de integridade no nível do cluster ou do nó forem aprovadas com avisos, mas sem falhas críticas, você verá *Pronto para ser atualizado*. Selecione *Upgrade Node*.
++
+
+NOTE: Enquanto a atualização estiver em andamento, você pode sair da página e voltar a ela mais tarde para continuar monitorando o progresso. Durante a atualização, a IU mostra várias mensagens sobre o status da atualização.
+
++
+
+CAUTION: Durante a atualização do firmware nos nós de computação H610C e H615C, não abra o console Serial-over-laN (sol) por meio da IU da Web do BMC. Isso pode fazer com que a atualização falhe.
+
++
+A IU exibe uma mensagem após a conclusão da atualização. Pode transferir registos após a conclusão da atualização. Para obter informações sobre as várias alterações de status de atualização, <<Alterações de status da atualização>>consulte .
+
+
+
+
+TIP: Se ocorrer uma falha durante a atualização, o Controle de nuvem híbrida da NetApp reiniciará o nó, retirá-lo do modo de manutenção e exibirá o status da falha com um link para o log de erro. Você pode baixar o log de erros, que contém instruções específicas ou links para artigos da KB, para diagnosticar e corrigir qualquer problema. Para obter informações adicionais sobre problemas de atualização de firmware de nós de computação usando o Controle de nuvem híbrida da NetApp, consulte link:https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/NetApp_HCI/Known_issues_and_workarounds_for_Compute_Node_upgrades["KB"^] este artigo.
+
+
+
+=== Alterações de status da atualização
+
+Aqui estão os diferentes estados que a IU mostra antes, durante e após o processo de atualização:
+
+[cols="2*"]
+|===
+| Estado de atualização | Descrição 
+
+
+| Falha no nó em uma ou mais verificações de integridade. Expanda para ver detalhes. | Uma ou mais verificações de integridade falharam. 
+
+
+| Erro | Ocorreu um erro durante a atualização. Você pode baixar o log de erros e enviá-lo para o suporte da NetApp. 
+
+
+| Não foi possível detetar | Esse status será exibido se o Controle de nuvem híbrida da NetApp não puder consultar o nó de computação quando o ativo do nó de computação não tiver a tag de hardware. 
+
+
+| Pronto para ser atualizado. | Todas as verificações de integridade passaram com êxito e o nó está pronto para ser atualizado. 
+
+
+| Ocorreu um erro durante a atualização. | A atualização falha com esta notificação quando ocorre um erro crítico. Faça o download dos logs selecionando o link *Download Logs* para ajudar a resolver o erro. Você pode tentar atualizar novamente depois de resolver o erro. 
+
+
+| A atualização do nó está em andamento. | A atualização está em andamento. Uma barra de progresso mostra o status da atualização. 
+|===
+
+
+== Use a API de controle de nuvem híbrida da NetApp para atualizar um nó de computação
+
+Você pode usar APIs para atualizar cada nó de computação em um cluster para a versão de firmware mais recente. Você pode usar uma ferramenta de automação de sua escolha para executar as APIs. O fluxo de trabalho da API documentado aqui usa a IU da API REST disponível no nó de gerenciamento como exemplo.
+
+
+NOTE: O uso da IU de controle de nuvem híbrida da NetApp para atualizar o firmware de computação em nós de computação H300E/H500E/H700E não é mais compatível. Para atualizar, você deve usar um <<manual_method_USB,Unidade USB>> ou o <<manual_method_BMC,IU do BMC>> para montar o pacote de firmware de computação.
+
+.O que você vai precisar
+Os ativos de nós de computação, incluindo o vCenter e os ativos de hardware, devem ser conhecidos pelos ativos de nós de gerenciamento. Você pode usar as APIs do serviço de inventário para verificar ativos (`https://<ManagementNodeIP>/inventory/1/`).
+
+.Passos
+. Vá para o software NetApp HCI https://mysupport.netapp.com/site/products/all/details/netapp-hci/downloads-tab/download/62542/Compute_Firmware_Bundle["página de download"^] e faça o download do pacote de firmware de computação mais recente para um dispositivo acessível ao nó de gerenciamento.
+. Faça o upload do pacote de firmware de computação para o nó de gerenciamento:
++
+.. Abra a IU da API REST do nó de gerenciamento no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/package-repository/1/
+----
+.. Selecione *autorizar* e preencha o seguinte:
++
+... Introduza o nome de utilizador e a palavra-passe do cluster.
+... Introduza a ID do cliente como `mnode-client`.
+... Selecione *autorizar* para iniciar uma sessão.
+... Feche a janela autorização.
+
+
+.. Na IU da API REST, selecione *POST /packages*.
+.. Selecione *Experimente*.
+.. Selecione *Procurar* e selecione o pacote de firmware de computação.
+.. Selecione *execute* para iniciar o upload.
+.. Na resposta, copie e salve o ID do pacote de firmware de computação (`"id"`) para uso em uma etapa posterior.
+
+
+. Verifique o status do upload.
++
+.. Na IU da API REST, selecione *GET​ /packages​/​ id/status*.
+.. Selecione *Experimente*.
+.. Insira o ID do pacote que você copiou na etapa anterior em *id*.
+.. Selecione *execute* para iniciar a solicitação de status.
++
+A resposta indica `state` como `SUCCESS` quando concluída.
+
+.. Na resposta, copie e salve o nome do pacote de firmware de computação (`"name"`) e a versão (`"version"`) para uso em uma etapa posterior.
+
+
+. Localize o ID do controlador de computação e o ID do hardware do nó que você pretende atualizar:
++
+.. Abra a IU da API REST do serviço de inventário no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/inventory/1/
+----
+.. Selecione *autorizar* e preencha o seguinte:
++
+... Introduza o nome de utilizador e a palavra-passe do cluster.
+... Introduza a ID do cliente como `mnode-client`.
+... Selecione *autorizar* para iniciar uma sessão.
+... Feche a janela autorização.
+
+
+.. Na IU da API REST, selecione *GET /installations*.
+.. Selecione *Experimente*.
+.. Selecione *Executar*.
+.. Na resposta, copie o ID do ativo de instalação (`"id"`).
+.. Na IU da API REST, selecione *GET /installations/
+.. Selecione *Experimente*.
+.. Cole o ID do ativo de instalação no campo *id*.
+.. Selecione *Executar*.
+.. Na resposta, copie e salve o ID do controlador do cluster (`"controllerId"`) e o ID do hardware do nó (`"hardwareId"`) para uso em uma etapa posterior:
++
+[listing, subs="+quotes"]
+----
+"compute": {
+  "errors": [],
+  "inventory": {
+    "clusters": [
+      {
+        "clusterId": "Test-1B",
+        *"controllerId": "a1b23456-c1d2-11e1-1234-a12bcdef123a",*
+----
++
+[listing, subs="+quotes"]
+----
+"nodes": [
+  {
+    "bmcDetails": {
+      "bmcAddress": "10.111.0.111",
+      "credentialsAvailable": true,
+      "credentialsValidated": true
+    },
+    "chassisSerialNumber": "111930011231",
+    "chassisSlot": "D",
+    *"hardwareId": "123a4567-01b1-1243-a12b-11ab11ab0a15",*
+    "hardwareTag": "00000000-0000-0000-0000-ab1c2de34f5g",
+    "id": "e1111d10-1a1a-12d7-1a23-ab1cde23456f",
+    "model": "H410C",
+----
+
+
+. Execute a atualização do firmware do nó de computação:
++
+.. Abra a IU da API REST do serviço de hardware no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/hardware/2/
+----
+.. Selecione *autorizar* e preencha o seguinte:
++
+... Introduza o nome de utilizador e a palavra-passe do cluster.
+... Introduza a ID do cliente como `mnode-client`.
+... Selecione *autorizar* para iniciar uma sessão.
+... Feche a janela autorização.
+
+
+.. Selecione *POST /nodes/(hardware_id)/Upgrades*.
+.. Selecione *Experimente*.
+.. Insira o ID do ativo do host de hardware (`"hardwareId"`salvo de uma etapa anterior) no campo parâmetro.
+.. Faça o seguinte com os valores de carga útil:
++
+... Guarde os valores `"force": false` e `"maintenanceMode": true"` de modo que as verificações de integridade sejam executadas no nó e o host ESXi seja definido para o modo de manutenção.
+... Introduza a ID do controlador do cluster (`"controllerId"`guardada a partir de um passo anterior).
+... Insira o nome e a versão do pacote de firmware de computação que você salvou de uma etapa anterior.
++
+[listing]
+----
+{
+  "config": {
+    "force": false,
+    "maintenanceMode": true
+  },
+  "controllerId": "a1b23456-c1d2-11e1-1234-a12bcdef123a",
+  "packageName": "compute-firmware-12.2.109",
+  "packageVersion": "12.2.109"
+}
+----
+
+
+.. Selecione *execute* para iniciar a atualização.
++
+
+CAUTION: A atualização não pode ser pausada depois de começar. O firmware será atualizado sequencialmente na seguinte ordem: NIC, BIOS e BMC. Não efetue login na IU do BMC durante a atualização. O login no BMC termina a sessão de controle de nuvem híbrida Serial-over-laN (sol) que monitora o processo de atualização.
+
+.. Copie o ID da tarefa de atualização que faz parte do (`"resourceLink"`URL do link de recurso ) na resposta.
+
+
+. Verifique o progresso e os resultados da atualização:
++
+.. Selecione *GET /task//log*.
+.. Selecione *Experimente*.
+.. Insira o ID da tarefa da etapa anterior em *Task_ID*.
+.. Selecione *Executar*.
+.. Siga um destes procedimentos se houver problemas ou requisitos especiais durante a atualização:
++
+[cols="2*"]
+|===
+| Opção | Passos 
+
+
+| Você precisa corrigir problemas de integridade do cluster devido a `failedHealthChecks` mensagem no corpo de resposta.  a| 
+... Vá para o artigo específico da KB listado para cada problema ou execute o recurso especificado.
+... Se um KB for especificado, conclua o processo descrito no artigo da KB relevante.
+... Depois de resolver problemas de cluster, reautentique se necessário e selecione *POST /nodes/ hardware_id/Upgrades*.
+... Repita as etapas conforme descrito anteriormente na etapa de atualização.
+
+
+
+
+| A atualização falha e as etapas de mitigação não estão listadas no log de atualização.  a| 
+... Veja isto https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/NetApp_HCI/Known_issues_and_workarounds_for_Compute_Node_upgrades["Artigo da KB"^] (login necessário).
+
+
+|===
+.. Execute a API *get ​/task/_id/logs* várias vezes, conforme necessário, até que o processo esteja concluído.
++
+Durante a atualização, o `status` indica `running` se não foram encontrados erros. À medida que cada etapa termina, o `status` valor muda para `completed`.
+
++
+A atualização foi concluída com êxito quando o status de cada etapa é `completed` e o `percentageCompleted` valor é `100`.
+
+
+
+. (Opcional) confirmar versões de firmware atualizadas para cada componente:
++
+.. Abra a IU da API REST do serviço de hardware no nó de gerenciamento:
++
+[listing]
+----
+https://<ManagementNodeIP>/hardware/2/
+----
+.. Selecione *autorizar* e preencha o seguinte:
++
+... Introduza o nome de utilizador e a palavra-passe do cluster.
+... Introduza a ID do cliente como `mnode-client`.
+... Selecione *autorizar* para iniciar uma sessão.
+... Feche a janela autorização.
+
+
+.. Na IU da API REST, selecione *GET ​/nodes​/ hardware_id​/Upgrades*.
+.. (Opcional) Digite os parâmetros de data e status para filtrar os resultados.
+.. Insira o ID do ativo do host de hardware (`"hardwareId"`salvo de uma etapa anterior) no campo parâmetro.
+.. Selecione *Experimente*.
+.. Selecione *Executar*.
+.. Verifique na resposta se o firmware para todos os componentes foi atualizado com êxito da versão anterior para o firmware mais recente.
+
+
+
+
+
+
+== Use uma unidade USB com o pacote de firmware de computação mais recente
+
+Você pode inserir uma unidade USB com o pacote de firmware de computação mais recente baixado em uma porta USB no nó de computação. Como alternativa ao uso do método de pen drive USB descrito neste procedimento, você pode montar o pacote de firmware de computação no nó de computação usando a opção *Virtual CD/DVD* no console virtual na interface do controlador de gerenciamento de placa de base (BMC). O método BMC leva consideravelmente mais tempo do que o método USB pen drive. Certifique-se de que a sua estação de trabalho ou servidor tem a largura de banda de rede necessária e de que a sessão do navegador com o BMC não expira.
+
+.O que você vai precisar
+* Se o nó de gerenciamento não estiver conetado à Internet, você baixou o pacote de firmware de computação do https://mysupport.netapp.com/site/products/all/details/netapp-hci/downloads-tab/download/62542/Compute_Firmware_Bundle["Site de suporte da NetApp"^].
++
+
+NOTE: Você deve extrair o `TAR.GZ` arquivo para um `TAR` arquivo e, em seguida, extrair o `TAR` arquivo para o pacote de firmware de computação.
+
+
+
+.Passos
+. Use o utilitário Etcher para flash o pacote de firmware de computação para uma unidade USB.
+. Coloque o nó de computação no modo de manutenção usando o VMware vCenter e evacue todas as máquinas virtuais do host.
++
+
+NOTE: Se o VMware Distributed Resource Scheduler (DRS) estiver habilitado no cluster (esse é o padrão nas instalações do NetApp HCI), as máquinas virtuais serão migradas automaticamente para outros nós no cluster.
+
+. Insira a pen drive USB em uma porta USB no nó de computação e reinicie o nó de computação usando o VMware vCenter.
+. Durante o ciclo PÓS DO nó de computação, pressione *F11* para abrir o Gerenciador de Inicialização. Você pode precisar pressionar *F11* várias vezes em sucessão rápida. Pode efetuar esta operação ligando um vídeo/teclado ou utilizando a consola no `BMC`.
+. Selecione *One Shot* > *USB Flash Drive* no menu que aparece. Se a pen USB não aparecer no menu, verifique se a unidade flash USB faz parte da ordem de inicialização herdada no BIOS do sistema.
+. Pressione *Enter* para inicializar o sistema a partir da unidade USB. O processo de flash do firmware é iniciado.
++
+Depois que o firmware piscar estiver concluído e o nó reiniciar, pode demorar alguns minutos para o ESXi iniciar.
+
+. Depois que a reinicialização estiver concluída, saia do modo de manutenção no nó de computação atualizado usando o vCenter.
+. Remova a unidade flash USB do nó de computação atualizado.
+. Repita essa tarefa para outros nós de computação no cluster ESXi até que todos os nós de computação sejam atualizados.
+
+
+
+
+== Utilizar a interface de utilizador (UI) do controlador de gestão de base (BMC)
+
+Você deve executar as etapas sequenciais para carregar o pacote de firmware de computação e reinicializar o nó para o pacote de firmware de computação para garantir que a atualização seja bem-sucedida. O pacote de firmware de computação deve estar localizado no sistema ou na máquina virtual (VM) que hospeda o navegador da Web. Verifique se você baixou o pacote de firmware de computação antes de iniciar o processo.
+
+
+TIP: A recomendação é ter o sistema ou VM e o nó na mesma rede.
+
+
+NOTE: Demora aproximadamente 25 a 30 minutos para a atualização através da IU do BMC.
+
+* <<Atualize o firmware nos nós H410C e H300E/H500E/H700E>>
+* <<Atualize o firmware em nós H610C/H615C>>
+
+
+
+
+=== Atualize o firmware nos nós H410C e H300E/H500E/H700E
+
+Se o nó fizer parte de um cluster, você deve colocar o nó no modo de manutenção antes da atualização e retirá-lo do modo de manutenção após a atualização.
+
+
+TIP: Ignore a seguinte mensagem informativa que você vê durante o processo: `Untrusty Debug Firmware Key is used, SecureFlash is currently in Debug Mode`
+
+.Passos
+. Se o nó fizer parte de um cluster, coloque-o no modo de manutenção da seguinte forma. Caso contrário, vá para o passo 2.
++
+.. Faça login no cliente da Web do VMware vCenter.
+.. Clique com o botão direito do rato no nome do host (nó de computação) e selecione *Maintenance Mode (modo de manutenção) > Enter Maintenance Mode (entrar no modo de manutenção)*.
+.. Selecione *OK*. As VMs no host serão migradas para outro host disponível. A migração de VM pode levar tempo, dependendo do número de VMs que precisam ser migradas.
++
+
+CAUTION: Certifique-se de que todas as VMs no host sejam migradas antes de prosseguir.
+
+
+
+. Navegue até a IU do BMC, `https://BMCIP/#login`, em que BMCIP é o endereço IP do BMC.
+. Faça login usando suas credenciais.
+. Selecione *Remote Control > Console Redirection* (controlo remoto > Redirecionamento da consola).
+. Selecione *Launch Console*.
++
+
+NOTE: Você pode ter que instalar o Java ou atualizá-lo.
+
+. Quando o console for aberto, selecione *Virtual Media > Virtual Storage*.
+. Na tela *Virtual Storage*, selecione *Logical Drive Type* e *ISO File*.
++
+image:BIOS_H410C_iso.png["Mostra o caminho de navegação para selecionar o arquivo de pacote de firmware de computação."]
+
+. Selecione *Open Image* (abrir imagem) para navegar até a pasta onde você baixou o arquivo do pacote de firmware de computação e selecione o arquivo do pacote de firmware de computação.
+. Selecione *Plug in*.
+. Quando o status da conexão for exibido `Device#: VM Plug-in OK!!`, selecione *OK*.
+. Reinicie o nó pressionando *F12* e selecionando *Restart* ou selecionando *Power Control > Set Power Reset*.
+. Durante a reinicialização, pressione *F11* para selecionar as opções de inicialização e carregar o pacote de firmware de computação. Você pode ter que pressionar F11 algumas vezes antes que o menu de inicialização seja exibido.
++
+Você verá a seguinte tela:
+
++
+image:boot_option_iso_h410c.png["Mostra o ecrã até ao qual o ISO virtual é inicializado."]
+
+. Na tela acima, pressione *Enter*. Dependendo da sua rede, pode demorar alguns minutos depois de premir *Enter* para iniciar a atualização.
++
+
+NOTE: Algumas atualizações de firmware podem fazer com que o console se desconete e/ou faça com que sua sessão no BMC se desconete. Você pode fazer login novamente no BMC, no entanto, alguns serviços, como o console, podem não estar disponíveis devido às atualizações de firmware. Após a conclusão das atualizações, o nó executará uma reinicialização a frio, o que pode levar aproximadamente cinco minutos.
+
+. Faça login novamente na IU do BMC e selecione *sistema* para verificar a versão do BIOS e o tempo de compilação após a inicialização no sistema operacional. Se a atualização foi concluída corretamente, você verá as novas versões do BIOS e do BMC.
++
+
+NOTE: A versão do BIOS não mostrará a versão atualizada até que o nó tenha terminado totalmente a inicialização.
+
+. Se o nó fizer parte de um cluster, execute as etapas abaixo. Se for um nó autônomo, nenhuma ação adicional será necessária.
++
+.. Faça login no cliente da Web do VMware vCenter.
+.. Retire o host do modo de manutenção. Isso pode mostrar um sinalizador vermelho desconetado. Aguarde até que todos os Estados sejam apagados.
+.. Ligue qualquer uma das VMs restantes que foram desligadas.
+
+
+
+
+
+
+=== Atualize o firmware em nós H610C/H615C
+
+As etapas variam dependendo se o nó é autônomo ou parte de um cluster. O procedimento pode levar aproximadamente 25 minutos e inclui desligar o nó, carregar o pacote de firmware de computação, piscar os dispositivos e ligar o nó novamente após a atualização.
+
+.Passos
+. Se o nó fizer parte de um cluster, coloque-o no modo de manutenção da seguinte forma. Caso contrário, vá para o passo 2.
++
+.. Faça login no cliente da Web do VMware vCenter.
+.. Clique com o botão direito do rato no nome do host (nó de computação) e selecione *Maintenance Mode (modo de manutenção) > Enter Maintenance Mode (entrar no modo de manutenção)*.
+.. Selecione *OK*. As VMs no host serão migradas para outro host disponível. A migração de VM pode levar tempo, dependendo do número de VMs que precisam ser migradas.
++
+
+CAUTION: Certifique-se de que todas as VMs no host sejam migradas antes de prosseguir.
+
+
+
+. Navegue até a IU do BMC `https://BMCIP/#login` , em que BMC IP é o endereço IP do BMC.
+. Faça login usando suas credenciais.
+. Selecione *Controle remoto > inicie o KVM (Java)*.
+. Na janela do console, selecione *Mídia > Virtual Media Wizard*.
++
+image::bmc_wizard.gif[Inicie o Assistente de Mídia virtual na IU do BMC.]
+
+. Selecione *Procurar* e selecione o ficheiro de firmware de computação `.iso`.
+. Selecione *Connect*. Um pop-up indicando sucesso é exibido, juntamente com o caminho e o dispositivo que aparece na parte inferior. Você pode fechar a janela *Virtual Media*.
++
+image::virtual_med_popup.gif[Janela pop-up mostrando o sucesso do upload do ISO.]
+
+. Reinicie o nó pressionando *F12* e selecionando *Restart* ou selecionando *Power Control > Set Power Reset*.
+. Durante a reinicialização, pressione *F11* para selecionar as opções de inicialização e carregar o pacote de firmware de computação.
+. Selecione *AMI Virtual CDROM* na lista exibida e selecione *Enter*. Se você não vir o CDROM virtual AMI na lista, vá para o BIOS e ative-o na lista de inicialização. O nó será reinicializado após você salvar. Durante a reinicialização, pressione *F11*.
++
+image::boot_device.gif[Mostra a janela onde você pode selecionar o dispositivo de inicialização.]
+
+. No ecrã apresentado, selecione *Enter*.
++
+
+NOTE: Algumas atualizações de firmware podem fazer com que o console se desconete e/ou faça com que sua sessão no BMC se desconete. Você pode fazer login novamente no BMC, no entanto, alguns serviços, como o console, podem não estar disponíveis devido às atualizações de firmware. Após a conclusão das atualizações, o nó executará uma reinicialização a frio, o que pode levar aproximadamente cinco minutos.
+
+. Se você for desconetado do console, selecione *Controle remoto* e selecione *Launch KVM* ou *Launch KVM (Java)* para reconetar e verificar quando o nó tiver terminado de inicializar o backup. Você pode precisar de várias reconexões para verificar se o nó foi inicializado com sucesso.
++
+
+CAUTION: Durante o processo de ativação, por aproximadamente cinco minutos, o console KVM exibe *sem sinal*.
+
+. Depois que o nó estiver ligado, selecione *Painel > informações do dispositivo > mais informações* para verificar as versões do BIOS e do BMC. As versões atualizadas do BIOS e do BMC são exibidas. A versão atualizada do BIOS não será exibida até que o nó tenha sido totalmente inicializado.
+. Se você colocou o nó no modo de manutenção, depois que o nó inicializar para ESXi, clique com o botão direito do Mouse no nome do host (nó de computação) e selecione *modo de manutenção > Sair do modo de manutenção* e migre as VMs de volta para o host.
+. No vCenter, com o nome do host selecionado, configure e verifique a versão do BIOS.
+
+
+
+
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

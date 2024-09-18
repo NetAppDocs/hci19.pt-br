@@ -1,0 +1,179 @@
+---
+sidebar: sidebar 
+permalink: docs/concept_hci_dataprotection.html 
+summary: Os termos de proteção de dados incluem diferentes tipos de replicação remota, snapshots de volume, volume, clonagem, domínios de proteção e alta disponibilidade com a tecnologia Double Helix. 
+keywords: netapp, hci, data protection, ha, snapshots, replication, cloning, helix 
+---
+= Proteção de dados
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Os termos de proteção de dados da NetApp HCI incluem diferentes tipos de replicação remota, snapshots de volume, clonagem de volumes, domínios de proteção e alta disponibilidade com tecnologia Helix dupla.
+
+A proteção de dados do NetApp HCI inclui os seguintes conceitos:
+
+* <<Tipos de replicação remota>>
+* <<Snapshots de volume para proteção de dados>>
+* <<Clones de volume>>
+* <<Visão geral do processo de backup e restauração para armazenamento SolidFire>>
+* <<Domínios de proteção>>
+* <<Dupla Helix alta disponibilidade>>
+
+
+
+
+== Tipos de replicação remota
+
+A replicação remota de dados pode assumir as seguintes formas:
+
+* <<Replicação síncrona e assíncrona entre clusters>>
+* <<Replicação somente snapshot>>
+* <<Replicação entre clusters Element e ONTAP com o SnapMirror>>
+
+
+ https://www.netapp.com/pdf.html?item=/media/10607-tr4741pdf.pdf["TR-4741: Replicação remota do software NetApp Element"^]Consulte .
+
+
+
+=== Replicação síncrona e assíncrona entre clusters
+
+Para clusters que executam o software NetApp Element, a replicação em tempo real permite a criação rápida de cópias remotas de dados de volume.
+
+É possível emparelhar um cluster de storage com até quatro outros clusters de storage. É possível replicar dados de volume de forma síncrona ou assíncrona de qualquer cluster em um par de cluster para cenários de failover e failback.
+
+
+
+==== Replicação síncrona
+
+A replicação síncrona replica continuamente os dados do cluster de origem para o cluster de destino e é afetada pela latência, perda de pacotes, jitter e largura de banda.
+
+A replicação síncrona é apropriada para as seguintes situações:
+
+* Replicação de vários sistemas a uma curta distância
+* Um local de recuperação de desastres que é geograficamente local para a fonte
+* Aplicações sensíveis ao tempo e à proteção de bancos de dados
+* Aplicações de continuidade dos negócios que exigem que o local secundário atue como o local principal quando o local principal está inativo
+
+
+
+
+==== Replicação assíncrona
+
+A replicação assíncrona replica continuamente os dados de um cluster de origem para um cluster de destino sem esperar pelos confirmações do cluster de destino. Durante a replicação assíncrona, as gravações são confirmadas para o cliente (aplicativo) após serem confirmadas no cluster de origem.
+
+A replicação assíncrona é apropriada para as seguintes situações:
+
+* O local de recuperação de desastre está longe de ser a fonte, e a aplicação não tolera latências induzidas pela rede.
+* Há limitações de largura de banda na rede conetando os clusters de origem e destino.
+
+
+
+
+=== Replicação somente snapshot
+
+A proteção de dados somente snapshot replica os dados alterados em momentos específicos para um cluster remoto. Somente os snapshots criados no cluster de origem são replicados. As gravações ativas do volume de origem não são.
+
+É possível definir a frequência das replicações de instantâneos.
+
+A replicação Snapshot não afeta a replicação assíncrona ou síncrona.
+
+
+
+=== Replicação entre clusters Element e ONTAP com o SnapMirror
+
+Com a tecnologia NetApp SnapMirror, é possível replicar snapshots obtidos usando o software NetApp Element para a ONTAP para fins de recuperação de desastres. Em uma relação SnapMirror, Element é um endpoint e ONTAP é o outro.
+
+O SnapMirror é uma tecnologia de replicação NetApp que facilita a recuperação de desastres, projetada para failover de armazenamento primário para armazenamento secundário em um local remoto geograficamente. A tecnologia SnapMirror cria uma réplica, ou espelho, dos dados em funcionamento no storage secundário a partir da qual você pode continuar fornecendo dados se houver interrupção no local primário. Os dados são espelhados no nível do volume.
+
+A relação entre o volume de origem no storage primário e o volume de destino no storage secundário é chamada de relação de proteção de dados. Os clusters são referidos como pontos de extremidade nos quais os volumes residem e os volumes que contêm os dados replicados devem ser colocados em campo. Um relacionamento de pares permite que clusters e volumes troquem dados com segurança.
+
+O SnapMirror é executado nativamente nas controladoras NetApp ONTAP e é integrado ao Element, que é executado nos clusters NetApp HCI e SolidFire. A lógica para controlar o SnapMirror reside no software ONTAP; portanto, todas as relações do SnapMirror devem envolver pelo menos um sistema ONTAP para executar o trabalho de coordenação. Os usuários gerenciam relacionamentos entre clusters Element e ONTAP principalmente por meio da IU do Element. No entanto, algumas tarefas de gerenciamento residem no Gerenciador de sistemas do NetApp ONTAP. Os usuários também podem gerenciar o SnapMirror por meio da CLI e da API, que estão disponíveis no ONTAP e no Element.
+
+Consulte https://fieldportal.netapp.com/content/616239["TR-4651: Arquitetura e Configuração do NetApp SolidFire SnapMirror"^] (login necessário).
+
+Você deve habilitar manualmente a funcionalidade do SnapMirror no nível do cluster usando o software Element. A funcionalidade SnapMirror está desativada por predefinição e não é ativada automaticamente como parte de uma nova instalação ou atualização.
+
+Depois de ativar o SnapMirror, você pode criar relacionamentos do SnapMirror a partir da guia proteção de dados no software Element.
+
+
+
+== Snapshots de volume para proteção de dados
+
+Um snapshot de volume é uma cópia pontual de um volume que você poderia usar posteriormente para restaurar um volume para esse tempo específico.
+
+Embora os snapshots sejam semelhantes aos clones de volume, os snapshots são simplesmente réplicas de metadados de volume, para que você não possa montá-los ou gravá-los. A criação de um snapshot de volume também exige apenas uma pequena quantidade de recursos e espaço do sistema, o que torna a criação de snapshot mais rápida do que a clonagem.
+
+Você pode replicar snapshots para um cluster remoto e usá-los como uma cópia de backup do volume. Isso permite reverter um volume para um ponto específico no tempo usando o snapshot replicado. Você também pode criar um clone de um volume a partir de um snapshot replicado.
+
+É possível fazer backup de snapshots de um cluster do SolidFire para um armazenamento de objetos externo ou para outro cluster do SolidFire. Ao fazer backup de um snapshot em um armazenamento de objetos externo, você deve ter uma conexão com o armazenamento de objetos que permita operações de leitura/gravação.
+
+Você pode tirar um snapshot de um volume individual ou vários para proteção de dados.
+
+
+
+== Clones de volume
+
+Um clone de um único volume ou vários volumes é uma cópia pontual dos dados. Quando você clonar um volume, o sistema cria um snapshot do volume e cria uma cópia dos dados referenciados pelo snapshot.
+
+Este é um processo assíncrono, e a quantidade de tempo que o processo requer depende do tamanho do volume que você está clonando e da carga atual do cluster.
+
+O cluster dá suporte a até duas solicitações de clone em execução por volume de cada vez e até oito operações de clone de volume ativo de cada vez. Solicitações além desses limites são enfileiradas para processamento posterior.
+
+
+
+== Visão geral do processo de backup e restauração para armazenamento SolidFire
+
+Você pode fazer backup e restaurar volumes para outro storage SolidFire, bem como para armazenamentos de objetos secundários compatíveis com Amazon S3 ou OpenStack Swift.
+
+Pode efetuar uma cópia de segurança de um volume para o seguinte:
+
+* Um cluster de storage SolidFire
+* Um armazenamento de objetos do Amazon S3
+* Um armazenamento de objetos OpenStack Swift
+
+
+Ao restaurar volumes do OpenStack Swift ou Amazon S3, você precisa de informações de manifesto do processo de backup original. Se você estiver restaurando um volume que foi feito backup em um sistema de storage SolidFire, nenhuma informação de manifesto será necessária.
+
+
+
+== Domínios de proteção
+
+Um domínio de proteção é um nó ou um conjunto de nós agrupados de modo que qualquer parte ou até mesmo todos eles possam falhar, mantendo a disponibilidade dos dados. Os domínios de proteção permitem que um cluster de armazenamento recupere automaticamente da perda de um chassi (afinidade de chassi) ou de um domínio inteiro (grupo de chassi).
+
+Um layout de domínio de proteção atribui cada nó a um domínio de proteção específico.
+
+Dois layouts de domínio de proteção diferentes, chamados de níveis de domínio de proteção, são suportados.
+
+* No nível do nó, cada nó está em seu próprio domínio de proteção.
+* No nível do chassi, apenas os nós que compartilham um chassi estão no mesmo domínio de proteção.
++
+** O layout do nível do chassi é determinado automaticamente a partir do hardware quando o nó é adicionado ao cluster.
+** Em um cluster onde cada nó está em um chassi separado, esses dois níveis são funcionalmente idênticos.
+
+
+
+
+Você pode usar manualmente https://docs.netapp.com/us-en/vcp/vcp_task_clusters_manage.html#set-protection-domain-monitoring["ativar o monitoramento do domínio de proteção"^] o plug-in do NetApp Element para vCenter Server. Você pode selecionar um limite de domínio de proteção com base em domínios de nó ou chassi.
+
+Ao criar um novo cluster, se você estiver usando nós de storage que residem em um chassi compartilhado, considere o projeto para proteção contra falhas no nível do chassi usando o recurso de domínios de proteção.
+
+Você pode definir um layout de domínio de proteção personalizado, onde cada nó está associado a um e apenas um domínio de proteção personalizado. Por padrão, cada nó é atribuído ao mesmo domínio de proteção personalizado padrão.
+
+
+
+== Dupla Helix alta disponibilidade
+
+A proteção de dados Double Helix é um método de replicação que espalha pelo menos duas cópias redundantes de dados em todas as unidades dentro de um sistema. A abordagem "sem RAID" permite que um sistema absorva várias falhas simultâneas em todos os níveis do sistema de storage e faça o reparo rapidamente.
+
+[discrete]
+== Encontre mais informações
+
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+

@@ -1,0 +1,63 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hcc_activeiq.html 
+summary: Você pode monitorar a integridade do cluster com o SolidFire Active IQ. 
+keywords: netapp, hci, on premise, activeiq, active iq, cluster, performance 
+---
+= Monitore performance, capacidade e integridade do cluster com o SolidFire Active IQ
+:allow-uri-read: 
+
+
+[role="lead"]
+Com o SolidFire Active IQ, você pode monitorar os eventos, a performance e a capacidade dos clusters. Você pode acessar o SolidFire Active IQ no Dashboard de controle da nuvem híbrida da NetApp.
+
+*Antes de começar*
+
+* Você precisa ter uma conta de suporte da NetApp para aproveitar esse serviço.
+* Você precisa ter autorização para usar APIs REST do nó de gerenciamento.
+* Você implantou um nó de gerenciamento executando a versão 12,0 ou posterior.
+* A versão do cluster está executando o software NetApp Element 12,0 ou posterior.
+* Você tem acesso à Internet. O serviço de coletor Active IQ não pode ser usado em locais escuros.
+
+
+*Sobre esta tarefa* você pode obter visualizações históricas continuamente atualizadas de estatísticas de todo o cluster. Você pode configurar notificações para alertá-lo sobre eventos, limites ou métricas especificados em um cluster para que eles possam ser resolvidos rapidamente.
+
+Como parte do seu contrato de suporte normal, o suporte da NetApp monitora esses dados e alerta você sobre possíveis problemas do sistema.
+
+*Passos*
+
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web. Por exemplo:
++
+[listing]
+----
+https://<ManagementNodeIP>
+----
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage da NetApp HCI.
+. No Painel de instrumentos, selecione o menu no canto superior direito.
+. Selecione *Exibir Active IQ*.
++
+O link:https://activeiq.solidfire.com["Painel do SolidFire Active IQ"^] é apresentado.
+
+. Para saber mais sobre o SolidFire Active IQ, consulte https://docs.netapp.com/us-en/solidfire-active-iq/index.html["Documentação do SolidFire Active IQ"^].
++
+Você também pode acessar a documentação do SolidFire Active IQ no painel selecionando o ícone do menu no canto superior direito e selecionando *Documentação*.
+
+. Na interface do SolidFire Active IQ, verifique se os nós de computação e storage do NetApp HCI estão relatando a telemetria corretamente ao Active IQ:
++
+.. Se você tiver mais de uma instalação do NetApp HCI, selecione *Selecione um cluster* e escolha o cluster na lista.
+.. No painel de navegação esquerdo, selecione *nós*.
+
+
+. Se um nó ou nós estiverem faltando na lista, entre em Contato com o suporte da NetApp.
+
+
+
+TIP: Para ver o número de recursos de computação e storage, consulte o dashboard de controle de nuvem híbrida (HCC). link:task_hcc_dashboard.html["Monitore recursos de computação e storage com o HCC Dashboard"]Consulte .
+
+[discrete]
+== Encontre mais informações
+
+* https://docs.netapp.com/us-en/solidfire-active-iq/index.html["Documentação do NetApp SolidFire Active IQ"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+

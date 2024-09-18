@@ -1,0 +1,164 @@
+---
+sidebar: sidebar 
+permalink: docs/rancher_prereqs_overview.html 
+summary: Saiba mais sobre os requisitos para uma instalação bem-sucedida do Rancher na NetApp HCI. 
+keywords: netapp, hci, Rancher, install, installation, requirements 
+---
+= Requisitos para Rancher no NetApp HCI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Antes de instalar Rancher no NetApp HCI, certifique-se de que seu ambiente e seu sistema NetApp HCI atendam a esses requisitos.
+
+
+NOTE: Se você acidentalmente implantar o Rancher no NetApp HCI com informações incorretas (como um FQDN de servidor de Rancher incorreto), não há maneira de corrigir a implantação sem removê-la e reimplantá-la. Você precisará remover a instância do Rancher no NetApp HCI e reimplantar o Rancher no NetApp HCI a partir da IU de controle de nuvem híbrida da NetApp. Consulte link:task_rancher_remove_deployment.html["Remova uma instalação do Rancher no NetApp HCI"] para obter mais informações.
+
+
+
+== Requisitos de nó
+
+* Garanta que seu sistema NetApp HCI tenha pelo menos três nós de computação; isso é necessário para resiliência completa. O rancher no NetApp HCI não é compatível com configurações somente de storage.
+* Certifique-se de que o datastore que você pretende usar para o Rancher na implantação do NetApp HCI tenha pelo menos 60GBMB de espaço livre.
+* Certifique-se de que o cluster do NetApp HCI esteja executando os serviços de gerenciamento versão 2,17 ou posterior.
+
+
+
+
+=== Detalhes do nó
+
+O Rancher no NetApp HCI implanta um cluster de gerenciamento de três nós.
+
+Todos os nós têm as seguintes caraterísticas:
+
+[cols="15,15, 15"]
+|===
+| VCPU | RAM (GB) | Disco (GB) 
+
+
+| 2 | 8 | 20 
+|===
+
+
+== Requisitos de rede
+
+* Certifique-se de que a rede que pretende implantar o Rancher no cluster de gerenciamento do NetApp HCI tenha uma rota para a rede de gerenciamento do nó de gerenciamento.
+* O rancher no NetApp HCI suporta endereços DHCP para o plano de controle (servidor Rancher) e clusters de usuários, mas recomendamos endereços IP estáticos para ambientes de produção. Certifique-se de alocar os endereços IP estáticos necessários se estiver implantando em um ambiente de produção.
++
+** O servidor rancher requer três endereços IP estáticos.
+** Cada cluster de usuário requer tantos endereços IP estáticos quanto nós no cluster. Por exemplo, um cluster de usuários com quatro nós requer quatro endereços IP estáticos.
+** Se você planeja usar o endereçamento DHCP para o plano de controle Rancher ou clusters de usuários, verifique se a duração da concessão DHCP é de pelo menos 24 horas.
+
+
+* Se você precisar usar um proxy HTTP para habilitar o acesso à Internet para o Rancher no NetApp HCI, será necessário fazer uma alteração pré-implantação no nó de gerenciamento. Faça login no seu nó de gerenciamento usando SSH e siga a https://docs.docker.com/config/daemon/systemd/#httphttps-proxy["instruções"^] documentação do Docker para atualizar manualmente as configurações de proxy para Docker.
+* Se você habilitar e configurar um servidor proxy durante a implantação, os seguintes intervalos de endereços IP e domínios serão adicionados automaticamente às configurações do servidor Rancher noProxy:
++
+[listing]
+----
+127.0.0.0/8, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, .svc, .cluster.local
+----
+* Certifique-se de que seu nó de gerenciamento pode usar o DNS para resolver o nome do host `<any IP address>.nip.io` para um endereço IP. Este é o provedor de DNS usado durante a implantação; se o nó de gerenciamento não puder resolver esse URL, a implantação falhará.
+* Certifique-se de que configurou registos DNS para cada endereço IP estático de que necessita.
+
+
+
+
+== Requisitos do VMware vSphere
+
+* Verifique se a instância do VMware vSphere que você está usando é a versão 6,5, 6,7 ou 7,0.
+* Você pode usar uma configuração de rede VSS (vSphere Standard Switch), mas, se isso acontecer, certifique-se de que os switches virtuais e os hosts físicos usados para VMs Rancher possam acessar todos os mesmos grupos de portas, da mesma forma que você garantiria para VMs regulares.
+
+
+
+
+== Considerações de implantação
+
+Você pode querer rever as seguintes considerações:
+
+* Tipos de implantações
++
+** Implantações de demonstração
+** Implantações de produção
+
+
+* FQDN
+
+
+
+TIP: O rancher no NetApp HCI não é resiliente a falhas de nó, a menos que você configure algum tipo de balanceamento de carga de rede. Como uma solução simples, crie uma entrada DNS de round robin para os três endereços IP estáticos reservados para o servidor Rancher. Essas entradas de DNS devem ser resolvidas para o FQDN do servidor Rancher que você usará para acessar o host do servidor Rancher, que serve a IU da Web do Rancher quando a implantação estiver concluída.
+
+
+
+=== Tipos de implantações
+
+Você pode implantar o Rancher no NetApp HCI das seguintes maneiras:
+
+* *Implantações de demonstração*: Se o DHCP estiver disponível no ambiente de implantação direcionado e você quiser demonstrar o recurso Rancher no NetApp HCI, uma implantação DHCP faz mais sentido.
++
+Nesse modelo de implantação, a IU do Rancher é acessível a partir de cada um dos três nós no cluster de gerenciamento.
+
++
+Se a sua organização não usar DHCP, você ainda pode experimentá-lo usando quatro endereços IP estáticos alocados antes da implantação, semelhante ao que você faria para uma implantação de produção.
+
+* *Implantações de produção*: Para implantações de produção ou quando o DHCP não está disponível no ambiente de implantação direcionado, um pouco mais de trabalho de pré-implantação é necessário. O primeiro passo é obter três endereços IP consecutivos. Você insere o primeiro durante a implantação.
++
+Recomendamos o uso de balanceamento de carga L4 ou configuração DNS round-robin para ambientes de produção. Isso requer um quarto endereço IP e uma entrada separada na configuração DNS.
+
++
+** *Balanceamento de carga L4*: Esta é uma técnica em que uma máquina virtual ou contentor que hospeda um aplicativo como o nginx é configurado para distribuir solicitações entre os três nós do cluster de gerenciamento.
+** *DNS Round-robin*: Esta é uma técnica em que um único nome de host é configurado no sistema DNS que gira as solicitações entre os três hosts que formam o cluster de gerenciamento.
+
+
+
+
+
+
+=== FQDN
+
+A instalação requer a atribuição de um URL Rancher, que inclui o nome de domínio totalmente qualificado (FQDN) do host onde a IU do Rancher será atendida após a conclusão da instalação.
+
+Em todos os casos, a IU do Rancher está acessível no seu navegador através do protocolo https (porta 443).
+
+As implantações de produção exigem um FQDN configurado que equilibra a carga nos nós do cluster de gerenciamento. Sem usar FQDN e balanceamento de carga, o ambiente não é resiliente e é adequado apenas para ambientes de demonstração.
+
+
+
+== Portas necessárias
+
+Certifique-se de que a lista de portas na seção "portas para nós de servidor Rancher no RKE" da seção *nós de Rancher* do oficial https://rancher.com/docs/rancher/v2.x/en/installation/requirements/ports/#ports-for-rancher-server-nodes-on-rke["Documentação do fazendeiro"^] esteja aberta em sua configuração de firewall de e para os nós que executam o servidor Rancher.
+
+
+
+== URLs obrigatórios
+
+Os URLs a seguir devem ser acessíveis a partir dos hosts onde o plano de controle Rancher reside:
+
+|===
+| URL | Descrição 
+
+
+| https://charts.jetstack.io/[] | Integração com o Kubernetes 
+
+
+| https://releases.rancher.com/server-charts/stable[] | Downloads de software rancher 
+
+
+| https://entropy.ubuntu.com/[] | Serviço de entropia Ubuntu para geração de números aleatórios 
+
+
+| https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/v1.3.1/install.sh[] | Adições de convidados da VMware 
+
+
+| https://download.docker.com/linux/ubuntu/gpg[] | Docker Ubuntu GPG chave pública 
+
+
+| https://download.docker.com/linux/ubuntu[] | Link de download do Docker 
+
+
+| https://hub.docker.com/[] | Hub do Docker para controle de nuvem híbrida da NetApp 
+|===

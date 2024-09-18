@@ -1,0 +1,35 @@
+---
+sidebar: sidebar 
+permalink: docs/hci_prereqs_LACP_configuration.html 
+summary: Saiba como configurar o NetApp HCI para obter o melhor desempenho de armazenamento. 
+keywords: netapp, hci, storage, performance, LACP 
+---
+= Configure o LACP para um desempenho de armazenamento ideal
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Para obter o desempenho ideal do cluster de storage do NetApp HCI, você deve configurar o protocolo de controle de agregação de links (LACP) nas portas do switch usadas para cada um dos nós de storage.
+
+.Antes de começar
+* Você configurou as portas do switch conetadas às interfaces 10/25GbE dos nós de storage NetApp HCI como canais de porta LACP.
+* Você definiu os temporizadores LACP nos switches que manipulam o tráfego de armazenamento para "modo rápido (1s)" para um tempo ideal de deteção de failover. Durante a implantação, as interfaces Bond1G em todos os nós de storage são configuradas automaticamente para o modo ativo/passivo.
+* Você configurou a Cisco Virtual PortChannel (VPC) ou a tecnologia de empilhamento de switch equivalente para os switches que manipulam a rede de armazenamento. A tecnologia de empilhamento de switches facilita a configuração de LACP e canais de portas e fornece uma topologia sem loop entre switches e as portas 10/25GbE nos nós de storage.
+
+
+.Passos
+. Siga as recomendações do fornecedor do switch para ativar o LACP nas portas do switch usadas para nós de storage da série H da NetApp.
+. Altere o modo de ligação em todos os nós de storage para LACP na interface do usuário do nó (também conhecida como interface do usuário do terminal ou TUI) antes de implantar o NetApp HCI.
+
+
+[discrete]
+== Encontre mais informações
+
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+

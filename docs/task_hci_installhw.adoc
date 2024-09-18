@@ -1,0 +1,428 @@
+---
+sidebar: sidebar 
+permalink: docs/task_hci_installhw.html 
+summary: Antes de começar a usar o NetApp HCI, instale os nós de computação e storage corretamente. 
+keywords: netapp, hci, on premise, activeiq, active iq, cluster, performance, rails, h-series, nodes 
+---
+= Instale as ferragens da série H.
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Antes de começar a usar o NetApp HCI, instale os nós de computação e storage corretamente.
+
+
+TIP: Consulte a link:../media/hseries-isi.pdf["cartaz"^] para obter uma representação visual das instruções.
+
+* <<Diagramas de fluxo de trabalho>>
+* <<Prepare-se para a instalação>>
+* <<Instale os trilhos>>
+* <<Instale o nó/chassi>>
+* <<Instale os interrutores>>
+* <<Faça o cabeamento dos nós>>
+* <<Ligue os nós>>
+* <<Configurar o NetApp HCI>>
+* <<Executar tarefas de pós-configuração>>
+
+
+
+
+== Diagramas de fluxo de trabalho
+
+Os diagramas de fluxo de trabalho aqui fornecem uma visão geral de alto nível das etapas de instalação. Os passos variam ligeiramente dependendo do modelo da série H.
+
+* <<H410C e H410S>>
+* <<H610C e H615C>>
+* <<H610S>>
+
+
+
+
+=== H410C e H410S
+
+image::workflow_h410c.PNG[Fluxo de trabalho de instalação H410C e H410S]
+
+
+
+=== H610C e H615C
+
+
+NOTE: Os termos "nó" e "chassi" são usados de forma intercambiável no caso de H610C e H615C, porque nó e chassi não são componentes separados, ao contrário no caso de um chassi de quatro nós 2U.
+
+image::workflow_h610c.png[Fluxo de trabalho de instalação H610C e H615C]
+
+
+
+=== H610S
+
+
+NOTE: Os termos "nó" e "chassi" são usados de forma intercambiável no caso de H610C e H615C, porque nó e chassi não são componentes separados, ao contrário no caso de um chassi de quatro nós 2U.
+
+image::workflow_h610s.png[Fluxo de trabalho de instalação do H610S]
+
+
+
+== Prepare-se para a instalação
+
+Em preparação para a instalação, faça o inventário do hardware que foi enviado para você e entre em Contato com o suporte da NetApp se algum dos itens estiver faltando.
+
+Certifique-se de que tem os seguintes itens no local de instalação:
+
+* Espaço em rack para o sistema.
+
+
+[cols="2*"]
+|===
+| Tipo de nó | Espaço em rack 
+
+
+| H410C e H410S nós | Duas unidades de rack (2UU) 
+
+
+| H610C nó | 2U 
+
+
+| H615C e H610S nós | Uma unidade de rack (1U) 
+|===
+* Cabos ou transcetores de conexão direta SFP28G/SFP
+* CAT5e ou mais cabos com conetor RJ45
+* Um teclado, vídeo, Mouse (KVM) switch para configurar seu sistema
+* Dispositivo USB (opcional)
+
+
+
+TIP: O hardware que é enviado para você depende do que você pede. Uma nova ordem de 2U nós inclui o chassi, o painel frontal, o kit de trilho deslizante, as unidades para nós de storage, os nós de computação e storage e os cabos de alimentação (dois por chassi). Se você solicitar H610S nós de storage, as unidades serão instaladas no chassi.
+
+
+CAUTION: Durante a instalação do hardware, certifique-se de que remove todo o material de embalagem e atamento da unidade. Isso evitará que os nós superaqueçam e fechem.
+
+
+
+== Instale os trilhos
+
+A ordem de hardware que foi enviada para você inclui um conjunto de trilhos deslizantes. Você precisará de uma chave de fenda para concluir a instalação do trilho. As etapas de instalação variam ligeiramente para cada modelo de nó.
+
+
+TIP: Instale o hardware da parte inferior do rack até a parte superior para evitar que o equipamento caia. Se o rack incluir dispositivos de estabilização, instale-os antes de instalar o hardware.
+
+* <<H410C e H410S>>
+* <<H610C>>
+* <<H610S e H615C>>
+
+
+
+
+=== H410C e H410S
+
+Os nós de H410C e H410S são instalados no chassi 2U H-Series de quatro nós, que é fornecido com dois conjuntos de adaptadores. Se você quiser instalar o chassi em um rack com orifícios redondos, use os adaptadores apropriados para um rack com orifícios redondos. Os trilhos para H410C e H410S nós encaixam em um rack entre 29 polegadas e 33,5 polegadas de profundidade. Quando o trilho é totalmente contratado, tem 28 polegadas de comprimento, e as seções dianteira e traseira do trilho são mantidas juntas por apenas um parafuso.
+
+
+CAUTION: Se instalar o chassis numa calha totalmente contraída, as secções dianteira e traseira da calha podem separar-se.
+
+.Passos
+. Alinhe a parte dianteira da calha com os orifícios na coluna dianteira da cremalheira.
+. Empurre os ganchos na parte frontal do trilho para dentro dos orifícios na coluna frontal do rack e, em seguida, para baixo, até que as cavilhas com mola encaixem nos orifícios da cremalheira.
+. Fixe o trilho no rack com parafusos. Aqui está uma ilustração do trilho esquerdo que está sendo anexado à frente do rack:
++
+image::h410c_rail.gif[Instalação do trilho para 2U]
+
+. Estenda a secção traseira da calha até ao poste traseiro da cremalheira.
+. Alinhe os ganchos na parte traseira da calha com os orifícios adequados no poste traseiro, certificando-se de que a parte dianteira e a parte traseira da calha estão no mesmo nível.
+. Monte a parte traseira do trilho no rack e fixe o trilho com parafusos.
+. Execute todas as etapas acima para o outro lado do rack.
+
+
+
+
+=== H610C
+
+Aqui está uma ilustração para a instalação de trilhos para um nó de computação H61OC:
+
+image::h610c_rail.png[Instalação do trilho para nó de computação H610C.]
+
+
+
+=== H610S e H615C
+
+Aqui está uma ilustração para a instalação de trilhos para um nó de storage H610S ou um nó de computação H615C:
+
+image::h610s_rail.gif[Instalação de trilho para H610S nós de storage e H615C nós de computação.]
+
+
+TIP: Há trilhos esquerdo e direito no H610S e H615C. Posicione o orifício do parafuso na direção da parte inferior de modo a que o parafuso de aperto manual H610S/H615C possa fixar o chassis à calha.
+
+
+
+== Instale o nó/chassi
+
+Instale o nó de computação H410C e o nó de storage H410S em um chassi de quatro nós de 2U U. Para H610C, H615C e H610S, instale o chassi/nó diretamente nos trilhos do rack.
+
+
+TIP: A partir do NetApp HCI 1,8, é possível configurar um cluster de storage com dois ou três nós de storage.
+
+
+CAUTION: Retire todo o material de embalagem e o acondicionamento da unidade. Isso impede que os nós superaqueçam e desliguem.
+
+* <<H410C e H410S nós>>
+* <<H610C nós/chassi>>
+* <<H610S e H615C nós/chassi>>
+
+
+
+
+=== H410C e H410S nós
+
+.Passos
+. Instale os nós H410C e H410S no chassi. Aqui está um exemplo de visão traseira de um chassi com quatro nós instalados:
++
+image::hseries_2U_rear.gif[Vista traseira do 2U]
+
+. Instalar unidades para H410S nós de storage.
++
+image::h410s_drives.png[Vista dianteira do nó de storage H410S com unidades instaladas.]
+
+
+
+
+
+=== H610C nós/chassi
+
+No caso do H610C, os termos "nó" e "chassi" são usados alternadamente porque nó e chassi não são componentes separados, ao contrário do 2U, chassi de quatro nós.
+
+Aqui está uma ilustração para instalar o nó/chassi no rack:
+
+image::h610c_chassis.png[Mostra o nó/chassi H610C que está sendo instalado no rack.]
+
+
+
+=== H610S e H615C nós/chassi
+
+No caso do H615C e do H610S, os termos "nó" e "chassi" são usados de forma intercambiável porque nó e chassi não são componentes separados, ao contrário do que acontece no chassi de quatro nós 2U.
+
+Aqui está uma ilustração para instalar o nó/chassi no rack:
+
+image::h610s_chassis.gif[Mostra o nó/chassi H615C ou H610S que está sendo instalado no rack.]
+
+
+
+== Instale os interrutores
+
+Se você quiser usar os switches Mellanox SN2010, SN2100 e SN2700 em sua instalação do NetApp HCI, siga as instruções fornecidas aqui para instalar e fazer o cabo dos switches:
+
+* link:https://docs.mellanox.com/pages/viewpage.action?pageId=6884619["Manual do usuário Mellanox hardware"^]
+* link:https://fieldportal.netapp.com/content/1075535?assetComponentId=1077676["TR-4836: NetApp HCI com guia de cabeamento de switch Mellanox SN2100 e SN2700 (login necessário)"^]
+
+
+
+
+== Faça o cabeamento dos nós
+
+Se você estiver adicionando nós a uma instalação existente do NetApp HCI, verifique se a configuração de cabeamento e rede dos nós que você adicionar são idênticos à instalação existente.
+
+
+CAUTION: Certifique-se de que as saídas de ar na parte traseira do chassis não estão bloqueadas por cabos ou etiquetas. Isso pode levar a falhas prematuras de componentes devido ao superaquecimento.
+
+* <<H410C nós de computação e H410S nós de storage>>
+* <<Nó de computação de H610C U.>>
+* <<Nó de computação de H615C U.>>
+* <<Nó de storage de H610S GB>>
+
+
+
+
+=== H410C nós de computação e H410S nós de storage
+
+Você tem duas opções de cabeamento do nó H410C: Usando dois cabos ou seis cabos.
+
+Aqui está a configuração de dois cabos:
+
+image::HCI_ISI_compute_2cable.png[Mostra a configuração de dois cabos para o nó H410C.]
+
+image:blue circle.png["ponto azul"] Para as portas D e e, conete dois cabos SFP28/SFP ou transcetores para gerenciamento compartilhado, máquinas virtuais e conetividade de armazenamento.
+
+image:purple circle.png["ponto roxo"] (Opcional, recomendado) Conete um cabo CAT5e na porta IPMI para conetividade de gerenciamento fora da banda.
+
+Aqui está a configuração de seis cabos:
+
+image::HCI_ISI_compute_6cable.png[Mostra a configuração de seis cabos do nó H410C.]
+
+image:green circle.png["ponto verde"] Para as portas A e B, conete dois cabos de CAT5e m ou superior nas portas A e B para conetividade de gerenciamento.
+
+image:orange circle.png["ponto laranja"] Para as portas C e F, conete dois cabos SFP28/SFP ou transcetores para conetividade de máquina virtual.
+
+image:blue circle.png["ponto azul"] Para as portas D e e, conete dois cabos SFP28/SFP ou transcetores para conetividade de armazenamento.
+
+image:purple circle.png["ponto roxo"] (Opcional, recomendado) Conete um cabo CAT5e na porta IPMI para conetividade de gerenciamento fora da banda.
+
+Aqui está o cabeamento do nó H410S:
+
+image::HCI_ISI_storage_cabling.png[Mostra o cabeamento do nó H410S.]
+
+image:green circle.png["ponto verde"] Para as portas A e B, conete dois cabos de CAT5e m ou superior nas portas A e B para conetividade de gerenciamento.
+
+image:blue circle.png["ponto azul"] Para as portas C e D, conete dois cabos SFP28/SFP ou transcetores para conetividade de armazenamento.
+
+image:purple circle.png["ponto roxo"] (Opcional, recomendado) Conete um cabo CAT5e na porta IPMI para conetividade de gerenciamento fora da banda.
+
+Depois de fazer o cabeamento dos nós, conete os cabos de alimentação às duas unidades de fonte de alimentação por chassi e conete-os à PDU de 240VV ou à tomada de energia.
+
+
+
+=== Nó de computação de H610C U.
+
+Aqui está o cabeamento do nó H610C:
+
+
+NOTE: Os nós de H610C U são implantados somente na configuração de dois cabos. Certifique-se de que todas as VLANs estejam presentes nas portas C e D.
+
+image::H610C_node-cabling.png[Mostra o cabeamento do nó H610C.]
+
+image:dark green.png["ponto verde escuro"] Para as portas C e D, conete o nó a uma rede de 10 GbE/25GbE GbE usando dois cabos de SFP28 GbE/SFP mais.
+
+image:purple circle.png["ponto roxo"] (Opcional, recomendado) Conete o nó a uma rede 1GbE usando um conetor RJ45 na porta IPMI.
+
+image:light blue circle.png["ponto azul claro"] Conete ambos os cabos de alimentação ao nó e conete os cabos de alimentação a uma tomada de 200 a 240VV.
+
+
+
+=== Nó de computação de H615C U.
+
+Aqui está o cabeamento do nó H615C:
+
+
+NOTE: Os nós de H615C U são implantados somente na configuração de dois cabos. Certifique-se de que todas as VLANs estejam presentes nas portas A e B.
+
+image::H615C_node_cabling.png[Mostra o cabeamento do nó H615C.]
+
+image:dark green.png["ponto verde escuro"] Para as portas A e B, conete o nó a uma rede de 10 GbE/25GbE GbE usando dois cabos de SFP28 GbE/SFP mais.
+
+image:purple circle.png["ponto roxo"] (Opcional, recomendado) Conete o nó a uma rede 1GbE usando um conetor RJ45 na porta IPMI.
+
+image:light blue circle.png["ponto azul claro"] Conete ambos os cabos de alimentação ao nó e conete os cabos de alimentação a uma tomada de alimentação 110-140VV.
+
+
+
+=== Nó de storage de H610S GB
+
+Aqui está o cabeamento do nó H610S:
+
+image::H600S_ISI_noderear.png[Mostra o cabeamento do nó H610S.]
+
+image:purple circle.png["ponto roxo"] Conete o nó a uma rede 1GbE usando dois conetores RJ45 na porta IPMI.
+
+image:dark green.png["ponto verde escuro"] Conete o nó a uma rede de 10 GbE/25GbE GbE usando dois cabos de SFP28 GbE ou SFP.
+
+image:orange circle.png["ponto laranja"] Conete o nó a uma rede 1GbE usando um conetor RJ45 na porta IPMI.
+
+image:light blue circle.png["ponto azul claro"] Conete ambos os cabos de alimentação ao nó.
+
+
+
+== Ligue os nós
+
+Os nós demoram aproximadamente seis minutos para serem inicializados.
+
+Aqui está uma ilustração que mostra o botão liga/desliga no chassi do NetApp HCI 2U:
+
+image::H410c_poweron_ISG.png[Apresenta o botão de alimentação na série H 2U]
+
+Aqui está uma ilustração que mostra o botão liga/desliga no nó H610C:
+
+image::H610C_power-on.png[Mostra o botão liga/desliga no nó H610C/chassi.]
+
+Aqui está uma ilustração que mostra o botão liga/desliga nos nós H615C e H610S:
+
+image::H600S_ISI_nodefront.png[Mostra o botão liga/desliga no nó/chassi H610S/H615C.]
+
+
+
+== Configurar o NetApp HCI
+
+Escolha uma das seguintes opções:
+
+* <<Nova instalação do NetApp HCI>>
+* <<Expanda uma instalação do NetApp HCI existente>>
+
+
+
+
+=== Nova instalação do NetApp HCI
+
+.Passos
+. Configure um endereço IPv4 na rede de gerenciamento (Bond1G) em um nó de storage NetApp HCI.
++
+
+NOTE: Se estiver a utilizar DHCP na rede de gestão, pode ligar-se ao endereço IPv4 adquirido por DHCP do sistema de armazenamento.
+
++
+.. Conete um teclado, vídeo, Mouse (KVM) na parte de trás de um nó de armazenamento.
+.. Configure o endereço IP, a máscara de sub-rede e o endereço de gateway para Bond1G na interface do usuário. Você também pode configurar um ID de VLAN para a rede Bond1G.
+
+
+. Usando um navegador da Web compatível (Mozilla Firefox, Google Chrome ou Microsoft Edge), navegue até o mecanismo de implantação do NetApp conetando-se ao endereço IPv4 que você configurou na Etapa 1.
+. Use a interface do usuário (UI) do mecanismo de implantação do NetApp para configurar o NetApp HCI.
++
+
+NOTE: Todos os outros nós do NetApp HCI serão descobertos automaticamente.
+
+
+
+
+
+=== Expanda uma instalação do NetApp HCI existente
+
+.Passos
+. Abra o endereço IP do nó de gerenciamento em um navegador da Web.
+. Faça login no controle de nuvem híbrida da NetApp fornecendo as credenciais de administrador do cluster de storage da NetApp HCI.
+. Siga as etapas do assistente para adicionar nós de storage e/ou computação à instalação do NetApp HCI.
++
+
+TIP: Para adicionar H410C nós de computação, a instalação existente deve executar o NetApp HCI 1,4 ou posterior. Para adicionar H615C nós de computação, a instalação existente deve executar o NetApp HCI 1,7 ou posterior.
+
++
+
+NOTE: Os nós NetApp HCI recém-instalados na mesma rede serão descobertos automaticamente.
+
+
+
+
+
+== Executar tarefas de pós-configuração
+
+Dependendo do tipo de nó que você tem, talvez seja necessário executar etapas adicionais depois de instalar o hardware e configurar o NetApp HCI.
+
+* <<H610C nó>>
+* <<H615C e H610S nós>>
+
+
+
+
+=== H610C nó
+
+Instale os drivers de GPU no ESXi para cada nó H610C instalado e valide sua funcionalidade.
+
+
+
+=== H615C e H610S nós
+
+.Passos
+. Use um navegador da Web e navegue até o endereço IP padrão do BMC: `192.168.0.120`
+. Inicie sessão utilizando o nome de utilizador `root` e a palavra-passe `calvin`.
+. Na tela de gerenciamento de nós, navegue até *Configurações > Configurações de rede* e configure os parâmetros de rede para a porta de gerenciamento fora da banda.
+
+
+Se o nó H615C tiver GPUs nele, instale os drivers de GPU no ESXi para cada nó H615C instalado e valide sua funcionalidade.
+
+[discrete]
+== Encontre mais informações
+
+* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
+* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
+* https://www.netapp.com/pdf.html?item=/media/9413-tr4820pdf.pdf["_TR-4820: Guia de Planejamento rápido de redes NetApp HCI_"^]
+* https://mysupport.netapp.com/site/tools["Consultor de configuração do NetApp"^] ferramenta de validação de rede 5.8.1 ou posterior
+
