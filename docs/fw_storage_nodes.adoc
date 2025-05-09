@@ -11,7 +11,6 @@ summary: Versões de firmware e driver suportadas para nós de storage.
 :icons: font
 :linkattrs: 
 :imagesdir: ../media/
-:keywords: hci, earlier, documentation, versions
 
 
 [role="lead"]

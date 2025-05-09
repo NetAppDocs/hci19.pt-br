@@ -11,7 +11,6 @@ keywords: netapp, hci, element, Witness Node
 :icons: font
 :linkattrs: 
 :imagesdir: ../media/
-:keywords: netapp, hci, element, Witness Node
 
 
 [role="lead"]
@@ -43,9 +42,8 @@ O NetApp HCI é compatível com apenas certos modelos de nós de storage em clus
 
 NOTE: Quando o processo de instalação do NetApp HCI instala nós de testemunha, um modelo de VM é armazenado no VMware vCenter que você pode usar para reimplantar um nó de testemunha caso ele seja removido, perdido ou corrompido acidentalmente. Você também pode usar o modelo para reimplantar um nó de testemunha se precisar substituir um nó de computação com falha que estava hospedando o nó de testemunha. Para obter instruções, consulte a seção *Redeploy Witness Nodes para clusters de storage de dois e três nós* link:task_hci_h410crepl.html["aqui"^].
 
-[discrete]
+
+
 == Encontre mais informações
 
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
-* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-
+https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]

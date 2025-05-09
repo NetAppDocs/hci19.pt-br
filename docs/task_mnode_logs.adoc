@@ -72,9 +72,8 @@ TIP: Use o `GET /services` comando para listar serviços no nó de gerenciamento
 . No corpo da resposta, selecione *Download* para salvar a saída do log.
 
 
-[discrete]
+
+
 == Encontre mais informações
 
-* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
-
+https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]

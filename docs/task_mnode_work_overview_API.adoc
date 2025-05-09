@@ -48,10 +48,10 @@ Tarefas que você pode executar com APIs REST:
 * link:task_mnode_logs.html["Obtendo logs de serviços de gerenciamento"]
 
 
-[discrete]
+
+
 == Encontre mais informações
 
 * link:task_mnode_access_ui.html["Acesse o nó de gerenciamento"]
 * https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
 

@@ -61,9 +61,8 @@ O nome de usuário do proxy, a senha do proxy e a porta SSH são opcionais e dev
 
 NOTE: Talvez seja necessário reinicializar o nó de gerenciamento dependendo do ambiente.
 
-[discrete]
+
+
 == Encontre mais informações
 
-* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
-
+https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]

@@ -63,9 +63,8 @@ NOTE: Como alternativa, você pode esperar 2 minutos para que o inventário seja
 . Atualize o navegador de controle de nuvem híbrida da NetApp para ver as alterações.
 
 
-[discrete]
+
+
 == Encontre mais informações
 
-* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
-
+https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]

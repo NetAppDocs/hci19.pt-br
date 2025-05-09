@@ -77,10 +77,10 @@ NOTE: A atualização do sistema operacional de nós de gerenciamento não é ma
 . link:task_hcc_upgrade_compute_node_firmware.html["Atualize o firmware do nó de computação usando o controle de nuvem híbrida da NetApp"] ou link:task_hcc_upgrade_compute_firmware_ansible.html["Automatize as atualizações de firmware de computação com o Ansible"].
 
 
-[discrete]
+
+
 == Encontre mais informações
 
 * https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
 * https://docs.netapp.com/us-en/element-software/upgrade/concept_element_upgrade_overview.html["Atualizar um sistema de storage all-flash NetApp SolidFire"^]
 

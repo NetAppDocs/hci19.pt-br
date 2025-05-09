@@ -567,6 +567,4 @@ CAUTION: Durante o processo de ativação, por aproximadamente cinco minutos, o 
 
 == Encontre mais informações
 
-* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
-
+https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]

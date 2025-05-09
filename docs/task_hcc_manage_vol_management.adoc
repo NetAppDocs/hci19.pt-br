@@ -283,11 +283,11 @@ Depois que os volumes de armazenamento são excluídos, eles permanecem disponí
 . Confirme o processo selecionando *Yes*.
 
 
-[discrete]
+
+
 == Encontre mais informações
 
 * link:concept_hci_volumes.html["Saiba mais sobre volumes"]
 * https://docs.netapp.com/us-en/element-software/index.html["Documentação do software SolidFire e Element"^]
 * https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
 

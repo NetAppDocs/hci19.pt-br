@@ -329,9 +329,8 @@ NOTE: Para o SO do nó, as atualizações automáticas para patches de seguranç
 
 A atualização foi concluída com êxito quando o `PercentComplete` `100` indica e `results` indica o número da versão atualizada.
 
-[discrete]
+
+
 == Encontre mais informações
 
-* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
-
+https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]

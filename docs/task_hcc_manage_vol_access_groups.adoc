@@ -73,11 +73,11 @@ Você pode remover um grupo de acesso ao volume usando o Controle de nuvem híbr
 . Confirme a operação de eliminação selecionando *Yes*.
 
 
-[discrete]
+
+
 == Encontre mais informações
 
 * link:concept_hci_volume_access_groups.html["Saiba mais sobre grupos de acesso de volume"]
 * link:task_hcc_manage_initiators.html#add-initiators-to-a-volume-access-group["Adicionar iniciador a um grupo de acesso de volume"]
 * https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
 

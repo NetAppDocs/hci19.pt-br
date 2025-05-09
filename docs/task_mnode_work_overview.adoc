@@ -53,9 +53,8 @@ Desative ou ative a funcionalidade SSH remota ou inicie uma sessão de túnel de
 * link:task_mnode_ssh_management.html["Gerencie a funcionalidade SSH no nó de gerenciamento"]
 
 
-[discrete]
+
+
 == Encontre mais informações
 
-* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
-
+https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]

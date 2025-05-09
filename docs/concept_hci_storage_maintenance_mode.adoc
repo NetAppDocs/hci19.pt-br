@@ -53,6 +53,5 @@ Você pode ver os estados das operações do modo de manutenção ao trabalhar c
 * https://docs.netapp.com/us-en/element-software/api/reference_element_api_enablemaintenancemode.html["Ative o modo de manutenção com a API Element"^]
 * https://docs.netapp.com/us-en/element-software/api/reference_element_api_disablemaintenancemode.html["Desative o modo de manutenção com a API Element"^]
 * https://docs.netapp.com/us-en/element-software/api/concept_element_api_about_the_api.html["Documentação da API do NetApp Element"^]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
 * https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
 

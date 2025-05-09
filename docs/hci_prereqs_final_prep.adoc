@@ -100,10 +100,10 @@ Você configurou o endereço IP IPMI para cada nó de computação e armazenamen
 . Repita este procedimento para quaisquer outros nós do NetApp HCI H610C, H615C ou H610S com senhas IPMI padrão.
 
 
-[discrete]
+
+
 == Encontre mais informações
 
 * https://docs.netapp.com/us-en/solidfire-active-iq/index.html["Documentação do NetApp SolidFire Active IQ"^]
 * https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
 

@@ -16,9 +16,8 @@ keywords: netapp, hci, element, storage, protection domains
 [role="lead"]
 O software NetApp Element oferece suporte link:concept_hci_dataprotection.html#protection-domains["domínios de proteção"] a recursos, o que otimiza o layout dos dados nos nós de storage para obter a melhor disponibilidade de dados. Para usar esse recurso, você deve dividir a capacidade de storage uniformemente em três ou mais gabinetes da série H da NetApp para obter a confiabilidade ideal do storage. Nesse cenário, o cluster de armazenamento ativa automaticamente os domínios de proteção.
 
-[discrete]
+
+
 == Encontre mais informações
 
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
-* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-
+https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]

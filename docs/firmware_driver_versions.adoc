@@ -11,7 +11,6 @@ summary: Versões de firmware e driver suportadas no software NetApp HCI e NetAp
 :icons: font
 :linkattrs: 
 :imagesdir: ../media/
-:keywords: hci, earlier, documentation, versions
 
 
 [role="lead"]

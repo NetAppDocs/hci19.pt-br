@@ -349,12 +349,12 @@ NOTE: Você deve criar uma nova função HCC do NetApp no vCenter para adicionar
 
 
 
-[discrete]
+
+
 == Encontre mais informações
 
 * link:concept_hci_volumes.html#persistent-volumes["Volumes persistentes"]
 * link:task_mnode_add_assets.html["Adicione ativos de computação e controlador ao nó de gerenciamento"]
 * link:task_mnode_install_add_storage_NIC.html["Configurar uma NIC de armazenamento"]
 * https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
 

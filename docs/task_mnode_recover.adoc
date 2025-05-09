@@ -251,10 +251,10 @@ NOTE: Você pode adicionar o nome de usuário ou permitir que o script solicite 
 
 IMPORTANT: O recurso SSH que fornece link:task_mnode_enable_remote_support_connections.html["Acesso à sessão do túnel de suporte remoto (RST) do suporte da NetApp"] é desativado por padrão nos nós de gerenciamento que executam os serviços de gerenciamento 2,18 e posteriores. Se você já ativou a funcionalidade SSH no nó de gerenciamento, talvez seja necessário fazer link:task_mnode_ssh_management.html["Desative o SSH novamente"]isso no nó de gerenciamento recuperado.
 
-[discrete]
+
+
 == Encontre mais informações
 
 * link:concept_hci_volumes.html#persistent-volumes["Volumes persistentes"]
 * https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
 

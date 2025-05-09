@@ -79,11 +79,11 @@ As contas específicas de volume são específicas apenas para o cluster de arma
 
 As contas de volume são gerenciadas na tabela volumes de controle de nuvem híbrida da NetApp.
 
-[discrete]
+
+
 == Encontre mais informações
 
 * link:task_hcc_manage_accounts.html["Gerenciar contas de usuário"]
 * link:concept_hci_clusters.html["Saiba mais sobre clusters"]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
 * https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
 

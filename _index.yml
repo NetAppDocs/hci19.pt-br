@@ -57,8 +57,6 @@ indexpage:
       url: https://kb.netapp.com/Special:Search?query=netapp+hci&type=wiki
   - title: Soluções
     links:
-    - title: Página de recursos do NetApp HCI
-      url: https://www.netapp.com/hybrid-cloud/hci-documentation/
     - title: Soluções da NetApp
       url: https://docs.netapp.com/us-en/netapp-solutions/index.html
   - title: Demos e tutoriais

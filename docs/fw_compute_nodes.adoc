@@ -11,7 +11,6 @@ summary: Versões de driver e firmware compatíveis para nós de computação.
 :icons: font
 :linkattrs: 
 :imagesdir: ../media/
-:keywords: hci, earlier, documentation, versions
 
 
 [role="lead"]

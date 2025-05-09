@@ -171,9 +171,9 @@ Você pode definir um layout de domínio de proteção personalizado, onde cada 
 
 A proteção de dados Double Helix é um método de replicação que espalha pelo menos duas cópias redundantes de dados em todas as unidades dentro de um sistema. A abordagem "sem RAID" permite que um sistema absorva várias falhas simultâneas em todos os níveis do sistema de storage e faça o reparo rapidamente.
 
-[discrete]
+
+
 == Encontre mais informações
 
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
 * https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
 

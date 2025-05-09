@@ -116,10 +116,10 @@ https://$mnode_IP:442/json-rpc/10.0 \
 ----
 
 
-[discrete]
+
+
 == Encontre mais informações
 
 * link:task_mnode_add_assets.html["Adicione ativos de computação e controlador ao nó de gerenciamento"]
 * https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
 

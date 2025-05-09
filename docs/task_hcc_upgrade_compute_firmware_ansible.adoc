@@ -32,9 +32,3 @@ Em um ambiente de produção, você deve atualizar os nós de computação em um
 
 .Comece a usar a automação de atualização de firmware
 Para começar, navegue até o https://github.com/NetApp-Automation/nar_compute_firmware_upgrade["Repositório do NetApp Ansible no GitHub"^] e faça o download da `nar_compute_nodes_firmware_upgrades` função e da documentação.
-
-[discrete]
-== Encontre mais informações
-
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
-

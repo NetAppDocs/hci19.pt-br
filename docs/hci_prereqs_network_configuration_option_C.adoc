@@ -102,9 +102,8 @@ Você pode usar os seguintes comandos de exemplo para configurar as portas de sw
 
 NOTE: Alguns switches podem exigir a inclusão da VLAN nativa na lista de VLAN permitida. Consulte a documentação para o modelo de switch específico e a versão de software.
 
-[discrete]
+
+
 == Encontre mais informações
 
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
-* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-
+https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]

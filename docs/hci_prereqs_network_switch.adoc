@@ -52,9 +52,8 @@ O NetApp HCI tem os seguintes requisitos de switch:
 
 Todos os nós do NetApp HCI fornecem recursos adicionais de gerenciamento fora da banda por meio de uma porta de gerenciamento dedicada. Os nós NetApp H300S, H300E, H500S, H500E, H700S, H700E e H410C também permitem acesso IPMI via porta A. como prática recomendada, você deve facilitar o gerenciamento remoto do NetApp HCI configurando o gerenciamento fora da banda para todos os nós em seu ambiente.
 
-[discrete]
+
+
 == Encontre mais informações
 
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
-* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-
+https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]

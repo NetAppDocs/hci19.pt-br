@@ -19,9 +19,3 @@ As soluções da NetApp HCI ajudam você a obter performance em escala com vári
 O NetApp HCI permite que você implante serviços de nuvem em vários fornecedores de nuvem pública e no local. Você pode usar o NetApp HCI para implantar serviços semelhantes ao que pode fazer com um provedor de nuvem, tudo em um modo de autoatendimento sem envolvimento DA TI.
 
 Para saber mais sobre as soluções da NetApp HCI, consulte https://docs.netapp.com/us-en/hci-solutions/index.html["Documentação das soluções da NetApp HCI"^].
-
-[discrete]
-== Encontre mais informações
-
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
-

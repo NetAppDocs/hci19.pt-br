@@ -281,9 +281,8 @@ As verificações de integridade da computação, sejam elas realizadas pelo Con
 
 | Qual é o status dos nós de testemunha no cluster? O nó testemunha está ativo e em execução neste host ESXi e o nó testemunha alternativo está ativo e em execução em outro host ESXi. | Nó | Um nó de testemunha está sendo executado localmente neste host ESXi. Quando estiver pronto para atualizar este host ESXi, encerre o nó testemunha somente neste host ESXi e execute novamente a verificação de integridade. *Um nó de testemunha deve estar em execução na instalação do HCI em todos os momentos*. | https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/NetApp_HCI/How_to_resolve_witness_node_issues_prior_to_upgrading_compute_nodes["Veja este KB"^] 
 |===
-[discrete]
+
+
 == Encontre mais informações
 
-* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
-
+https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]

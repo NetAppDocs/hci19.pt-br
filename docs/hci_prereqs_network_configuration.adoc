@@ -88,9 +88,8 @@ Se o mecanismo de implantação do NetApp falhar porque sua rede não suporta qu
 * link:hci_prereqs_network_configuration_option_C.html["Configuração de rede opção C"]
 
 
-[discrete]
+
+
 == Encontre mais informações
 
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
-* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-
+https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]

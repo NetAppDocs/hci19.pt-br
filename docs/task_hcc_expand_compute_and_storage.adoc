@@ -132,10 +132,10 @@ NOTE: Se você expandiu um cluster de storage de dois nós para quatro nós ou m
 
 
 
-[discrete]
+
+
 == Encontre mais informações
 
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
 * https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
 * https://library.netapp.com/ecm/ecm_download_file/ECMLP2856176["Instruções de instalação e configuração dos nós de computação e storage do NetApp HCI"^]
 * https://kb.vmware.com/s/article/1003212["Base de Conhecimento VMware: Suporte aprimorado ao processador vMotion Compatibility (EVC)"^]

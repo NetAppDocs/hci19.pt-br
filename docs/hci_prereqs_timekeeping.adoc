@@ -11,7 +11,6 @@ keywords: netapp, hci, timekeeping, NTP, DNS
 :icons: font
 :linkattrs: 
 :imagesdir: ../media/
-:keywords: netapp, hci, timekeeping, NTP, DNS
 
 
 [role="lead"]
@@ -26,9 +25,8 @@ Faça as seguintes preparações de DNS e Timeserver antes de implantar o NetApp
 * Verifique se todos os relógios de nós de storage e computação estão sincronizados e se os relógios dos dispositivos usados para fazer login no NetApp HCI estão sincronizados com os nós do NetApp HCI.
 
 
-[discrete]
+
+
 == Encontre mais informações
 
-* https://www.netapp.com/hybrid-cloud/hci-documentation/["Página de recursos do NetApp HCI"^]
-* https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
-
+https://docs.netapp.com/us-en/vcp/index.html["Plug-in do NetApp Element para vCenter Server"^]
